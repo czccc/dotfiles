@@ -1,0 +1,428 @@
+local M = {}
+
+M.packer = {
+  "nvim-lualine/lualine.nvim",
+  config = function()
+    require("plugins.lualine").setup()
+  end,
+  disable = false,
+}
+
+M.setup = function()
+  local lualine = require "lualine"
+  lualine.setup(gconf.plugins.lualine)
+end
+
+local conditions = {
+  buffer_not_empty = function()
+    return vim.fn.empty(vim.fn.expand "%:t") ~= 1
+  end,
+  wide_window = function()
+    return vim.fn.winwidth(0) > 80
+  end,
+  large_window = function()
+    return vim.fn.winwidth(0) > 150
+  end,
+  check_git_workspace = function()
+    local filepath = vim.fn.expand "%:p:h"
+    local gitdir = vim.fn.finddir(".git", filepath .. ";")
+    return gitdir and #gitdir > 0 and #gitdir < #filepath
+  end,
+}
+
+local colors = {
+  bg = "#202328",
+  fg = "#bbc2cf",
+  yellow = "#ECBE7B",
+  cyan = "#008080",
+  darkblue = "#081633",
+  green = "#98be65",
+  orange = "#FF8800",
+  violet = "#a9a1e1",
+  magenta = "#c678dd",
+  purple = "#c678dd",
+  blue = "#51afef",
+  red = "#ec5f67",
+}
+
+local components = {
+  mode = {
+    function()
+      return " "
+    end,
+    padding = { left = 0, right = 0 },
+    color = {},
+    cond = nil,
+  },
+  mode1 = {
+    function()
+      local mod = vim.fn.mode()
+      local _time = os.date "*t"
+      local selector = math.floor(_time.hour / 8) + 1
+      local normal_icons = {
+        "  ",
+        "  ",
+        "  ",
+      }
+      if mod == "n" or mod == "no" or mod == "nov" then
+        return normal_icons[selector]
+      elseif mod == "i" or mod == "ic" or mod == "ix" then
+        local insert_icons = {
+          "  ",
+          "  ",
+          "  ",
+        }
+        return insert_icons[selector]
+      elseif mod == "V" or mod == "v" or mod == "vs" or mod == "Vs" or mod == "cv" then
+        local verbose_icons = {
+          " 勇",
+          "  ",
+          "  ",
+        }
+        return verbose_icons[selector]
+      elseif mod == "c" or mod == "ce" then
+        local command_icons = {
+          "  ",
+          "  ",
+          "  ",
+        }
+
+        return command_icons[selector]
+      elseif mod == "r" or mod == "rm" or mod == "r?" or mod == "R" or mod == "Rc" or mod == "Rv" or mod == "Rv" then
+        local replace_icons = {
+          "  ",
+          "  ",
+          "  ",
+        }
+        return replace_icons[selector]
+      end
+      return normal_icons[selector]
+    end,
+    color = { fg = colors.blue, gui = "bold" },
+    -- padding = { left = 1, right = 0 },
+  },
+  branch = {
+    "b:gitsigns_head",
+    icon = " ",
+    color = { fg = colors.blue, gui = "bold" },
+    cond = function()
+      return conditions.check_git_workspace() and conditions.wide_window()
+    end,
+    padding = 0,
+  },
+  filename = {
+    "filename",
+    file_status = true, -- Displays file status (readonly status, modified status)
+    path = 1,
+    shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+    symbols = {
+      modified = "[+]", -- Text to show when the file is modified.
+      readonly = "[-]", -- Text to show when the file is non-modifiable or readonly.
+      unnamed = "[No Name]", -- Text to show for unnamed buffers.
+    },
+    cond = conditions.buffer_not_empty,
+    color = { gui = "bold" },
+  },
+  diff = {
+    "diff",
+    source = function()
+      local gitsigns = vim.b.gitsigns_status_dict
+      if gitsigns then
+        return {
+          added = gitsigns.added,
+          modified = gitsigns.changed,
+          removed = gitsigns.removed,
+        }
+      end
+    end,
+    symbols = { added = "  ", modified = " ", removed = " " },
+    diff_color = {
+      added = { fg = colors.green },
+      modified = { fg = colors.yellow },
+      removed = { fg = colors.red },
+    },
+    color = {},
+    cond = nil,
+  },
+  diagnostics = {
+    "diagnostics",
+    sources = { "nvim_diagnostic" },
+    symbols = { error = " ", warn = " ", info = " ", hint = " " },
+    color = {},
+    cond = conditions.wide_window,
+  },
+  treesitter = {
+    function()
+      local b = vim.api.nvim_get_current_buf()
+      if next(vim.treesitter.highlighter.active[b]) then
+        return ""
+      end
+      return ""
+    end,
+    color = { fg = colors.green },
+    cond = conditions.wide_window,
+  },
+  lsp = {
+    function(msg)
+      msg = msg or "LS Inactive"
+      local buf_clients = vim.lsp.buf_get_clients()
+      if next(buf_clients) == nil then
+        -- TODO: clean up this if statement
+        if type(msg) == "boolean" or #msg == 0 then
+          return "LS Inactive"
+        end
+        return msg
+      end
+      local buf_ft = vim.bo.filetype
+      local buf_client_names = {}
+
+      -- add client
+      for _, client in pairs(buf_clients) do
+        if client.name ~= "null-ls" then
+          table.insert(buf_client_names, client.name)
+        end
+      end
+
+      -- add formatter
+      local formatters = require "plugins.lsp.null-ls.formatters"
+      local supported_formatters = formatters.list_registered(buf_ft)
+      vim.list_extend(buf_client_names, supported_formatters)
+
+      -- add linter
+      local linters = require "plugins.lsp.null-ls.linters"
+      local supported_linters = linters.list_registered(buf_ft)
+      vim.list_extend(buf_client_names, supported_linters)
+
+      return "[" .. table.concat(buf_client_names, ", ") .. "]"
+    end,
+    color = { gui = "bold" },
+    cond = conditions.hide_in_small,
+  },
+  lsp_progress = {
+    function()
+      local messages = vim.lsp.util.get_progress_messages()
+      if #messages == 0 then
+        return ""
+      end
+      local status = {}
+      for _, msg in pairs(messages) do
+        table.insert(status, (msg.percentage or 0) .. "%% " .. (msg.title or ""))
+      end
+      -- local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+      -- local spinners = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " " }
+      -- local spinners = { " ", " ", " ", " ", " ", " ", " ", " ", " " }
+      local spinners = {
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+      }
+      local ms = vim.loop.hrtime() / 1000000
+      local frame = math.floor(ms / 60) % #spinners
+      return spinners[frame + 1] .. " " .. table.concat(status, " | ")
+    end,
+    cond = conditions.large_window,
+  },
+  location = { "location", cond = conditions.wide_window, color = {} },
+  progress = { "progress", cond = conditions.wide_window, color = {} },
+  spaces = {
+    function()
+      if not vim.api.nvim_buf_get_option(0, "expandtab") then
+        return "Tab size: " .. vim.api.nvim_buf_get_option(0, "tabstop") .. " "
+      end
+      local size = vim.api.nvim_buf_get_option(0, "shiftwidth")
+      if size == 0 then
+        size = vim.api.nvim_buf_get_option(0, "tabstop")
+      end
+      return "Spaces: " .. size .. " "
+    end,
+    cond = conditions.wide_window,
+    color = {},
+  },
+  encoding = {
+    "o:encoding",
+    fmt = string.upper,
+    color = {},
+    cond = conditions.wide_window,
+  },
+  fileformat = {
+    "fileformat",
+    icons_enabled = true,
+    symbols = {
+      unix = "LF",
+      dos = "CRLF",
+      mac = "CR",
+    },
+    fmt = string.upper,
+    color = { fg = colors.green },
+    cond = conditions.wide_window,
+  },
+  filesize = {
+    function()
+      local function format_file_size(file)
+        local size = vim.fn.getfsize(file)
+        if size <= 0 then
+          return ""
+        end
+        local sufixes = { "b", "k", "m", "g" }
+        local i = 1
+        while size > 1024 do
+          size = size / 1024
+          i = i + 1
+        end
+        return string.format("%.1f%s", size, sufixes[i])
+      end
+      local file = vim.fn.expand "%:p"
+      if string.len(file) == 0 then
+        return ""
+      end
+      return format_file_size(file)
+    end,
+    cond = conditions.wide_window,
+  },
+  clock = {
+    function()
+      return " " .. os.date "%H:%M"
+    end,
+    cond = conditions.wide_window,
+  },
+  keymap = {
+    function()
+      if vim.opt.iminsert:get() > 0 and vim.b.keymap_name then
+        return "⌨ " .. vim.b.keymap_name
+      end
+      return ""
+    end,
+    cond = conditions.wide_window,
+  },
+  filetype = { "filetype", cond = conditions.wide_window },
+  scrollbar = {
+    function()
+      local current_line = vim.fn.line "."
+      local total_lines = vim.fn.line "$"
+      local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
+      local line_ratio = current_line / total_lines
+      local index = math.ceil(line_ratio * #chars)
+      return chars[index]
+    end,
+    padding = { left = 0, right = 0 },
+    color = { fg = colors.yellow, bg = colors.bg },
+    cond = nil,
+  },
+}
+
+vim.cmd [[autocmd User LspProgressUpdate let &ro = &ro]]
+
+M.config = function()
+  gconf.plugins.lualine = {
+    options = {
+      icons_enabled = true,
+      -- Disable sections and component separators
+      component_separators = { left = "", right = "" },
+      section_separators = { left = "", right = "" },
+      theme = "auto",
+      disabled_filetypes = { "dashboard", "alpha" },
+      always_divide_middle = true,
+      -- globalstatus = true,
+    },
+    sections = {
+      -- these are to remove the defaults
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = {
+        components.mode1,
+        components.branch,
+        components.filename,
+        components.diff,
+        components.lsp_progress,
+        "%=",
+      },
+      lualine_x = {
+        components.diagnostics,
+        components.treesitter,
+        components.lsp,
+        components.filetype,
+        components.fileformat,
+        components.spaces,
+        components.filesize,
+        components.location,
+        components.clock,
+        components.scrollbar,
+      },
+      lualine_y = {},
+      lualine_z = {},
+    },
+    inactive_sections = {
+      -- these are to remove the defaults
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = { components.filename },
+      lualine_x = { components.location },
+      lualine_y = {},
+      lualine_z = {},
+    },
+    tabline = {},
+    extensions = {
+      {
+        sections = {
+          lualine_c = {
+            {
+              function()
+                return vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
+              end,
+              color = { gui = "bold" },
+            },
+          },
+        },
+        filetypes = { "NvimTree" },
+      },
+      {
+        sections = {
+          lualine_c = {
+            {
+              function()
+                return "ToggleTerm #" .. vim.b.toggle_number
+              end,
+              color = { fg = colors.blue, gui = "bold" },
+            },
+          },
+        },
+        filetypes = { "toggleterm" },
+      },
+      {
+        sections = { lualine_c = { { "filetype", color = { gui = "bold" } } } },
+        filetypes = { "Outline" },
+      },
+      {
+        sections = { lualine_c = { { "filetype", color = { gui = "bold" } } } },
+        filetypes = { "Sidebar" },
+      },
+    },
+  }
+end
+
+return M

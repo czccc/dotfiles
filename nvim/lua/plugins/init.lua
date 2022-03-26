@@ -1,0 +1,66 @@
+local M = {}
+local Log = require "core.log"
+
+local plugin_files = {
+  "plugins.which_key",
+  "plugins.misc",
+  "plugins.notify",
+  "plugins.themes.tokyonight",
+  "plugins.themes.onedarker",
+  "plugins.nvim_tree",
+  "plugins.bufferline",
+  "plugins.gitsigns",
+  "plugins.lualine",
+  "plugins.toggleterm",
+  "plugins.telescope",
+  "plugins.treesitter",
+  "plugins.trouble",
+  "plugins.cmp",
+  "plugins.comment",
+  "plugins.autopairs",
+  "plugins.project",
+  "plugins.session",
+  "plugins.lsp",
+  "plugins.dap",
+
+  "plugins.lsp.lang.clangd_extension",
+  "plugins.lsp.lang.rust_tools",
+
+  -- "plugins.alpha",
+  -- "plugins.bqf",
+  "plugins.diffview",
+  "plugins.hlslens",
+  "plugins.indent_blankline",
+  "plugins.lsp_signature",
+  "plugins.neoclip",
+  "plugins.sidebar",
+  "plugins.todo",
+  "plugins.zenmode",
+}
+
+M.config = function()
+  for _, plugin_file in ipairs(plugin_files) do
+    local status_ok, plugin = pcall(require, plugin_file)
+    if not status_ok then
+      Log:error("Unable to require file " .. plugin)
+      print("Unable to require file " .. plugin)
+    end
+    if plugin.config then
+      plugin.config()
+    end
+    if plugin.packer then
+      gconf.plugins.packers[#gconf.plugins.packers + 1] = plugin.packer
+    end
+    if plugin.packers then
+      for _, plugin_packer in ipairs(plugin.packers) do
+        gconf.plugins.packers[#gconf.plugins.packers + 1] = plugin_packer
+      end
+    end
+  end
+end
+
+M.setup = function()
+  require("plugins.lsp").setup()
+end
+
+return M
