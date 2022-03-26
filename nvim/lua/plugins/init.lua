@@ -5,8 +5,9 @@ local plugin_files = {
   "plugins.which_key",
   "plugins.misc",
   "plugins.notify",
-  "plugins.themes.tokyonight",
-  "plugins.themes.onedarker",
+
+  "plugins.themes",
+
   "plugins.nvim_tree",
   "plugins.bufferline",
   "plugins.gitsigns",
@@ -46,7 +47,7 @@ M.config = function()
       print("Unable to require file " .. plugin)
     end
     if plugin.config then
-      plugin.config()
+      pcall(plugin.config)
     end
     if plugin.packer then
       gconf.plugins.packers[#gconf.plugins.packers + 1] = plugin.packer
