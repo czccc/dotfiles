@@ -1,12 +1,12 @@
 local M = {}
 
 M.packer = {
-    "rmagatti/auto-session",
-    config = function()
-      require("plugins.session").setup()
-    end,
-    after = { "nvim-tree.lua" },
-    disable = false,
+  "rmagatti/auto-session",
+  config = function()
+    require("plugins.session").setup()
+  end,
+  after = { "nvim-tree.lua" },
+  disable = false,
 }
 
 M.setup = function()
@@ -15,8 +15,8 @@ M.setup = function()
     if not status_ok then
       return
     end
-    nvim_tree.change_dir(vim.fn.getcwd())
-    nvim_tree.toggle(false, false)
+    pcall(nvim_tree.change_dir, vim.fn.getcwd())
+    pcall(nvim_tree.toggle, false, false)
     -- require("nvim-tree.actions.reloaders").reload_explorer()
   end
 
@@ -35,7 +35,7 @@ M.setup = function()
     auto_restore_enabled = true,
     auto_session_suppress_dirs = nil,
     -- the configs below are lua only
-    bypass_session_save_file_types = { "Outline" },
+    bypass_session_save_file_types = { "Outline", "NvimTree" },
     post_restore_cmds = { restore_nvim_tree },
   }
 end

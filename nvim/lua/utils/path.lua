@@ -1,7 +1,7 @@
 local path = {}
 local uv = vim.loop
 
-path.osname = vim.loop.os_uname().sysname
+path.os_name = vim.loop.os_uname().sysname
 path.is_mac = path.os_name == "Darwin"
 path.is_linux = path.os_name == "Linux"
 path.is_windows = path.os_name == "Windows_NT"

@@ -4,8 +4,7 @@ local path = require "utils.path"
 M.packer = {
   "ahmedkhalf/project.nvim",
   config = function()
-    local project = require "project_nvim"
-    project.setup(gconf.plugins.project)
+    require("plugins.projects").setup()
   end,
   disable = false,
 }
@@ -42,6 +41,19 @@ function M.config()
     ---@usage path to store the project history for use in telescope
     datapath = path.cache_dir,
   }
+end
+
+M.setup = function()
+  local project = require "project_nvim"
+  project.setup(gconf.plugins.project)
+  require("telescope").load_extension "projects"
+  gconf.plugins.which_key["s"]["p"] = { ":lua require('plugins.projects').projects()<cr>", "projects" }
+end
+
+function M.projects()
+  local opts = require("plugins.telescope").dropdown_opts()
+  opts.initial_mode = "normal"
+  require("telescope").extensions.projects.projects(opts)
 end
 
 return M

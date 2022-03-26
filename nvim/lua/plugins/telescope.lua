@@ -24,10 +24,10 @@ M.packers = {
 
 function M.config()
   gconf.plugins.telescope = {}
-  local ok, actions = pcall(require, "telescope.actions")
-  if not ok then
-    return
-  end
+  -- local ok, actions = pcall(require, "telescope.actions")
+  -- if not ok then
+  --   return
+  -- end
 
   gconf.plugins.telescope = {
     defaults = {
@@ -209,6 +209,7 @@ local function dropdown_opts()
     shorten_path = false,
   }
 end
+M.dropdown_opts = dropdown_opts
 
 local function ivy_opts()
   return require("telescope.themes").get_ivy {
@@ -226,6 +227,7 @@ local function ivy_opts()
     ignore_filename = false,
   }
 end
+M.ivy_opts = ivy_opts
 
 function M.code_actions()
   local opts = dropdown_opts()

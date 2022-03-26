@@ -25,6 +25,8 @@ M.config = function()
   require("core.autocmds").config()
   require("core.pack").config()
   require("plugins").config()
+
+  require("core.osconf").config()
 end
 
 M.setup = function()

@@ -27,7 +27,7 @@ function M:setup()
     -- null_ls.builtins.formatting.terraform_fmt,
     -- null_ls.builtins.formatting.shfmt.with { extra_args = { "-i", "2", "-ci" } },
     null_ls.builtins.formatting.black.with { extra_args = { "--fast" }, filetypes = { "python" } },
-    null_ls.builtins.formatting.isort.with { extra_args = { "--profile", "black" }, filetypes = { "python" } },
+    -- null_ls.builtins.formatting.isort.with { extra_args = { "--profile", "black" }, filetypes = { "python" } },
 
     null_ls.builtins.diagnostics.eslint_d.with {
       condition = function(utils)

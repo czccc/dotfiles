@@ -28,7 +28,7 @@ end
 
 local function diagnostics_indicator(_, _, diagnostics)
   local result = {}
-  local symbols = { error = "", warning = "", info = "" }
+  local symbols = { error = " ", warning = " ", info = " " }
   for name, count in pairs(diagnostics) do
     if symbols[name] and count > 0 then
       table.insert(result, symbols[name] .. count)

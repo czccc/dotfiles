@@ -5,7 +5,7 @@ local autocmds = require "core.autocmds"
 
 M.packers = {
   { "neovim/nvim-lspconfig" },
-  { "tamago324/nlsp-settings.nvim" },
+  -- { "tamago324/nlsp-settings.nvim" },
   { "jose-elias-alvarez/null-ls.nvim" },
   { "williamboman/nvim-lsp-installer" },
   {
@@ -209,16 +209,16 @@ function M.setup()
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, gconf.lsp.float)
   vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, gconf.lsp.float)
 
-  local lsp_settings_status_ok, lsp_settings = pcall(require, "nlspsettings")
-  if lsp_settings_status_ok then
-    lsp_settings.setup {
-      config_home = path.join(path.config_dir, "nlsp-settings"),
-      local_settings_dir = ".nlsp-settings",
-      local_settings_root_markers = { ".git" },
-      append_default_schemas = true,
-      loader = "json",
-    }
-  end
+  -- local lsp_settings_status_ok, lsp_settings = pcall(require, "nlspsettings")
+  -- if lsp_settings_status_ok then
+  --   lsp_settings.setup {
+  --     config_home = path.join(path.config_dir, "nlsp-settings"),
+  --     local_settings_dir = ".nlsp-settings",
+  --     local_settings_root_markers = { ".git" },
+  --     append_default_schemas = true,
+  --     loader = "json",
+  --   }
+  -- end
 
   local lsp_installer_status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
   if lsp_installer_status_ok then
