@@ -47,18 +47,18 @@ M.setup = function()
 
         -- -- delete all buffers (does not save changes)
         -- "silent %bdelete!",
-        "SaveSession",
+        -- "SaveSession",
       },
       open = {
-        function(dir)
-          local Lib = require "auto-session-library"
-          Lib.conf.last_loaded_session = nil
-          vim.cmd "RestoreSession"
-        end,
+        -- function(dir)
+        --   local Lib = require "auto-session-library"
+        --   Lib.conf.last_loaded_session = nil
+        --   vim.cmd "RestoreSession"
+        -- end,
         -- function()
         --   require("sessions").load(nil, { silent = true })
         -- end,
-        "NvimTreeOpen",
+        -- "NvimTreeOpen",
       },
     },
   }

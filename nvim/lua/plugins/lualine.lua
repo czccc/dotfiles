@@ -196,7 +196,7 @@ local components = {
       return "[" .. table.concat(buf_client_names, ", ") .. "]"
     end,
     color = { gui = "bold" },
-    cond = conditions.hide_in_small,
+    cond = conditions.large_window,
   },
   lsp_progress = {
     function()
