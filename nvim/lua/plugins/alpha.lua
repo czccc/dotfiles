@@ -75,6 +75,7 @@ local function configure_additional_autocmds()
 end
 
 function M.setup()
+  ---@diagnostic disable-next-line: different-requires
   local alpha = require "alpha"
   local mode = gconf.plugins.alpha.mode
   local config = gconf.plugins.alpha[mode].config

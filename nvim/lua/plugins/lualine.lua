@@ -46,6 +46,13 @@ local colors = {
 }
 
 local components = {
+  left = {
+    function()
+      return "▊"
+    end,
+    color = { fg = colors.blue }, -- Sets highlighting of component
+    padding = { left = 0, right = 1 }, -- We don't need space before this
+  },
   mode = {
     function()
       return " "
@@ -57,56 +64,35 @@ local components = {
   mode1 = {
     function()
       local mod = vim.fn.mode()
-      local _time = os.date "*t"
-      local selector = math.floor(_time.hour / 8) + 1
-      local normal_icons = {
-        "  ",
-        "  ",
-        "  ",
+      local icons = {
+        normal = "",
+        insert = "",
+        visual = "",
+        command = "",
+        replace = "",
       }
       if mod == "n" or mod == "no" or mod == "nov" then
-        return normal_icons[selector]
+        return icons.normal
       elseif mod == "i" or mod == "ic" or mod == "ix" then
-        local insert_icons = {
-          "  ",
-          "  ",
-          "  ",
-        }
-        return insert_icons[selector]
+        return icons.insert
       elseif mod == "V" or mod == "v" or mod == "vs" or mod == "Vs" or mod == "cv" then
-        local verbose_icons = {
-          " 勇",
-          "  ",
-          "  ",
-        }
-        return verbose_icons[selector]
+        return icons.visual
       elseif mod == "c" or mod == "ce" then
-        local command_icons = {
-          "  ",
-          "  ",
-          "  ",
-        }
-
-        return command_icons[selector]
+        return icons.command
       elseif mod == "r" or mod == "rm" or mod == "r?" or mod == "R" or mod == "Rc" or mod == "Rv" or mod == "Rv" then
-        local replace_icons = {
-          "  ",
-          "  ",
-          "  ",
-        }
-        return replace_icons[selector]
+        return icons.replace
       end
-      return normal_icons[selector]
+      return icons.normal
     end,
     color = { fg = colors.blue, gui = "bold" },
-    -- padding = { left = 1, right = 0 },
+    padding = { left = 0, right = 1 },
   },
   branch = {
     "b:gitsigns_head",
     icon = " ",
     color = { fg = colors.blue, gui = "bold" },
     cond = function()
-      return conditions.check_git_workspace() and conditions.wide_window()
+      return conditions.check_git_workspace() and conditions.large_window()
     end,
     padding = 0,
   },
@@ -114,7 +100,7 @@ local components = {
     "filename",
     file_status = true, -- Displays file status (readonly status, modified status)
     path = 1,
-    shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+    shorting_target = 80, -- Shortens path to leave 80 spaces in the window
     symbols = {
       modified = "[+]", -- Text to show when the file is modified.
       readonly = "[-]", -- Text to show when the file is non-modifiable or readonly.
@@ -122,6 +108,7 @@ local components = {
     },
     cond = conditions.buffer_not_empty,
     color = { gui = "bold" },
+    padding = { left = 0, right = 1 },
   },
   diff = {
     "diff",
@@ -135,13 +122,14 @@ local components = {
         }
       end
     end,
-    symbols = { added = "  ", modified = " ", removed = " " },
+    symbols = { added = " ", modified = " ", removed = " " },
     diff_color = {
       added = { fg = colors.green },
       modified = { fg = colors.yellow },
       removed = { fg = colors.red },
     },
     color = {},
+    padding = { left = 0, right = 0 },
     cond = nil,
   },
   diagnostics = {
@@ -160,7 +148,7 @@ local components = {
       return ""
     end,
     color = { fg = colors.green },
-    cond = conditions.wide_window,
+    cond = conditions.large_window,
   },
   lsp = {
     function(msg)
@@ -208,66 +196,46 @@ local components = {
       for _, msg in pairs(messages) do
         table.insert(status, (msg.percentage or 0) .. "%% " .. (msg.title or ""))
       end
-      -- local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+      local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
       -- local spinners = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " " }
       -- local spinners = { " ", " ", " ", " ", " ", " ", " ", " ", " " }
-      local spinners = {
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-        " ",
-      }
       local ms = vim.loop.hrtime() / 1000000
       local frame = math.floor(ms / 60) % #spinners
       return spinners[frame + 1] .. " " .. table.concat(status, " | ")
     end,
     cond = conditions.large_window,
   },
-  location = { "location", cond = conditions.wide_window, color = {} },
+  location = {
+    "location",
+    -- cond = conditions.wide_window,
+    color = { fg = colors.yellow },
+  },
   progress = { "progress", cond = conditions.wide_window, color = {} },
   spaces = {
     function()
       if not vim.api.nvim_buf_get_option(0, "expandtab") then
-        return "Tab size: " .. vim.api.nvim_buf_get_option(0, "tabstop") .. " "
+        if not conditions.large_window() then
+          return "T: " .. vim.api.nvim_buf_get_option(0, "tabstop")
+        end
+        return "Tab size: " .. vim.api.nvim_buf_get_option(0, "tabstop")
       end
       local size = vim.api.nvim_buf_get_option(0, "shiftwidth")
       if size == 0 then
         size = vim.api.nvim_buf_get_option(0, "tabstop")
       end
-      return "Spaces: " .. size .. " "
+      if not conditions.large_window() then
+        return "S: " .. size
+      end
+      return "Spaces: " .. size
     end,
     cond = conditions.wide_window,
-    color = {},
+    color = { fg = colors.orange },
   },
   encoding = {
     "o:encoding",
     fmt = string.upper,
-    color = {},
-    cond = conditions.wide_window,
+    color = { fg = colors.green },
+    cond = conditions.large_window,
   },
   fileformat = {
     "fileformat",
@@ -302,13 +270,15 @@ local components = {
       end
       return format_file_size(file)
     end,
+    color = { fg = colors.green },
     cond = conditions.wide_window,
   },
   clock = {
     function()
       return " " .. os.date "%H:%M"
     end,
-    cond = conditions.wide_window,
+    color = { fg = colors.purple },
+    cond = conditions.large_window,
   },
   keymap = {
     function()
@@ -319,7 +289,16 @@ local components = {
     end,
     cond = conditions.wide_window,
   },
-  filetype = { "filetype", cond = conditions.wide_window },
+  filetype = {
+    "filetype",
+    icon_only = true,
+    cond = conditions.wide_window,
+  },
+  filetype1 = {
+    "filetype",
+    icon_only = false,
+    cond = conditions.large_window,
+  },
   scrollbar = {
     function()
       local current_line = vim.fn.line "."
@@ -330,7 +309,8 @@ local components = {
       return chars[index]
     end,
     padding = { left = 0, right = 0 },
-    color = { fg = colors.yellow, bg = colors.bg },
+    color = { fg = colors.blue },
+    -- color = { fg = colors.blue, bg = colors.bg },
     cond = nil,
   },
 }
@@ -354,8 +334,10 @@ M.config = function()
       lualine_a = {},
       lualine_b = {},
       lualine_c = {
+        -- components.left,
         components.mode1,
         components.branch,
+        components.filetype,
         components.filename,
         components.diff,
         components.lsp_progress,
@@ -363,14 +345,14 @@ M.config = function()
       },
       lualine_x = {
         components.diagnostics,
-        components.treesitter,
         components.lsp,
-        components.filetype,
+        components.treesitter,
+        components.encoding,
         components.fileformat,
         components.spaces,
         components.filesize,
-        components.location,
         components.clock,
+        components.location,
         components.scrollbar,
       },
       lualine_y = {},
@@ -381,7 +363,7 @@ M.config = function()
       lualine_a = {},
       lualine_b = {},
       lualine_c = { components.filename },
-      lualine_x = { components.location },
+      lualine_x = {},
       lualine_y = {},
       lualine_z = {},
     },

@@ -183,6 +183,7 @@ end
 
 M.setup = function()
   require("core.keymap").load(gconf.plugins.bufferline.keymap)
+  ---@diagnostic disable-next-line: different-requires
   require("bufferline").setup {
     options = gconf.plugins.bufferline.options,
     highlights = gconf.plugins.bufferline.highlights,

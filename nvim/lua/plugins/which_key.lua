@@ -86,19 +86,19 @@ M.config = function()
       ["f"] = {
         name = "Find Files",
         b = { "<cmd>lua require('plugins.telescope').curbuf()<cr>", "Current Buffer" },
-        B = { "<cmd>lua require('plugins.telescope').file_browser()<cr>", "Current Buffer" },
+        B = { "<cmd>lua require('plugins.telescope').file_browser()<cr>", "File Browser" },
         e = { "<cmd>Telescope oldfiles<cr>", "History" },
         f = { "<cmd>Telescope find_files<cr>", "Find File" },
         g = { "<cmd>lua require('plugins.telescope').git_files()<cr>", "Git Files" },
-        j = { "<cmd>Telescope jumplist<cr>", "Last Search" },
-        l = { "<cmd>Telescope resume<cr>", "Last Search" },
-        m = { "<cmd>Telescope masks<cr>", "Last Search" },
+        j = { "<cmd>Telescope jumplist<cr>", "Jumplists" },
+        l = { "<cmd>Telescope resume<cr>", "Resume" },
+        m = { "<cmd>Telescope marks<cr>", "Marks" },
         p = { "<cmd>lua require('plugins.telescope').project_search()<cr>", "Project Files" },
         r = { "<cmd>lua require('plugins.telescope').workspace_frequency()<cr>", "Frecency" },
         s = { "<cmd>lua require('plugins.telescope').git_status()<cr>", "Git Status" },
-        t = { "<cmd>TodoTelescope<cr>", "Telescope" },
+        t = { "<cmd>TodoTelescope<cr>", "Todo" },
         w = { "<cmd>lua require('plugins.telescope').live_grep()<cr>", "Live Grep" },
-        W = { "<cmd>lua require('plugins.telescope').grep_cursor_string()<cr>", "Live Grep" },
+        W = { "<cmd>lua require('plugins.telescope').grep_cursor_string()<cr>", "Live Grep Words" },
         z = { "<cmd>lua require('plugins.telescope').search_only_certain_files()<cr>", "Certain Filetype" },
       },
       ["s"] = {
@@ -111,8 +111,8 @@ M.config = function()
         },
         h = { "<cmd>Telescope help_tags<cr>", "Find Help" },
         i = { "<cmd>lua require('plugins.telescope').installed_plugins()<cr>", "Installed Plugins" },
-        j = { "<cmd>Telescope jumplist<cr>", "Man Pages" },
         k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
+        j = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
         m = { "<cmd>Telescope commands<cr>", "Commands" },
         M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
         p = { "<cmd>lua require('plugins.telescope').projects()<cr>", "Projects" },
@@ -135,6 +135,7 @@ M.config = function()
         },
       },
     },
+    key_desc = {},
   }
 end
 
@@ -156,42 +157,47 @@ M.setup = function()
   which_key.register(mappings, opts)
   which_key.register(vmappings, vopts)
 
-  require("plugins.which_key").add_desc(which_key)
+  require("plugins.which_key").add_desc_group()
 end
 
-M._add_desc = function(wk, keymap, desc, mode, group)
+M.add_desc = function(keymap, desc, mode, group)
+  local status_ok, which_key = pcall(require, "which-key")
+  if not status_ok then
+    print "which-key not loaded"
+    return
+  end
   -- print("setting " .. keymap .. " " .. desc)
   if group then
-    wk.register({ [keymap] = { name = desc } }, { mode = mode })
+    which_key.register({ [keymap] = { name = desc } }, { mode = mode })
   else
-    wk.register({ [keymap] = { desc } }, { mode = mode })
+    which_key.register({ [keymap] = { desc } }, { mode = mode })
   end
 end
 
-M.add_desc = function(wk)
+M.add_desc_group = function()
   for _, exec in pairs(gconf.plugins.terminal.execs) do
-    M._add_desc(wk, exec[2], exec[3], "n")
-    -- M._add_desc(wk, exec[2], exec[3], "t")
+    M.add_desc(exec[2], exec[3], "n")
+    -- M._add_desc(exec[2], exec[3], "t")
   end
-  M._add_desc(wk, "<Leader>t", "Terminal", "n", true)
-  M._add_desc(wk, "<C-\\>", "Terminal", "n")
+  M.add_desc("<Leader>t", "Terminal", "n", true)
+  M.add_desc("<C-\\>", "Terminal", "n")
 
-  M._add_desc(wk, "gc", "Line Comment", "n")
-  M._add_desc(wk, "gcc", "Line Comment", "n")
-  M._add_desc(wk, "gc", "Line Comment", "v")
-  M._add_desc(wk, "gb", "Block Comment", "n")
-  M._add_desc(wk, "gbc", "Block Comment", "n")
-  M._add_desc(wk, "gb", "Block Comment", "v")
+  M.add_desc("gc", "Line Comment", "n")
+  M.add_desc("gcc", "Line Comment", "n")
+  M.add_desc("gc", "Line Comment", "v")
+  M.add_desc("gb", "Block Comment", "n")
+  M.add_desc("gbc", "Block Comment", "n")
+  M.add_desc("gb", "Block Comment", "v")
 
-  M._add_desc(wk, "<C-y>", "Scroll UP Little", "n")
-  M._add_desc(wk, "<C-u>", "Scroll UP Much", "n")
-  M._add_desc(wk, "<C-b>", "Scroll UP Page", "n")
-  M._add_desc(wk, "<C-e>", "Scroll Down Little", "n")
-  M._add_desc(wk, "<C-d>", "Scroll Down Much", "n")
-  M._add_desc(wk, "<C-f>", "Scroll Down Page", "n")
+  M.add_desc("<C-y>", "Scroll UP Little", "n")
+  M.add_desc("<C-u>", "Scroll UP Much", "n")
+  M.add_desc("<C-b>", "Scroll UP Page", "n")
+  M.add_desc("<C-e>", "Scroll Down Little", "n")
+  M.add_desc("<C-d>", "Scroll Down Much", "n")
+  M.add_desc("<C-f>", "Scroll Down Page", "n")
 
-  M._add_desc(wk, "<A-k>", "Move Text Up", "n")
-  M._add_desc(wk, "<A-j>", "Move Text Down", "n")
+  M.add_desc("<A-k>", "Move Text Up", "n")
+  M.add_desc("<A-j>", "Move Text Down", "n")
 end
 
 return M

@@ -1,11 +1,9 @@
 local M = {}
 local Log = require "core.log"
-local path = require "utils.path"
 local autocmds = require "core.autocmds"
 
 M.packers = {
   { "neovim/nvim-lspconfig" },
-  -- { "tamago324/nlsp-settings.nvim" },
   { "jose-elias-alvarez/null-ls.nvim" },
   { "williamboman/nvim-lsp-installer" },
   {
@@ -90,21 +88,18 @@ local function add_lsp_buffer_keybindings(bufnr)
     visual_mode = "v",
   }
 
-  if gconf.plugins.which_key.active then
-    -- Remap using which_key
-    local status_ok, wk = pcall(require, "which-key")
-    if not status_ok then
-      return
-    end
+  -- Remap using which_key
+  local status_ok, wk = pcall(require, "which-key")
+  if status_ok then
     for mode_name, mode_char in pairs(mappings) do
       wk.register(gconf.lsp.buffer_mappings[mode_name], { mode = mode_char, buffer = bufnr })
     end
-  else
-    -- Remap using nvim api
-    for mode_name, mode_char in pairs(mappings) do
-      for key, remap in pairs(gconf.lsp.buffer_mappings[mode_name]) do
-        vim.api.nvim_buf_set_keymap(bufnr, mode_char, key, remap[1], { noremap = true, silent = true })
-      end
+    return
+  end
+  -- Remap using nvim api
+  for mode_name, mode_char in pairs(mappings) do
+    for key, remap in pairs(gconf.lsp.buffer_mappings[mode_name]) do
+      vim.api.nvim_buf_set_keymap(bufnr, mode_char, key, remap[1], { noremap = true, silent = true })
     end
   end
 end
@@ -208,17 +203,6 @@ function M.setup()
   vim.diagnostic.config(config)
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, gconf.lsp.float)
   vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, gconf.lsp.float)
-
-  -- local lsp_settings_status_ok, lsp_settings = pcall(require, "nlspsettings")
-  -- if lsp_settings_status_ok then
-  --   lsp_settings.setup {
-  --     config_home = path.join(path.config_dir, "nlsp-settings"),
-  --     local_settings_dir = ".nlsp-settings",
-  --     local_settings_root_markers = { ".git" },
-  --     append_default_schemas = true,
-  --     loader = "json",
-  --   }
-  -- end
 
   local lsp_installer_status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
   if lsp_installer_status_ok then

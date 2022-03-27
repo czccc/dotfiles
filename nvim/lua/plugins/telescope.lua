@@ -189,6 +189,10 @@ function M.setup()
   require("telescope").load_extension "fzf"
   require("telescope").load_extension "frecency"
   require("telescope").load_extension "file_browser"
+
+  require("core.autocmds").define_augroups {
+    telescope_fold_fix = { { "BufRead", "*", "autocmd BufWinEnter * ++once normal! zx" } },
+  }
 end
 
 local function dropdown_opts()
