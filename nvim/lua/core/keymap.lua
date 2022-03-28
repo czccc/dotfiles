@@ -1,5 +1,4 @@
 local M = {}
-local Log = require "core.log"
 
 local generic_opts_any = { noremap = true, silent = true }
 
@@ -81,6 +80,7 @@ M.config = function()
   gconf.keys.visual_mode = {
     ["p"] = [["_dP]],
     ["c"] = [["_c]],
+    ["s"] = [["_c]],
     ["x"] = [["_x]],
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
