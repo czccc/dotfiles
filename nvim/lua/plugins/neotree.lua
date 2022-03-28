@@ -42,7 +42,7 @@ M.config = function()
       },
       name = {
         trailing_slash = false,
-        use_git_status_colors = true,
+        -- use_git_status_colors = true,
       },
       git_status = {
         symbols = {
@@ -162,14 +162,16 @@ M.setup = function()
   gconf.plugins.which_key.mappings["e"] = { "<cmd>Neotree filesystem reveal<CR>", "Explorer" }
   gconf.plugins.which_key.mappings["E"] = { "<cmd>Neotree toggle<CR>", "Explorer" }
 
-  vim.cmd [[
-highlight! link NeoTreeDirectoryIcon NvimTreeFolderIcon
-highlight! link NeoTreeDirectoryName NvimTreeFolderName
-highlight! link NeoTreeSymbolicLinkTarget NvimTreeSymlink
-highlight! link NeoTreeRootName NvimTreeRootFolder
-highlight! link NeoTreeDirectoryName NvimTreeOpenedFolderName
-highlight! link NeoTreeFileNameOpened NvimTreeOpenedFile
-]]
+  -- vim.cmd [[highlight! link NeoTreeDirectoryIcon NvimTreeFolderIcon]]
+  -- vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeFolderName]]
+  -- vim.cmd [[highlight! link NeoTreeSymbolicLinkTarget NvimTreeSymlink]]
+  -- vim.cmd [[highlight! link NeoTreeRootName NvimTreeRootFolder]]
+  -- vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeOpenedFolderName]]
+  -- vim.cmd [[highlight! link NeoTreeFileNameOpened NvimTreeOpenedFile]]
+
+  vim.cmd [[highlight NeoTreeGitModified guifg=Green]]
+  vim.cmd [[highlight NeoTreeDirectoryName guifg=#51afef]]
+
   require("core.autocmds").define_augroups {
     neotree_tab_key = {
       { "FileType", "neo-tree", "nnoremap <silent> <buffer> <Tab> <C-w>l" },

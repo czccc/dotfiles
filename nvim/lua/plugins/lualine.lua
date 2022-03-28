@@ -21,7 +21,7 @@ local conditions = {
     return vim.fn.winwidth(0) > 80
   end,
   large_window = function()
-    return vim.fn.winwidth(0) > 150
+    return vim.fn.winwidth(0) > 120
   end,
   check_git_workspace = function()
     local filepath = vim.fn.expand "%:p:h"
