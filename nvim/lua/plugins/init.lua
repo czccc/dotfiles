@@ -20,9 +20,12 @@ local plugin_files = {
   "plugins.cmp",
   "plugins.comment",
   "plugins.autopairs",
+  "plugins.hop",
+
   -- "plugins.project",
   "plugins.workspaces",
   "plugins.session",
+
   "plugins.lsp",
   "plugins.dap",
 

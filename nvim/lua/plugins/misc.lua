@@ -58,15 +58,6 @@ M.packers = {
     event = "BufWinEnter",
     disable = false,
   },
-  {
-    "phaazon/hop.nvim",
-    event = "BufRead",
-    cmd = { "HopChar2", "HopWord" },
-    config = function()
-      require("hop").setup()
-    end,
-    disable = false,
-  },
 }
 
 M.config = function() end
