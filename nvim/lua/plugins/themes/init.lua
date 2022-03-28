@@ -174,7 +174,10 @@ M.setup_tokyonight = function()
   vim.g.tokyonight_hide_inactive_statusline = true
   vim.g.tokyonight_dark_sidebar = true
   vim.g.tokyonight_dark_float = true
-  vim.g.tokyonight_colors = { NvimTreeGitDirty = "orange" }
+  vim.g.tokyonight_colors = {
+    -- NvimTreeGitDirty = "orange",
+    -- FocusedSymbol = "Visual",
+  }
 end
 
 return M

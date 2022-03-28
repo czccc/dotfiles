@@ -82,6 +82,7 @@ M.config = function()
         s = { "<cmd>PackerSync<cr>", "Sync" },
         S = { "<cmd>PackerStatus<cr>", "Status" },
         u = { "<cmd>PackerUpdate<cr>", "Update" },
+        r = { "<cmd>lua require('core.pack').reload()<cr>", "Reload" },
       },
       ["f"] = {
         name = "Find Files",

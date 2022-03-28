@@ -42,6 +42,7 @@ local plugin_files = {
 }
 
 M.config = function()
+  gconf.plugins.packers = {}
   for _, plugin_file in ipairs(plugin_files) do
     local status_ok, plugin = pcall(require, plugin_file)
     if not status_ok then

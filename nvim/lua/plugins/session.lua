@@ -10,14 +10,35 @@ M.packer = {
 }
 
 M.setup = function()
-  local function restore_nvim_tree()
+  local function close_explorer()
     local status_ok, nvim_tree = pcall(require, "nvim-tree")
-    if not status_ok then
+    if status_ok then
+      pcall(nvim_tree.change_dir, vim.fn.getcwd())
+      pcall(nvim_tree.toggle, false, false)
+      -- require("nvim-tree.actions.reloaders").reload_explorer()
+    end
+    local neotree_status_ok, neotree = pcall(require, "neo-tree.command")
+    if neotree_status_ok then
+      pcall(neotree.execute, { action = "close" })
+      -- pcall(vim.cmd [[tabdo Neotree close]])
+    end
+    pcall(vim.cmd [[tabdo SymbolsOutlineClose]])
+    pcall(vim.cmd [[tabdo SidebarNvimClose]])
+  end
+  local function restore_explorer()
+    local status_ok, nvim_tree = pcall(require, "nvim-tree")
+    if status_ok then
+      pcall(nvim_tree.change_dir, vim.fn.getcwd())
+      pcall(nvim_tree.toggle, false, false)
+      -- require("nvim-tree.actions.reloaders").reload_explorer()
       return
     end
-    pcall(nvim_tree.change_dir, vim.fn.getcwd())
-    pcall(nvim_tree.toggle, false, false)
-    -- require("nvim-tree.actions.reloaders").reload_explorer()
+    local neotree_status_ok, neotree = pcall(require, "neo-tree.command")
+    if neotree_status_ok then
+      pcall(neotree.execute, { action = "close" })
+      pcall(neotree.execute, { action = "show" })
+      return
+    end
   end
 
   local status_ok, auto_session = pcall(require, "auto-session")
@@ -36,7 +57,8 @@ M.setup = function()
     auto_session_suppress_dirs = nil,
     -- the configs below are lua only
     bypass_session_save_file_types = { "Outline", "NvimTree", "neo-tree" },
-    post_restore_cmds = { restore_nvim_tree },
+    pre_save_cmds = { close_explorer },
+    post_restore_cmds = { restore_explorer },
   }
 end
 

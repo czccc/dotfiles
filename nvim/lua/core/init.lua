@@ -1,5 +1,5 @@
 local M = {}
-local Log = require "core.log"
+-- local Log = require "core.log"
 
 if vim.fn.has "nvim-0.6.1" ~= 1 then
   vim.notify("Please upgrade your Neovim base installation. Lunarvim requires v0.6.1+", vim.log.levels.WARN)
@@ -24,7 +24,7 @@ M.config = function()
   require("core.keymap").config()
   require("core.autocmds").config()
   require("core.pack").config()
-  require("plugins").config()
+  -- require("plugins").config()
 
   require("core.osconf").config()
 end
@@ -35,7 +35,7 @@ M.setup = function()
   require("core.keymap").setup()
   require("core.autocmds").setup()
   require("core.pack").setup()
-  require("plugins").setup()
+  -- require("plugins").setup()
 end
 
 return M

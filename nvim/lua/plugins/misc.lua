@@ -20,7 +20,7 @@ M.packers = {
     "yamatsum/nvim-cursorline",
     opt = true,
     event = "BufWinEnter",
-    disable = false,
+    disable = true,
   },
   {
     "norcalli/nvim-colorizer.lua",

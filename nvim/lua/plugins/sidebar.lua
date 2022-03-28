@@ -44,6 +44,7 @@ M.setup_symbol = function()
     lsp_blacklist = {},
     symbol_blacklist = {},
   }
+  vim.cmd [[ highlight! link FocusedSymbol Visual ]]
 end
 
 M.setup_sidebar = function()

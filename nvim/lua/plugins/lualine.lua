@@ -387,6 +387,19 @@ M.config = function()
           lualine_c = {
             {
               function()
+                return vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
+              end,
+              color = { gui = "bold" },
+            },
+          },
+        },
+        filetypes = { "neo-tree" },
+      },
+      {
+        sections = {
+          lualine_c = {
+            {
+              function()
                 return "ToggleTerm #" .. vim.b.toggle_number
               end,
               color = { fg = colors.blue, gui = "bold" },

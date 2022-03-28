@@ -43,18 +43,22 @@ function M.init()
       end,
     },
   }
-
-  -- if not in_headless then
-  -- 	vim.cmd([[autocmd User PackerComplete lua require('lvim.utils.hooks').run_on_packer_complete()]])
-  -- end
 end
 
 function M.config()
   M.init()
+  require("plugins").config()
 end
 
 function M.setup()
   M.load(gconf.plugins.packers)
+  require("plugins").setup()
+end
+
+function M.reload()
+  require("plugins").config()
+  M.load(gconf.plugins.packers)
+  require("plugins").setup()
 end
 
 function M.load(configurations)
@@ -70,10 +74,6 @@ function M.load(configurations)
       use { "wbthomason/packer.nvim" }
       for _, plugin in pairs(configurations) do
         use(plugin)
-        -- if plugin.packer then
-        -- 	use(plugin)
-        -- 	-- print(plugin.packer)
-        -- end
       end
     end)
   end, debug.traceback)
