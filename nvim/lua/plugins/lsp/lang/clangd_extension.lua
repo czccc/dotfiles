@@ -3,12 +3,12 @@ local M = {}
 M.packer = {
   "p00f/clangd_extensions.nvim",
   config = function()
-    require("plugins.lsp.lang.clangd_extension").config()
+    require("plugins.lsp.lang.clangd_extension").setup()
   end,
   ft = { "c", "cpp", "objc", "objcpp" },
 }
 
-M.config = function()
+M.setup = function()
   local status_ok, clangd_extensions = pcall(require, "clangd_extensions")
   if not status_ok then
     return
@@ -34,9 +34,9 @@ M.config = function()
       -- options to pass to nvim-lspconfig
       -- i.e. the arguments to require("lspconfig").clangd.setup({})
       cmd = { "clangd", unpack(clangd_flags) },
-      on_attach = require("lvim.lsp").common_on_attach,
-      on_init = require("lvim.lsp").common_on_init,
-      capabilities = require("lvim.lsp").common_capabilities(),
+      on_attach = require("plugins.lsp").common_on_attach,
+      on_init = require("plugins.lsp").common_on_init,
+      capabilities = require("plugins.lsp").common_capabilities(),
     },
     extensions = {
       -- defaults:

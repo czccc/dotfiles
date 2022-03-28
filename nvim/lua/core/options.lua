@@ -32,6 +32,7 @@ M.config = function()
     completeopt = { "menuone", "noselect" },
     conceallevel = 0, -- so that `` is visible in markdown files
     fileencoding = "utf-8", -- the encoding written to a file
+    fileformats = "unix,mac,dos",
     foldexpr = "", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
     foldmethod = "manual", -- folding, set to "expr" for treesitter based folding
     -- foldexpr = "nvim_treesitter#foldexpr()",

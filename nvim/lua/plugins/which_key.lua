@@ -183,10 +183,10 @@ M.add_desc_group = function()
   M.add_desc("<Leader>t", "Terminal", "n", true)
   M.add_desc("<C-\\>", "Terminal", "n")
 
-  M.add_desc("gc", "Line Comment", "n")
+  M.add_desc("gc", "Line Comment", "n", true)
   M.add_desc("gcc", "Line Comment", "n")
   M.add_desc("gc", "Line Comment", "v")
-  M.add_desc("gb", "Block Comment", "n")
+  M.add_desc("gb", "Block Comment", "n", true)
   M.add_desc("gbc", "Block Comment", "n")
   M.add_desc("gb", "Block Comment", "v")
 

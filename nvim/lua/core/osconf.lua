@@ -18,6 +18,10 @@ M.config = function()
     end
     Log:debug("Set sqlite dll path in Windows: " .. sqlite_path)
     vim.g.sqlite_clib_path = sqlite_path
+
+    gconf.plugins.neotree.filesystem.filtered_items.hide_gitignored = false
+    gconf.plugins.neotree.filesystem.follow_current_file = false
+    gconf.plugins.neotree.filesystem.use_libuv_file_watcher = false
   end
 end
 

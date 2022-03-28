@@ -71,13 +71,7 @@ M.config = function()
         ["S"] = "open_split",
         ["s"] = "open_vsplit",
         ["C"] = "close_node",
-        ["<bs>"] = "navigate_up",
-        ["."] = "set_root",
-        ["H"] = "toggle_hidden",
         ["R"] = "refresh",
-        ["/"] = "fuzzy_finder",
-        ["f"] = "filter_on_submit",
-        ["<c-x>"] = "clear_filter",
         ["a"] = "add",
         ["A"] = "add_directory",
         ["d"] = "delete",
@@ -93,6 +87,17 @@ M.config = function()
     nesting_rules = {},
     filesystem = {
       bind_to_cwd = true,
+      window = {
+        mappings = {
+          ["H"] = "toggle_hidden",
+          ["/"] = "fuzzy_finder",
+          --["/"] = "filter_as_you_type", -- this was the default until v1.28
+          ["f"] = "filter_on_submit",
+          ["<C-x>"] = "clear_filter",
+          ["<bs>"] = "navigate_up",
+          ["."] = "set_root",
+        },
+      },
       filtered_items = {
         visible = true, -- when true, they will just be displayed differently than normal items
         hide_dotfiles = false,
@@ -121,6 +126,8 @@ M.config = function()
       show_unloaded = true,
       window = {
         mappings = {
+          ["<bs>"] = "navigate_up",
+          ["."] = "set_root",
           ["bd"] = "buffer_delete",
         },
       },
