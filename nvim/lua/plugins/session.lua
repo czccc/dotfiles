@@ -5,7 +5,7 @@ M.packer = {
   config = function()
     require("plugins.session").setup()
   end,
-  after = { "nvim-tree.lua" },
+  -- after = { "nvim-tree.lua" },
   disable = false,
 }
 
@@ -35,7 +35,7 @@ M.setup = function()
     auto_restore_enabled = true,
     auto_session_suppress_dirs = nil,
     -- the configs below are lua only
-    bypass_session_save_file_types = { "Outline", "NvimTree" },
+    bypass_session_save_file_types = { "Outline", "NvimTree", "neo-tree" },
     post_restore_cmds = { restore_nvim_tree },
   }
 end

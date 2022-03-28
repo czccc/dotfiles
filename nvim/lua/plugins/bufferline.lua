@@ -115,6 +115,12 @@ M.config = function()
           padding = 1,
         },
         {
+          filetype = "neo-tree",
+          text = "Explorer",
+          highlight = "PanelHeading",
+          padding = 1,
+        },
+        {
           filetype = "NvimTree",
           text = "Explorer",
           highlight = "PanelHeading",

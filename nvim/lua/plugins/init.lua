@@ -8,7 +8,8 @@ local plugin_files = {
 
   "plugins.themes",
 
-  "plugins.nvim_tree",
+  -- "plugins.nvim_tree",
+  "plugins.neotree",
   "plugins.bufferline",
   "plugins.gitsigns",
   "plugins.lualine",
