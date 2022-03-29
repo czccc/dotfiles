@@ -22,6 +22,8 @@ local plugin_files = {
   "plugins.autopairs",
   "plugins.hop",
 
+  "plugins.tmux",
+
   -- "plugins.project",
   "plugins.workspaces",
   "plugins.session",

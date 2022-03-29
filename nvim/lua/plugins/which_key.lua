@@ -135,6 +135,9 @@ M.config = function()
           d = { "<cmd>DeleteSession<cr>", "DeleteSession" },
         },
       },
+      ["t"] = {
+        name = "Termianl",
+      },
     },
     key_desc = {},
   }
@@ -180,7 +183,6 @@ M.add_desc_group = function()
     M.add_desc(exec[2], exec[3], "n")
     -- M._add_desc(exec[2], exec[3], "t")
   end
-  M.add_desc("<Leader>t", "Terminal", "n", true)
   M.add_desc("<C-\\>", "Terminal", "n")
 
   M.add_desc("gc", "Line Comment", "n", true)

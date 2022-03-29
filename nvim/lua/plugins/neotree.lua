@@ -42,19 +42,22 @@ M.config = function()
       },
       name = {
         trailing_slash = false,
-        -- use_git_status_colors = true,
+        use_git_status_colors = true,
       },
       git_status = {
         symbols = {
           -- Change type
           added = "✚",
           deleted = "✖",
-          modified = "",
+          -- modified = "",
+          modified = "",
           renamed = "",
           -- Status type
-          untracked = "",
+          -- untracked = "",
+          untracked = "✚",
           ignored = "",
-          unstaged = "",
+          -- unstaged = "",
+          unstaged = "",
           staged = "",
           conflict = "",
         },
@@ -82,6 +85,37 @@ M.config = function()
         ["c"] = "copy", -- takes text input for destination
         ["m"] = "move", -- takes text input for destination
         ["q"] = "close_window",
+      },
+    },
+    renderers = {
+      directory = {
+        { "indent" },
+        { "icon" },
+        { "current_filter" },
+        { "name" },
+        -- {
+        --   "symlink_target",
+        --   highlight = "NeoTreeSymbolicLinkTarget",
+        -- },
+        { "clipboard" },
+        { "diagnostics", errors_only = true },
+        --{ "git_status" },
+      },
+      file = {
+        { "indent" },
+        { "icon" },
+        {
+          "name",
+          use_git_status_colors = true,
+        },
+        -- {
+        --   "symlink_target",
+        --   highlight = "NeoTreeSymbolicLinkTarget",
+        -- },
+        { "bufnr" },
+        { "clipboard" },
+        { "diagnostics" },
+        { "git_status" },
       },
     },
     nesting_rules = {},
