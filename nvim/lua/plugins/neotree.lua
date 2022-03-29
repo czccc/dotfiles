@@ -169,8 +169,10 @@ M.setup = function()
   -- vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeOpenedFolderName]]
   -- vim.cmd [[highlight! link NeoTreeFileNameOpened NvimTreeOpenedFile]]
 
-  vim.cmd [[highlight NeoTreeGitModified guifg=Green]]
-  vim.cmd [[highlight NeoTreeDirectoryName guifg=#51afef]]
+  vim.cmd [[ highlight NeoTreeGitModified guifg=#948B60 ]]
+  vim.cmd [[ highlight NeoTreeGitAdded guifg=#109868 ]]
+  vim.cmd [[ highlight NeoTreeDirectoryName guifg=#51afef ]]
+  vim.cmd [[ highlight NeoTreeCursorLine guibg=#323842 ]]
 
   require("core.autocmds").define_augroups {
     neotree_tab_key = {
