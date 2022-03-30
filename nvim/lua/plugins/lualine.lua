@@ -85,7 +85,7 @@ local components = {
       return icons.normal
     end,
     color = { fg = colors.blue, gui = "bold" },
-    padding = { left = 0, right = 1 },
+    padding = { left = 1, right = 1 },
   },
   branch = {
     "b:gitsigns_head",
@@ -234,8 +234,8 @@ local components = {
   encoding = {
     "o:encoding",
     fmt = string.upper,
-    color = { fg = colors.green },
-    cond = conditions.large_window,
+    color = { fg = colors.orange },
+    cond = conditions.wide_window,
   },
   fileformat = {
     "fileformat",
@@ -346,7 +346,7 @@ M.config = function()
       lualine_x = {
         components.diagnostics,
         components.lsp,
-        components.treesitter,
+        -- components.treesitter,
         components.encoding,
         components.fileformat,
         components.spaces,

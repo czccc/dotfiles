@@ -76,10 +76,11 @@ M.setup = function()
 
     M.add_exec(opts)
   end
-
-  if gconf.plugins.terminal.on_config_done then
-    gconf.plugins.terminal.on_config_done(terminal)
-  end
+  require("core.autocmds").define_augroups {
+    term_open = {
+      { "TermOpen", "term://*", "lua require('plugins.toggleterm').set_terminal_keymaps()" },
+    },
+  }
 end
 
 M.set_terminal_keymaps = function()
@@ -118,7 +119,7 @@ M.add_exec = function(opts)
     return
   end
   wk.register({ [opts.keymap] = { opts.label } }, { mode = "n" })
-  wk.register({ [opts.keymap] = { opts.label } }, { mode = "t" })
+  -- wk.register({ [opts.keymap] = { opts.label } }, { mode = "t" })
 end
 
 M._exec_toggle = function(opts)

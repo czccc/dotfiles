@@ -37,6 +37,7 @@ M.setup = function()
     if neotree_status_ok then
       pcall(neotree.execute, { action = "close" })
       pcall(neotree.execute, { action = "show" })
+      pcall(vim.cmd, vim.api.nvim_replace_termcodes("normal <C-w>=", true, true, true))
       return
     end
   end

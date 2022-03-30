@@ -46,10 +46,6 @@ M.config = function()
     _general_lsp = {
       { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" },
     },
-    -- toggleterm
-    _term_open = {
-      { "TermOpen", "term://*", "lua require('plugins.toggleterm').set_terminal_keymaps()" },
-    },
     -- code_lens
     -- _code_lens = {
     --   { "CursorHold", "*.rs,*.go,*.ts,*.tsx", "lua require('nvim-lightbulb').update_lightbulb()" },

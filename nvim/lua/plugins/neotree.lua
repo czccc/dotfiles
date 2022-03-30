@@ -19,6 +19,48 @@ M.config = function()
     popup_border_style = "rounded",
     enable_git_status = true,
     enable_diagnostics = true,
+    event_handlers = {
+      -- {
+      --   event = "vim_win_enter",
+      --   handler = function()
+      --     -- pcall(vim.cmd, vim.api.nvim_replace_termcodes("normal <C-w>=", true, true, true))
+      --   end,
+      -- },
+      --  {
+      --    event = "before_render",
+      --    handler = function (state)
+      --      -- add something to the state that can be used by custom components
+      --    end
+      --  },
+      --  {
+      --    event = "file_opened",
+      --    handler = function(file_path)
+      --      --auto close
+      --      require("neo-tree").close_all()
+      --    end
+      --  },
+      --  {
+      --    event = "file_opened",
+      --    handler = function(file_path)
+      --      --clear search after opening a file
+      --      require("neo-tree.sources.filesystem").reset_search()
+      --    end
+      --  },
+      --  {
+      --    event = "file_renamed",
+      --    handler = function(args)
+      --      -- fix references to file
+      --      print(args.source, " renamed to ", args.destination)
+      --    end
+      --  },
+      --  {
+      --    event = "file_moved",
+      --    handler = function(args)
+      --      -- fix references to file
+      --      print(args.source, " moved to ", args.destination)
+      --    end
+      --  },
+    },
     default_component_configs = {
       indent = {
         indent_size = 2,
@@ -71,6 +113,7 @@ M.config = function()
         ["<Tab>"] = "none",
         ["<2-LeftMouse>"] = "open",
         ["<cr>"] = "open",
+        ["o"] = "open",
         ["S"] = "open_split",
         ["s"] = "open_vsplit",
         ["C"] = "close_node",
@@ -85,6 +128,20 @@ M.config = function()
         ["c"] = "copy", -- takes text input for destination
         ["m"] = "move", -- takes text input for destination
         ["q"] = "close_window",
+        ["J"] = function(state)
+          local tree = state.tree
+          local node = tree:get_node()
+          local siblings = tree:get_nodes(node:get_parent_id())
+          local renderer = require "neo-tree.ui.renderer"
+          renderer.focus_node(state, siblings[#siblings]:get_id())
+        end,
+        ["K"] = function(state)
+          local tree = state.tree
+          local node = tree:get_node()
+          local siblings = tree:get_nodes(node:get_parent_id())
+          local renderer = require "neo-tree.ui.renderer"
+          renderer.focus_node(state, siblings[1]:get_id())
+        end,
       },
     },
     renderers = {
@@ -186,9 +243,9 @@ end
 M.setup = function()
   vim.cmd [[ let g:neo_tree_remove_legacy_commands = 1 ]]
 
-  vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
-  vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
-  vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+  vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
+  vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+  vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
   vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
   require("neo-tree").setup(gconf.plugins.neotree)
@@ -196,17 +253,17 @@ M.setup = function()
   gconf.plugins.which_key.mappings["e"] = { "<cmd>Neotree filesystem reveal<CR>", "Explorer" }
   gconf.plugins.which_key.mappings["E"] = { "<cmd>Neotree toggle<CR>", "Explorer" }
 
-  -- vim.cmd [[highlight! link NeoTreeDirectoryIcon NvimTreeFolderIcon]]
-  -- vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeFolderName]]
-  -- vim.cmd [[highlight! link NeoTreeSymbolicLinkTarget NvimTreeSymlink]]
-  -- vim.cmd [[highlight! link NeoTreeRootName NvimTreeRootFolder]]
-  -- vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeOpenedFolderName]]
-  -- vim.cmd [[highlight! link NeoTreeFileNameOpened NvimTreeOpenedFile]]
+  vim.cmd [[highlight! link NeoTreeDirectoryIcon NvimTreeFolderIcon]]
+  vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeFolderName]]
+  vim.cmd [[highlight! link NeoTreeSymbolicLinkTarget NvimTreeSymlink]]
+  vim.cmd [[highlight! link NeoTreeRootName NvimTreeRootFolder]]
+  vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeOpenedFolderName]]
+  vim.cmd [[highlight! link NeoTreeFileNameOpened NvimTreeOpenedFile]]
 
-  vim.cmd [[ highlight NeoTreeGitModified guifg=#948B60 ]]
-  vim.cmd [[ highlight NeoTreeGitAdded guifg=#109868 ]]
-  vim.cmd [[ highlight NeoTreeDirectoryName guifg=#51afef ]]
-  vim.cmd [[ highlight NeoTreeCursorLine guibg=#323842 ]]
+  -- vim.cmd [[ highlight NeoTreeGitModified guifg=Orange ]]
+  -- vim.cmd [[ highlight NeoTreeGitAdded guifg=#109868 ]]
+  -- vim.cmd [[ highlight NeoTreeDirectoryName guifg=#51afef ]]
+  -- vim.cmd [[ highlight NeoTreeCursorLine guibg=#323842 ]]
 
   require("core.autocmds").define_augroups {
     neotree_tab_key = {
