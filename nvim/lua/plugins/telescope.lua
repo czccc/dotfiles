@@ -201,7 +201,7 @@ local function dropdown_opts()
     layout_config = {
       prompt_position = "top",
       width = 80,
-      height = 12,
+      height = 20,
     },
     borderchars = {
       prompt = { "─", "│", " ", "│", "╭", "╮", "│", "│" },

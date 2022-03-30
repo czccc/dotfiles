@@ -123,12 +123,11 @@ local components = {
       end
     end,
     symbols = { added = " ", modified = " ", removed = " " },
-    diff_color = {
-      added = { fg = colors.green },
-      modified = { fg = colors.yellow },
-      removed = { fg = colors.red },
-    },
-    color = {},
+    -- diff_color = {
+    --   added = { fg = colors.green },
+    --   modified = { fg = colors.yellow },
+    --   removed = { fg = colors.red },
+    -- },
     padding = { left = 0, right = 0 },
     cond = nil,
   },
@@ -136,7 +135,6 @@ local components = {
     "diagnostics",
     sources = { "nvim_diagnostic" },
     symbols = { error = " ", warn = " ", info = " ", hint = " " },
-    color = {},
     cond = conditions.wide_window,
   },
   treesitter = {
@@ -310,7 +308,6 @@ local components = {
     end,
     padding = { left = 0, right = 0 },
     color = { fg = colors.blue },
-    -- color = { fg = colors.blue, bg = colors.bg },
     cond = nil,
   },
 }

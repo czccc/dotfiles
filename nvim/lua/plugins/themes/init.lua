@@ -125,7 +125,10 @@ M.setup_onedark = function()
 
     -- Custom Highlights --
     colors = {}, -- Override default colors
-    highlights = {}, -- Override highlight groups
+    highlights = {
+      StatusLine = { bg = "#2d3343" },
+      -- StatusLineNC = { bg = "#2d3343" },
+    }, -- Override highlight groups
 
     -- Plugins Config --
     diagnostics = {
