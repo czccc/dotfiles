@@ -5,6 +5,7 @@ local plugin_files = {
   "plugins.which_key",
   "plugins.misc",
   "plugins.notify",
+  "plugins.hop",
 
   "plugins.themes",
 
@@ -13,16 +14,16 @@ local plugin_files = {
   "plugins.bufferline",
   "plugins.gitsigns",
   "plugins.lualine",
-  "plugins.toggleterm",
+  "plugins.autopairs",
+
   "plugins.telescope",
   "plugins.treesitter",
   "plugins.trouble",
   "plugins.cmp",
   "plugins.comment",
-  "plugins.autopairs",
-  "plugins.hop",
 
   "plugins.tmux",
+  "plugins.toggleterm",
 
   -- "plugins.project",
   "plugins.workspaces",
@@ -44,6 +45,8 @@ local plugin_files = {
   "plugins.sidebar",
   "plugins.todo",
   "plugins.zenmode",
+
+  "plugins.copilot",
 }
 
 M.config = function()

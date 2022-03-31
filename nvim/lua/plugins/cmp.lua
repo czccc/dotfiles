@@ -191,8 +191,6 @@ end
 
 M.methods.jumpable = jumpable
 
-
-
 M.config = function()
   local status_cmp_ok, cmp = pcall(require, "cmp")
   if not status_cmp_ok then
@@ -215,6 +213,7 @@ M.config = function()
     experimental = {
       ghost_text = true,
       native_menu = false,
+      custom_menu = true,
     },
     formatting = {
       fields = { "kind", "abbr", "menu" },
@@ -280,11 +279,11 @@ M.config = function()
     },
     sources = {
       { name = "nvim_lsp" },
-      { name = "path" },
-      { name = "luasnip" },
+      { name = "path", max_item_count = 5 },
+      { name = "luasnip", max_item_count = 3 },
       { name = "cmp_tabnine" },
       { name = "nvim_lua" },
-      { name = "buffer" },
+      { name = "buffer", max_item_count = 5 },
       { name = "calc" },
       { name = "emoji" },
       { name = "treesitter" },

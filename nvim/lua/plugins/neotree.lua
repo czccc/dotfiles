@@ -21,45 +21,23 @@ M.config = function()
     enable_diagnostics = true,
     event_handlers = {
       -- {
-      --   event = "vim_win_enter",
+      --   event = "neo_tree_buffer_enter",
       --   handler = function()
-      --     -- pcall(vim.cmd, vim.api.nvim_replace_termcodes("normal <C-w>=", true, true, true))
+      --     pcall(vim.cmd, vim.api.nvim_replace_termcodes("normal <C-w>=", true, true, true))
       --   end,
       -- },
-      --  {
-      --    event = "before_render",
-      --    handler = function (state)
-      --      -- add something to the state that can be used by custom components
-      --    end
-      --  },
-      --  {
-      --    event = "file_opened",
-      --    handler = function(file_path)
-      --      --auto close
-      --      require("neo-tree").close_all()
-      --    end
-      --  },
-      --  {
-      --    event = "file_opened",
-      --    handler = function(file_path)
-      --      --clear search after opening a file
-      --      require("neo-tree.sources.filesystem").reset_search()
-      --    end
-      --  },
-      --  {
-      --    event = "file_renamed",
-      --    handler = function(args)
-      --      -- fix references to file
-      --      print(args.source, " renamed to ", args.destination)
-      --    end
-      --  },
-      --  {
-      --    event = "file_moved",
-      --    handler = function(args)
-      --      -- fix references to file
-      --      print(args.source, " moved to ", args.destination)
-      --    end
-      --  },
+      {
+        event = "neo_tree_buffer_enter",
+        handler = function()
+          vim.cmd "highlight! Cursor blend=100"
+        end,
+      },
+      {
+        event = "neo_tree_buffer_leave",
+        handler = function()
+          vim.cmd "highlight! Cursor guibg=#5f87af blend=0"
+        end,
+      },
     },
     default_component_configs = {
       indent = {

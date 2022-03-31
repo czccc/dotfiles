@@ -21,7 +21,7 @@ local conditions = {
     return vim.fn.winwidth(0) > 80
   end,
   large_window = function()
-    return vim.fn.winwidth(0) > 120
+    return vim.fn.winwidth(0) > 140
   end,
   check_git_workspace = function()
     local filepath = vim.fn.expand "%:p:h"
@@ -199,9 +199,13 @@ local components = {
       -- local spinners = { " ", " ", " ", " ", " ", " ", " ", " ", " " }
       local ms = vim.loop.hrtime() / 1000000
       local frame = math.floor(ms / 60) % #spinners
-      return spinners[frame + 1] .. " " .. table.concat(status, " | ")
+      if not conditions.large_window() then
+        return spinners[frame + 1]
+      else
+        return spinners[frame + 1] .. " " .. table.concat(status, " | ")
+      end
     end,
-    cond = conditions.large_window,
+    -- cond = conditions.large_window,
   },
   location = {
     "location",
