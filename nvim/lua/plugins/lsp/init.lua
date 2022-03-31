@@ -12,6 +12,24 @@ M.packers = {
       require("plugins.lsp.renamer").config()
     end,
   },
+  {
+    "folke/lua-dev.nvim",
+    module = "lua-dev",
+  },
+  {
+    "simrat39/rust-tools.nvim",
+    config = function()
+      require("plugins.lsp.lang.rust_tools").setup()
+    end,
+    ft = { "rust", "rs" },
+  },
+  {
+    "p00f/clangd_extensions.nvim",
+    config = function()
+      require("plugins.lsp.lang.clangd_extension").setup()
+    end,
+    ft = { "c", "cpp", "objc", "objcpp" },
+  },
 }
 
 M.config = function()
@@ -36,8 +54,6 @@ M.config = function()
     r = { "<cmd>lua require('plugins.telescope').lsp_references()<CR>", "Goto references" },
     i = { "<cmd>lua require('plugins.telescope').lsp_implementations()<CR>", "Goto Implementation" },
     h = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", "show signature help" },
-
-    v = { "<cmd>ClangdSwitchSourceHeader<CR>", "show signature help" },
 
     p = {
       name = "Peek",

@@ -20,6 +20,9 @@ M.packers = {
   {
     "nvim-telescope/telescope-file-browser.nvim",
   },
+  {
+    "nvim-telescope/telescope-ui-select.nvim",
+  },
 }
 
 function M.config()
@@ -150,6 +153,11 @@ function M.config()
       frecency = {
         -- show_scores = true,
       },
+      ["ui-select"] = {
+        require("telescope.themes").get_dropdown {
+          -- even more opts
+        },
+      },
     },
   }
 end
@@ -189,6 +197,7 @@ function M.setup()
   require("telescope").load_extension "fzf"
   require("telescope").load_extension "frecency"
   require("telescope").load_extension "file_browser"
+  require("telescope").load_extension "ui-select"
 
   require("core.autocmds").define_augroups {
     telescope_fold_fix = { { "BufRead", "*", "autocmd BufWinEnter * ++once normal! zx" } },

@@ -32,8 +32,8 @@ local plugin_files = {
   "plugins.lsp",
   "plugins.dap",
 
-  "plugins.lsp.lang.clangd_extension",
-  "plugins.lsp.lang.rust_tools",
+  -- "plugins.lsp.lang.clangd_extension",
+  -- "plugins.lsp.lang.rust_tools",
 
   -- "plugins.alpha",
   -- "plugins.bqf",

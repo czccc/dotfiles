@@ -138,6 +138,9 @@ M.config = function()
       ["t"] = {
         name = "Termianl",
       },
+      ["m"] = {
+        name = "Module",
+      },
     },
     key_desc = {},
   }

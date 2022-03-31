@@ -1,13 +1,5 @@
 local M = {}
 
-M.packer = {
-  "p00f/clangd_extensions.nvim",
-  config = function()
-    require("plugins.lsp.lang.clangd_extension").setup()
-  end,
-  ft = { "c", "cpp", "objc", "objcpp" },
-}
-
 M.setup = function()
   local status_ok, clangd_extensions = pcall(require, "clangd_extensions")
   if not status_ok then
@@ -76,6 +68,15 @@ M.setup = function()
       },
     },
   }
+
+  local status_ok_wk, which_key = pcall(require, "which-key")
+  if status_ok_wk then
+    which_key.register({
+      ["m"] = {
+        s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch Source Header" },
+      },
+    }, gconf.plugins.which_key.opts)
+  end
 end
 
 return M

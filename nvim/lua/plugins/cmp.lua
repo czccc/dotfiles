@@ -32,10 +32,6 @@ M.packers = {
     "hrsh7th/cmp-path",
   },
   {
-    "folke/lua-dev.nvim",
-    module = "lua-dev",
-  },
-  {
     "danymat/neogen",
     config = function()
       require("neogen").setup { snippet_engine = "luasnip" }
