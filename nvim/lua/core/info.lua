@@ -102,6 +102,9 @@ end
 
 local function make_override_info(ft)
   local available = lsp_utils.get_supported_servers_per_filetype(ft)
+  if not available then
+    return { "" }
+  end
   local overridden = vim.tbl_filter(function(name)
     return vim.tbl_contains(available, name)
   end, gconf.lsp.override)
