@@ -122,6 +122,7 @@ M.config = function()
       },
       ["u"] = {
         name = "Utils",
+        i = { "<cmd>lua require('core.info').toggle_popup(vim.bo.filetype)<cr>", "Info" },
         z = { "<cmd>ZenMode<cr>", "Zen Mode" },
         s = { "<cmd>SymbolsOutline<cr>", "Symbol Outline" },
         D = { "<cmd>DiffviewFileHistory<cr>", "diffview: diff HEAD" },
