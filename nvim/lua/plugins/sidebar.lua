@@ -5,7 +5,7 @@ M.packers = {
     setup = function()
       require("plugins.sidebar").setup_symbol()
     end,
-    event = "BufRead",
+    -- event = "BufRead",
     cmd = "SymbolsOutline",
     disable = false,
   },
@@ -14,7 +14,7 @@ M.packers = {
     config = function()
       require("plugins.sidebar").setup_sidebar()
     end,
-    event = "BufRead",
+    -- event = "BufRead",
     cmd = "SidebarNvimToggle",
     disable = false,
   },
@@ -27,7 +27,7 @@ M.setup_symbol = function()
     auto_preview = false,
     position = "right",
     relative_width = true,
-    width = 15,
+    width = 12,
     show_numbers = false,
     show_relative_numbers = false,
     show_symbol_details = true,
