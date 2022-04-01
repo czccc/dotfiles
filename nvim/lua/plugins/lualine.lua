@@ -414,8 +414,17 @@ M.config = function()
         filetypes = { "Outline" },
       },
       {
-        sections = { lualine_c = { { "filetype", color = { gui = "bold" } } } },
-        filetypes = { "Sidebar" },
+        sections = {
+          lualine_c = {
+            {
+              function()
+                return "Sidebar"
+              end,
+              color = { gui = "bold" },
+            },
+          },
+        },
+        filetypes = { "SidebarNvim" },
       },
     },
   }

@@ -5,7 +5,7 @@ M.packers = {
     setup = function()
       require("plugins.sidebar").setup_symbol()
     end,
-    event = "BufReadPost",
+    event = "BufRead",
     cmd = "SymbolsOutline",
     disable = false,
   },

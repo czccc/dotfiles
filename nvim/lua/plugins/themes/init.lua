@@ -117,16 +117,18 @@ M.setup_onedark = function()
     -- You can configure multiple style with comma seperated, For e.g., keywords = 'italic,bold'
     code_style = {
       comments = "italic",
-      keywords = "none",
-      functions = "none",
-      strings = "none",
-      variables = "none",
+      -- keywords = "none",
+      -- functions = "none",
+      -- strings = "none",
+      -- variables = "none",
     },
 
     -- Custom Highlights --
     colors = {}, -- Override default colors
     highlights = {
       StatusLine = { bg = "#2d3343" },
+      Visual = { bg = "#404859" },
+      -- FocusedSymbol = { bg = "#404859" },
       -- StatusLineNC = { bg = "#2d3343" },
     }, -- Override highlight groups
 
