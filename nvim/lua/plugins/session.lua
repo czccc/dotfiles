@@ -22,8 +22,8 @@ M.setup = function()
       pcall(neotree.execute, { action = "close" })
       -- pcall(vim.cmd [[tabdo Neotree close]])
     end
-    pcall(vim.cmd [[tabdo SymbolsOutlineClose]])
-    pcall(vim.cmd [[tabdo SidebarNvimClose]])
+    pcall(vim.cmd, [[tabdo SymbolsOutlineClose]])
+    pcall(vim.cmd, [[tabdo SidebarNvimClose]])
   end
   local function restore_explorer()
     local status_ok, nvim_tree = pcall(require, "nvim-tree")

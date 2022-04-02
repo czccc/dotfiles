@@ -6,7 +6,7 @@ M.packers = {
       require("plugins.sidebar").setup_symbol()
     end,
     -- event = "BufRead",
-    cmd = "SymbolsOutline",
+    cmd = { "SymbolsOutline", "SymbolsOutlineClose" },
     disable = false,
   },
   {
@@ -15,7 +15,7 @@ M.packers = {
       require("plugins.sidebar").setup_sidebar()
     end,
     -- event = "BufRead",
-    cmd = "SidebarNvimToggle",
+    cmd = { "SidebarNvimToggle", "SidebarNvimClose" },
     disable = false,
   },
 }

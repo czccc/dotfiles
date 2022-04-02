@@ -24,6 +24,7 @@ local plugin_files = {
 
   "plugins.tmux",
   "plugins.toggleterm",
+  "plugins.async",
 
   -- "plugins.project",
   "plugins.workspaces",

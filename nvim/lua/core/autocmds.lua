@@ -28,6 +28,12 @@ M.config = function()
         "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
       },
     },
+    _terminal_job = {
+      -- { "TermOpen", "*", "startinsert" },
+      { "TermOpen", "*", "setlocal nonumber norelativenumber" },
+      -- { "TermLeave", "*", "exe 'BufDel'..expand('<abuf>')" },
+      -- { "TermClose", "*", "bf" },
+    },
     _filetypechanges = {},
     _git = {
       { "FileType", "gitcommit", "setlocal wrap" },

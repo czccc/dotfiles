@@ -238,7 +238,7 @@ M.setup = function()
   vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeOpenedFolderName]]
   vim.cmd [[highlight! link NeoTreeFileNameOpened NvimTreeOpenedFile]]
 
-  -- vim.cmd [[ highlight NeoTreeGitModified guifg=Orange ]]
+  vim.cmd [[ highlight NeoTreeGitModified guifg=Orange ]]
   -- vim.cmd [[ highlight NeoTreeGitAdded guifg=#109868 ]]
   -- vim.cmd [[ highlight NeoTreeDirectoryName guifg=#51afef ]]
   -- vim.cmd [[ highlight NeoTreeCursorLine guibg=#323842 ]]

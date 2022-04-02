@@ -1,0 +1,14 @@
+{
+  "plugin_init": {
+    "prefix": "plugin_init",
+    "body": [
+      "local M = {}",
+      "",
+      "M.packer = {",
+      "\t${0}",
+      "}",
+      "",
+      "return M"
+    ]
+  }
+}
