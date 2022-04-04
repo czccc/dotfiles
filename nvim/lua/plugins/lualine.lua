@@ -381,20 +381,7 @@ M.config = function()
             },
           },
         },
-        filetypes = { "NvimTree" },
-      },
-      {
-        sections = {
-          lualine_c = {
-            {
-              function()
-                return vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
-              end,
-              color = { gui = "bold" },
-            },
-          },
-        },
-        filetypes = { "neo-tree" },
+        filetypes = { "NvimTree", "neo-tree" },
       },
       {
         sections = {
@@ -411,7 +398,7 @@ M.config = function()
       },
       {
         sections = { lualine_c = { { "filetype", color = { gui = "bold" } } } },
-        filetypes = { "Outline" },
+        filetypes = { "Outline", "SidebarNvim" },
       },
       {
         sections = {

@@ -86,7 +86,9 @@ end
 M.set_terminal_keymaps = function()
   local opts = { noremap = true }
   vim.api.nvim_buf_set_keymap(0, "t", "<C-q>", "<cmd>bdelete!<CR>", opts)
-  vim.api.nvim_buf_set_keymap(0, "n", "<esc>", [[<C-W>w]], opts)
+  -- vim.api.nvim_buf_set_keymap(0, "n", "<esc>", [[<C-W>w]], opts)
+  vim.api.nvim_buf_set_keymap(0, "n", "<esc>", "<cmd>:q<cr>", opts)
+  vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>:q<cr>", opts)
   vim.api.nvim_buf_set_keymap(0, "t", "jk", [[<C-\><C-n>]], opts)
   vim.api.nvim_buf_set_keymap(0, "n", "jk", [[<C-W>w]], opts)
   vim.api.nvim_buf_set_keymap(0, "t", "<C-h>", [[<C-\><C-n><C-W>h]], opts)

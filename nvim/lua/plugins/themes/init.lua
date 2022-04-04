@@ -140,6 +140,10 @@ M.setup_onedark = function()
     },
   }
   require("onedark").load()
+  vim.cmd [[ highlight! link LspReferenceText Visual ]]
+  vim.cmd [[ highlight! link LspReferenceRead Visual ]]
+  vim.cmd [[ highlight! link LspReferenceWrite Visual ]]
+  vim.cmd [[ highlight! link FocusedSymbol Visual ]]
 end
 
 M.setup_doom_one = function()

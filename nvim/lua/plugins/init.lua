@@ -29,6 +29,7 @@ local plugin_files = {
   -- "plugins.project",
   "plugins.workspaces",
   "plugins.session",
+  "plugins.possession",
 
   "plugins.lsp",
   "plugins.dap",
