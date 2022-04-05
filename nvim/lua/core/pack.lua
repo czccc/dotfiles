@@ -43,7 +43,7 @@ end
 
 function M.init()
   M.init_packer()
-  require("plugins").init()
+  -- require("plugins").init()
 end
 
 function M.setup()

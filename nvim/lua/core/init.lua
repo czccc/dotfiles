@@ -14,7 +14,7 @@ M.config = function()
   require("core.log"):init()
   -- require("core.autocmds").config()
   require("core.pack").init()
-  -- require("plugins").config()
+  require("plugins").init()
 
   require("core.osconf").setup()
 end
