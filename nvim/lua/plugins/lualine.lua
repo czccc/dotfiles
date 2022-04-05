@@ -7,12 +7,6 @@ M.packer = {
   end,
   disable = false,
 }
-
-M.setup = function()
-  local lualine = require "lualine"
-  lualine.setup(gconf.plugins.lualine)
-end
-
 local conditions = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
@@ -21,7 +15,7 @@ local conditions = {
     return vim.fn.winwidth(0) > 80
   end,
   large_window = function()
-    return vim.fn.winwidth(0) > 140
+    return vim.fn.winwidth(0) > 130
   end,
   check_git_workspace = function()
     local filepath = vim.fn.expand "%:p:h"
@@ -123,11 +117,11 @@ local components = {
       end
     end,
     symbols = { added = " ", modified = " ", removed = " " },
-    -- diff_color = {
-    --   added = { fg = colors.green },
-    --   modified = { fg = colors.yellow },
-    --   removed = { fg = colors.red },
-    -- },
+    diff_color = {
+      added = { fg = colors.green },
+      modified = { fg = colors.yellow },
+      removed = { fg = colors.red },
+    },
     padding = { left = 0, right = 0 },
     cond = nil,
   },
@@ -318,103 +312,106 @@ local components = {
 
 vim.cmd [[autocmd User LspProgressUpdate let &ro = &ro]]
 
-M.config = function()
-  gconf.plugins.lualine = {
-    options = {
-      icons_enabled = true,
-      -- Disable sections and component separators
-      component_separators = { left = "", right = "" },
-      section_separators = { left = "", right = "" },
-      theme = "auto",
-      disabled_filetypes = { "dashboard", "alpha" },
-      always_divide_middle = true,
-      -- globalstatus = true,
+M.config = {
+  options = {
+    icons_enabled = true,
+    -- Disable sections and component separators
+    component_separators = { left = "", right = "" },
+    section_separators = { left = "", right = "" },
+    theme = "auto",
+    disabled_filetypes = { "dashboard", "alpha" },
+    always_divide_middle = true,
+    -- globalstatus = true,
+  },
+  sections = {
+    -- these are to remove the defaults
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {
+      -- components.left,
+      components.mode1,
+      components.branch,
+      components.filetype,
+      components.filename,
+      components.diff,
+      components.lsp_progress,
+      "%=",
     },
-    sections = {
-      -- these are to remove the defaults
-      lualine_a = {},
-      lualine_b = {},
-      lualine_c = {
-        -- components.left,
-        components.mode1,
-        components.branch,
-        components.filetype,
-        components.filename,
-        components.diff,
-        components.lsp_progress,
-        "%=",
-      },
-      lualine_x = {
-        components.diagnostics,
-        components.lsp,
-        -- components.treesitter,
-        components.encoding,
-        components.fileformat,
-        components.spaces,
-        components.filesize,
-        components.clock,
-        components.location,
-        components.scrollbar,
-      },
-      lualine_y = {},
-      lualine_z = {},
+    lualine_x = {
+      components.diagnostics,
+      components.lsp,
+      -- components.treesitter,
+      components.encoding,
+      components.fileformat,
+      components.spaces,
+      components.filesize,
+      components.clock,
+      components.location,
+      components.scrollbar,
     },
-    inactive_sections = {
-      -- these are to remove the defaults
-      lualine_a = {},
-      lualine_b = {},
-      lualine_c = { components.filename },
-      lualine_x = {},
-      lualine_y = {},
-      lualine_z = {},
-    },
-    tabline = {},
-    extensions = {
-      {
-        sections = {
-          lualine_c = {
-            {
-              function()
-                return vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
-              end,
-              color = { gui = "bold" },
-            },
+    lualine_y = {},
+    lualine_z = {},
+  },
+  inactive_sections = {
+    -- these are to remove the defaults
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = { components.filename },
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {},
+  },
+  tabline = {},
+  extensions = {
+    {
+      sections = {
+        lualine_c = {
+          {
+            function()
+              return vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
+            end,
+            color = { gui = "bold" },
           },
         },
-        filetypes = { "NvimTree", "neo-tree" },
       },
-      {
-        sections = {
-          lualine_c = {
-            {
-              function()
-                return "ToggleTerm #" .. vim.b.toggle_number
-              end,
-              color = { fg = colors.blue, gui = "bold" },
-            },
-          },
-        },
-        filetypes = { "toggleterm" },
-      },
-      {
-        sections = { lualine_c = { { "filetype", color = { gui = "bold" } } } },
-        filetypes = { "Outline", "SidebarNvim" },
-      },
-      {
-        sections = {
-          lualine_c = {
-            {
-              function()
-                return "Sidebar"
-              end,
-              color = { gui = "bold" },
-            },
-          },
-        },
-        filetypes = { "SidebarNvim" },
-      },
+      filetypes = { "NvimTree", "neo-tree" },
     },
-  }
+    {
+      sections = {
+        lualine_c = {
+          {
+            function()
+              return "ToggleTerm #" .. vim.b.toggle_number
+            end,
+            color = { fg = colors.blue, gui = "bold" },
+          },
+        },
+      },
+      filetypes = { "toggleterm" },
+    },
+    {
+      sections = { lualine_c = { { "filetype", color = { gui = "bold" } } } },
+      filetypes = { "Outline", "SidebarNvim" },
+    },
+    {
+      sections = {
+        lualine_c = {
+          {
+            function()
+              return "Sidebar"
+            end,
+            color = { gui = "bold" },
+          },
+        },
+      },
+      filetypes = { "SidebarNvim" },
+    },
+  },
+}
+
+M.setup = function()
+  local lualine = require "lualine"
+  lualine.setup(M.config)
 end
 
 return M

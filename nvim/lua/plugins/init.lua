@@ -20,6 +20,7 @@ local plugin_files = {
   "plugins.treesitter",
   "plugins.trouble",
   "plugins.cmp",
+  -- "plugins.copilot",
   "plugins.comment",
 
   "plugins.tmux",
@@ -47,27 +48,27 @@ local plugin_files = {
   "plugins.sidebar",
   "plugins.todo",
   "plugins.zenmode",
-
-  "plugins.copilot",
 }
 
-M.config = function()
-  gconf.plugins.packers = {}
+M.packers = {}
+
+M.init = function()
+  M.packers = {}
   for _, plugin_file in ipairs(plugin_files) do
     local status_ok, plugin = pcall(require, plugin_file)
     if not status_ok then
       Log:error("Unable to require file " .. plugin)
       print("Unable to require file " .. plugin)
     end
-    if plugin.config then
-      pcall(plugin.config)
+    if plugin.init then
+      pcall(plugin.init)
     end
     if plugin.packer then
-      gconf.plugins.packers[#gconf.plugins.packers + 1] = plugin.packer
+      M.packers[#M.packers + 1] = plugin.packer
     end
     if plugin.packers then
       for _, plugin_packer in ipairs(plugin.packers) do
-        gconf.plugins.packers[#gconf.plugins.packers + 1] = plugin_packer
+        M.packers[#M.packers + 1] = plugin_packer
       end
     end
   end
@@ -75,6 +76,16 @@ end
 
 M.setup = function()
   require("plugins.lsp").setup()
+end
+
+M.test = {}
+
+function M:register(x)
+  self.test[#self.test + 1] = x
+end
+
+function M:get()
+  return self.test
 end
 
 return M

@@ -9,9 +9,7 @@ M.packer = {
   disable = false,
 }
 
-function M.config()
-  gconf.plugins.autopairs = {
-    opts = {
+M.config = {
       ---@usage  modifies the function or method delimiter by filetypes
       map_char = {
         all = "(",
@@ -51,15 +49,14 @@ function M.config()
         highlight = "Search",
         highlight_grey = "Comment",
       },
-    },
+
   }
-end
 
 M.setup = function()
   local autopairs = require "nvim-autopairs"
   local Rule = require "nvim-autopairs.rule"
 
-  autopairs.setup(gconf.plugins.autopairs.opts)
+  autopairs.setup(M.config)
 
   require("nvim-treesitter.configs").setup { autopairs = { enable = true } }
 

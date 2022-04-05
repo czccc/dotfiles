@@ -32,63 +32,17 @@ M.packers = {
   },
 }
 
-M.config = function()
-  gconf.lsp = require "plugins.lsp.config"
-  gconf.plugins.which_key.mappings["l"] = {
-    name = "LSP",
-    a = { "<cmd>lua require('plugins.telescope').code_actions()<cr>", "Code Action" },
-    f = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" },
-    j = { "<cmd>lua vim.diagnostic.goto_next()<cr>", "Next Diagnostic" },
-    k = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Prev Diagnostic" },
-    l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
-    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
-    -- R = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
-    R = { "<cmd>lua require('renamer').rename()<cr>", "Rename" },
-    s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
-    S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace Symbols" },
-    w = { "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>", "Buffer Diagnostics" },
-    W = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
-
-    d = { "<cmd>lua require('plugins.telescope').lsp_definitions()<CR>", "Goto Definition" },
-    D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto declaration" },
-    r = { "<cmd>lua require('plugins.telescope').lsp_references()<CR>", "Goto references" },
-    i = { "<cmd>lua require('plugins.telescope').lsp_implementations()<CR>", "Goto Implementation" },
-    h = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", "show signature help" },
-
-    p = {
-      name = "Peek",
-      d = { "<cmd>lua require('lvim.lsp.peek').Peek('definition')<cr>", "Definition" },
-      t = { "<cmd>lua require('lvim.lsp.peek').Peek('typeDefinition')<cr>", "Type Definition" },
-      i = { "<cmd>lua require('lvim.lsp.peek').Peek('implementation')<cr>", "Implementation" },
-    },
-    u = {
-      name = "Utils",
-      i = { "<cmd>LspInfo<cr>", "Lsp Info" },
-      I = { "<cmd>LspInstallInfo<cr>", "Install" },
-      r = { "<cmd>LspRestart<cr>", "Restart" },
-    },
-    t = {
-      name = "+Trouble",
-      d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnosticss" },
-      f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
-      l = { "<cmd>Trouble loclist<cr>", "LocationList" },
-      q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
-      r = { "<cmd>Trouble lsp_references<cr>", "References" },
-      t = { "<cmd>TodoTrouble<cr>", "Todo" },
-      w = { "<cmd>Trouble workspace_diagnostics<cr>", "Diagnosticss" },
-    },
-  }
-end
+M.config = require "plugins.lsp.config"
 
 local function lsp_highlight_document(client)
-  if gconf.lsp.document_highlight == false then
+  if M.config.document_highlight == false then
     return -- we don't need further
   end
   autocmds.enable_lsp_document_highlight(client.id)
 end
 
 local function lsp_code_lens_refresh(client)
-  if gconf.lsp.code_lens_refresh == false then
+  if M.config.code_lens_refresh == false then
     return
   end
 
@@ -105,16 +59,16 @@ local function add_lsp_buffer_keybindings(bufnr)
   }
 
   -- Remap using which_key
-  local status_ok, wk = pcall(require, "which-key")
-  if status_ok then
+  local wk = require "plugins.which_key"
+  if wk:load() then
     for mode_name, mode_char in pairs(mappings) do
-      wk.register(gconf.lsp.buffer_mappings[mode_name], { mode = mode_char, buffer = bufnr })
+      wk.register(M.config.buffer_mappings[mode_name], { mode = mode_char, buffer = bufnr })
     end
-    return
+    wk.register(M.config.which_key_mapping)
   end
   -- Remap using nvim api
   for mode_name, mode_char in pairs(mappings) do
-    for key, remap in pairs(gconf.lsp.buffer_mappings[mode_name]) do
+    for key, remap in pairs(M.config.buffer_mappings[mode_name]) do
       vim.api.nvim_buf_set_keymap(bufnr, mode_char, key, remap[1], { noremap = true, silent = true })
     end
   end
@@ -156,28 +110,28 @@ local function select_default_formater(client)
 end
 
 function M.common_on_exit(_, _)
-  if gconf.lsp.document_highlight then
+  if M.config.document_highlight then
     autocmds.disable_lsp_document_highlight()
   end
-  if gconf.lsp.code_lens_refresh then
+  if M.config.code_lens_refresh then
     autocmds.disable_code_lens_refresh()
   end
 end
 
 function M.common_on_init(client, bufnr)
-  if gconf.lsp.on_init_callback then
-    gconf.lsp.on_init_callback(client, bufnr)
-    Log:debug "Called lsp.on_init_callback"
-    return
-  end
+  -- if M.config.on_init_callback then
+  --   M.config.on_init_callback(client, bufnr)
+  --   Log:debug "Called lsp.on_init_callback"
+  --   return
+  -- end
   select_default_formater(client)
 end
 
 function M.common_on_attach(client, bufnr)
-  if gconf.lsp.on_attach_callback then
-    gconf.lsp.on_attach_callback(client, bufnr)
-    Log:debug "Called lsp.on_attach_callback"
-  end
+  -- if M.config.on_attach_callback then
+  --   M.config.on_attach_callback(client, bufnr)
+  --   Log:debug "Called lsp.on_attach_callback"
+  -- end
   lsp_highlight_document(client)
   lsp_code_lens_refresh(client)
   add_lsp_buffer_keybindings(bufnr)
@@ -204,21 +158,13 @@ function M.setup()
     capabilities = M.common_capabilities(),
   })
 
-  for _, sign in ipairs(gconf.lsp.diagnostics.signs.values) do
+  for _, sign in ipairs(M.config.diagnostics.signs.values) do
     vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
   end
 
-  local config = {
-    virtual_text = gconf.lsp.diagnostics.virtual_text,
-    signs = gconf.lsp.diagnostics.signs,
-    underline = gconf.lsp.diagnostics.underline,
-    update_in_insert = gconf.lsp.diagnostics.update_in_insert,
-    severity_sort = gconf.lsp.diagnostics.severity_sort,
-    float = gconf.lsp.diagnostics.float,
-  }
-  vim.diagnostic.config(config)
-  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, gconf.lsp.float)
-  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, gconf.lsp.float)
+  vim.diagnostic.config(M.config.diagnostics)
+  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, M.config.float)
+  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, M.config.float)
 
   local lsp_installer_status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
   if lsp_installer_status_ok then
@@ -231,7 +177,7 @@ function M.setup()
 
   require("plugins.lsp.null-ls").setup()
 
-  autocmds.configure_format_on_save()
+  require("core.autocmds").configure_format_on_save()
 end
 
 return M

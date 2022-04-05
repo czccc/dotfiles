@@ -16,7 +16,7 @@ local dev_opts = {
     settings = {
       Lua = {
         diagnostics = {
-          globals = { "vim", "gconf" },
+          globals = { "vim" },
         },
         workspace = {
           library = {

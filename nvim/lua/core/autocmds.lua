@@ -1,67 +1,78 @@
 local M = {}
 local Log = require "core.log"
 
-M.config = function()
-  gconf.autocommands = {
-    _general_settings = {
-      { "FileType", "qf,help,man", "nnoremap <silent> <buffer> q :close<CR>" },
-      {
-        "TextYankPost",
-        "*",
-        "lua require('vim.highlight').on_yank({higroup = 'Search', timeout = 200})",
-      },
-      {
-        "BufWinEnter",
-        "dashboard",
-        "setlocal cursorline signcolumn=yes cursorcolumn number",
-      },
-      { "FileType", "qf", "set nobuflisted" },
-      { "CursorHold", "* checktime" },
-      { "FileType", "alpha", "nnoremap <silent> <buffer> q :q<CR>" },
-      { "FileType", "Outline", "setlocal signcolumn=no nowrap" },
-      { "user", "TelescopePreviewerLoaded", "setlocal number relativenumber wrap list" },
+M.autocommands = {
+  general_settings = {
+    { "VimResized", "*", "tabdo wincmd =" },
+    { "CursorHold", "* checktime" },
+    {
+      "TextYankPost",
+      "*",
+      "lua require('vim.highlight').on_yank({higroup = 'Search', timeout = 200})",
     },
-    _formatoptions = {
-      {
-        "BufWinEnter,BufRead,BufNewFile",
-        "*",
-        "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
-      },
+    {
+      "BufWinEnter,BufRead,BufNewFile",
+      "*",
+      "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
     },
-    _terminal_job = {
-      -- { "TermOpen", "*", "startinsert" },
-      { "TermOpen", "*", "setlocal nonumber norelativenumber" },
-      -- { "TermLeave", "*", "exe 'BufDel'..expand('<abuf>')" },
-      -- { "TermClose", "*", "bf" },
+  },
+  file_setting = {
+    { "FileType", "markdown,gitcommit", "setlocal spell wrap" },
+  },
+  buffer_quit = {
+    { "FileType", "alpha,floaterm", "nnoremap <silent> <buffer> q :q<CR>" },
+    { "FileType", "qf,help,man", "nnoremap <silent> <buffer> q :close<CR>" },
+    { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" },
+  },
+  buffer_setting = {
+    { "TermOpen", "*", "setlocal nonumber norelativenumber" },
+    { "FileType", "qf", "set nobuflisted" },
+    { "FileType", "Outline", "setlocal signcolumn=no nowrap" },
+    { "user", "TelescopePreviewerLoaded", "setlocal number relativenumber wrap list" },
+    {
+      "BufWinEnter",
+      "dashboard",
+      "setlocal cursorline signcolumn=yes cursorcolumn number",
     },
-    _filetypechanges = {},
-    _git = {
-      { "FileType", "gitcommit", "setlocal wrap" },
-      { "FileType", "gitcommit", "setlocal spell" },
-    },
-    _markdown = {
-      { "FileType", "markdown", "setlocal wrap" },
-      { "FileType", "markdown", "setlocal spell" },
-    },
-    _buffer_bindings = {
-      { "FileType", "floaterm", "nnoremap <silent> <buffer> q :q<CR>" },
-    },
-    _auto_resize = {
-      { "VimResized", "*", "tabdo wincmd =" },
-    },
-    _general_lsp = {
-      { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" },
-    },
-    -- code_lens
-    -- _code_lens = {
-    --   { "CursorHold", "*.rs,*.go,*.ts,*.tsx", "lua require('nvim-lightbulb').update_lightbulb()" },
-    -- },
-  }
-end
+  },
+}
+
+M.format_on_save = {
+  pattern = "*",
+  timeout = 1000,
+}
 
 M.setup = function()
-  M.define_augroups(gconf.autocommands)
+  M.define_augroups(M.autocommands)
   M.configure_format_on_save()
+end
+
+function M.disable_augroup(name)
+  vim.schedule(function()
+    if vim.fn.exists("#" .. name) == 1 then
+      vim.cmd("augroup " .. name)
+      vim.cmd "autocmd!"
+      vim.cmd "augroup END"
+    end
+  end)
+end
+
+function M.define_augroups(definitions, buffer)
+  for group_name, definition in pairs(definitions) do
+    vim.cmd("augroup " .. group_name)
+    if buffer then
+      vim.cmd [[autocmd! * <buffer>]]
+    else
+      vim.cmd [[autocmd!]]
+    end
+
+    for _, def in pairs(definition) do
+      local command = table.concat(vim.tbl_flatten { "autocmd", def }, " ")
+      vim.cmd(command)
+    end
+
+    vim.cmd "augroup END"
+  end
 end
 
 local get_format_on_save_opts = function()
@@ -69,12 +80,12 @@ local get_format_on_save_opts = function()
     pattern = "*",
     timeout = 1000,
   }
-  if type(gconf.format_on_save) ~= "table" then
+  if type(M.format_on_save) ~= "table" then
     return defaults
   end
   return {
-    pattern = gconf.format_on_save.pattern or defaults.pattern,
-    timeout = gconf.format_on_save.timeout or defaults.timeout,
+    pattern = M.format_on_save.pattern or defaults.pattern,
+    timeout = M.format_on_save.timeout or defaults.timeout,
   }
 end
 
@@ -92,7 +103,7 @@ function M.disable_format_on_save()
 end
 
 function M.configure_format_on_save()
-  if gconf.format_on_save then
+  if M.format_on_save then
     local opts = get_format_on_save_opts()
     M.enable_format_on_save(opts)
   else
@@ -151,39 +162,5 @@ function M.disable_code_lens_refresh()
   M.disable_augroup "lsp_code_lens_refresh"
 end
 
---- Disable autocommand groups if it exists
---- This is more reliable than trying to delete the augroup itself
----@param name string the augroup name
-function M.disable_augroup(name)
-  -- defer the function in case the autocommand is still in-use
-  vim.schedule(function()
-    if vim.fn.exists("#" .. name) == 1 then
-      vim.cmd("augroup " .. name)
-      vim.cmd "autocmd!"
-      vim.cmd "augroup END"
-    end
-  end)
-end
-
---- Create autocommand groups based on the passed definitions
----@param definitions table contains trigger, pattern and text. The key will be used as a group name
----@param buffer boolean indicate if the augroup should be local to the buffer
-function M.define_augroups(definitions, buffer)
-  for group_name, definition in pairs(definitions) do
-    vim.cmd("augroup " .. group_name)
-    if buffer then
-      vim.cmd [[autocmd! * <buffer>]]
-    else
-      vim.cmd [[autocmd!]]
-    end
-
-    for _, def in pairs(definition) do
-      local command = table.concat(vim.tbl_flatten { "autocmd", def }, " ")
-      vim.cmd(command)
-    end
-
-    vim.cmd "augroup END"
-  end
-end
 
 return M

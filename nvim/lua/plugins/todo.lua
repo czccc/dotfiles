@@ -9,24 +9,21 @@ M.packer = {
   event = "BufRead",
 }
 
-M.setup = function()
-  local status_ok, todo = pcall(require, "todo-comments")
-  if not status_ok then
-    return
-  end
+M.config = {
+  highlight = { max_line_len = 120 },
+  colors = {
+    error = { "DiagnosticError" },
+    warning = { "DiagnosticWarn" },
+    info = { "DiagnosticInfo" },
+    hint = { "DiagnosticHint" },
+    hack = { "Function" },
+    ref = { "FloatBorder" },
+    default = { "Identifier" },
+  },
+}
 
-  todo.setup {
-    highlight = { max_line_len = 120 },
-    colors = {
-      error = { "DiagnosticError" },
-      warning = { "DiagnosticWarn" },
-      info = { "DiagnosticInfo" },
-      hint = { "DiagnosticHint" },
-      hack = { "Function" },
-      ref = { "FloatBorder" },
-      default = { "Identifier" },
-    },
-  }
+M.setup = function()
+  require("todo-comments").setup(M.config)
 end
 
 return M

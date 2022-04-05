@@ -25,149 +25,141 @@ M.packers = {
   },
 }
 
-function M.config()
-  gconf.plugins.telescope = {}
-  -- local ok, actions = pcall(require, "telescope.actions")
-  -- if not ok then
-  --   return
-  -- end
-
-  gconf.plugins.telescope = {
-    defaults = {
-      prompt_prefix = " ",
-      selection_caret = " ",
-      entry_prefix = "  ",
-      initial_mode = "insert",
-      selection_strategy = "reset",
-      sorting_strategy = "descending",
-      layout_strategy = "horizontal",
-      layout_config = {
-        width = 0.75,
-        preview_cutoff = 120,
-        horizontal = {
-          mirror = false,
-          preview_width = 0.6,
-        },
-        vertical = { mirror = false },
+M.config = {
+  defaults = {
+    prompt_prefix = " ",
+    selection_caret = " ",
+    entry_prefix = "  ",
+    initial_mode = "insert",
+    selection_strategy = "reset",
+    sorting_strategy = "descending",
+    layout_strategy = "horizontal",
+    layout_config = {
+      width = 0.75,
+      preview_cutoff = 120,
+      horizontal = {
+        mirror = false,
+        preview_width = 0.6,
       },
-      vimgrep_arguments = {
-        "rg",
-        "--color=never",
-        "--no-heading",
-        "--with-filename",
-        "--line-number",
-        "--column",
-        "--smart-case",
-        "--hidden",
-        "--glob=!.git/",
+      vertical = { mirror = false },
+    },
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--hidden",
+      "--glob=!.git/",
+    },
+    -- mappings = {
+    --   i = {
+    --     ["<C-c>"] = actions.close,
+    --     ["<C-y>"] = actions.which_key,
+    --     ["<C-j>"] = actions.cycle_history_next,
+    --     ["<C-k>"] = actions.cycle_history_prev,
+    --     ["<C-n>"] = actions.move_selection_next,
+    --     ["<C-p>"] = actions.move_selection_previous,
+    --     ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
+    --     ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
+    --     ["<CR>"] = actions.select_default + actions.center,
+    --     ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+    --   },
+    --   n = {
+    --     ["<Esc>"] = actions.close,
+    --     ["<c-j>"] = actions.cycle_history_next,
+    --     ["<c-k>"] = actions.cycle_history_prev,
+    --     ["<C-n>"] = actions.move_selection_next,
+    --     ["<C-p>"] = actions.move_selection_previous,
+    --     ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
+    --     ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
+    --     ["<CR>"] = actions.select_default + actions.center,
+    --     ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+    --   },
+    -- },
+    file_ignore_patterns = {
+      "vendor/*",
+      "%.lock",
+      "__pycache__/*",
+      "%.sqlite3",
+      "%.ipynb",
+      "node_modules/*",
+      "%.jpg",
+      "%.jpeg",
+      "%.png",
+      "%.svg",
+      "%.otf",
+      "%.ttf",
+      ".git/",
+      "%.webp",
+      ".dart_tool/",
+      ".github/",
+      ".gradle/",
+      ".idea/",
+      ".settings/",
+      ".vscode/",
+      "__pycache__/",
+      "build/",
+      "env/",
+      "gradle/",
+      "node_modules/",
+      "target/",
+      "%.pdb",
+      "%.dll",
+      "%.class",
+      "%.exe",
+      "%.cache",
+      "%.ico",
+      "%.pdf",
+      "%.dylib",
+      "%.jar",
+      "%.docx",
+      "%.met",
+      "smalljre_*/*",
+      ".vale/",
+    },
+    path_display = { shorten = 10 },
+    winblend = 6,
+    border = {},
+    borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    color_devicons = true,
+    set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
+    pickers = {
+      find_files = {
+        find_command = { "fd", "--type=file", "--hidden", "--smart-case" },
       },
-      -- mappings = {
-      --   i = {
-      --     ["<C-c>"] = actions.close,
-      --     ["<C-y>"] = actions.which_key,
-      --     ["<C-j>"] = actions.cycle_history_next,
-      --     ["<C-k>"] = actions.cycle_history_prev,
-      --     ["<C-n>"] = actions.move_selection_next,
-      --     ["<C-p>"] = actions.move_selection_previous,
-      --     ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
-      --     ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
-      --     ["<CR>"] = actions.select_default + actions.center,
-      --     ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-      --   },
-      --   n = {
-      --     ["<Esc>"] = actions.close,
-      --     ["<c-j>"] = actions.cycle_history_next,
-      --     ["<c-k>"] = actions.cycle_history_prev,
-      --     ["<C-n>"] = actions.move_selection_next,
-      --     ["<C-p>"] = actions.move_selection_previous,
-      --     ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
-      --     ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
-      --     ["<CR>"] = actions.select_default + actions.center,
-      --     ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-      --   },
-      -- },
-      file_ignore_patterns = {
-        "vendor/*",
-        "%.lock",
-        "__pycache__/*",
-        "%.sqlite3",
-        "%.ipynb",
-        "node_modules/*",
-        "%.jpg",
-        "%.jpeg",
-        "%.png",
-        "%.svg",
-        "%.otf",
-        "%.ttf",
-        ".git/",
-        "%.webp",
-        ".dart_tool/",
-        ".github/",
-        ".gradle/",
-        ".idea/",
-        ".settings/",
-        ".vscode/",
-        "__pycache__/",
-        "build/",
-        "env/",
-        "gradle/",
-        "node_modules/",
-        "target/",
-        "%.pdb",
-        "%.dll",
-        "%.class",
-        "%.exe",
-        "%.cache",
-        "%.ico",
-        "%.pdf",
-        "%.dylib",
-        "%.jar",
-        "%.docx",
-        "%.met",
-        "smalljre_*/*",
-        ".vale/",
-      },
-      path_display = { shorten = 10 },
-      winblend = 6,
-      border = {},
-      borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-      color_devicons = true,
-      set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-      pickers = {
-        find_files = {
-          find_command = { "fd", "--type=file", "--hidden", "--smart-case" },
-        },
-        live_grep = {
-          --@usage don't include the filename in the search results
-          only_sort_text = true,
-        },
+      live_grep = {
+        --@usage don't include the filename in the search results
+        only_sort_text = true,
       },
     },
-    extensions = {
-      fzf = {
-        fuzzy = true, -- false will only do exact matching
-        override_generic_sorter = true, -- override the generic sorter
-        override_file_sorter = true, -- override the file sorter
-        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-      },
-      frecency = {
-        -- show_scores = true,
-      },
-      ["ui-select"] = {
-        require("telescope.themes").get_dropdown {
-          -- even more opts
-        },
+  },
+  extensions = {
+    fzf = {
+      fuzzy = true, -- false will only do exact matching
+      override_generic_sorter = true, -- override the generic sorter
+      override_file_sorter = true, -- override the file sorter
+      case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+    },
+    frecency = {
+      -- show_scores = true,
+    },
+    ["ui-select"] = {
+      require("telescope.themes").get_dropdown {
+        -- even more opts
       },
     },
-  }
-end
+  },
+}
 
 function M.setup()
   local previewers = require "telescope.previewers"
   local sorters = require "telescope.sorters"
   local actions = require "telescope.actions"
 
-  gconf.plugins.telescope = vim.tbl_extend("keep", {
+  M.config = vim.tbl_extend("keep", {
     file_previewer = previewers.vim_buffer_cat.new,
     grep_previewer = previewers.vim_buffer_vimgrep.new,
     qflist_previewer = previewers.vim_buffer_qflist.new,
@@ -190,10 +182,10 @@ function M.setup()
         ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
       },
     },
-  }, gconf.plugins.telescope)
+  }, M.config)
 
   local telescope = require "telescope"
-  telescope.setup(gconf.plugins.telescope)
+  telescope.setup(M.config)
   require("telescope").load_extension "fzf"
   require("telescope").load_extension "frecency"
   require("telescope").load_extension "file_browser"

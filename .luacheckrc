@@ -3,7 +3,6 @@
 
 stds.nvim = {
   globals = {
-    "gconf",
     vim = { fields = { "g" } },
     "TERMINAL",
     "USER",

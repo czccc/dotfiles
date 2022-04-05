@@ -1,16 +1,15 @@
 local M = {}
 local path = require "utils.path"
-
-local in_headless = #vim.api.nvim_list_uis() == 0
-
 local Log = require "core.log"
--- we need to reuse this outside of init()
-local compile_path = path.pack_compile_path
 
-function M.init()
+function M.init_packer()
   local install_path = path.pack_install_dir
   local package_root = path.pack_dir
+  local compile_path = path.pack_compile_path
+  local in_headless = #vim.api.nvim_list_uis() == 0
+
   -- local github_proxy = "https://hub.fastgit.xyz/"
+  -- local github_proxy = "git@github.com:"
   local github_proxy = "https://ghproxy.com/https://github.com/"
 
   if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
@@ -18,10 +17,7 @@ function M.init()
     vim.cmd "packadd packer.nvim"
   end
 
-  local log_level = in_headless and "debug" or "warn"
-  if gconf.log and gconf.log.level then
-    log_level = gconf.log.level
-  end
+  local log_level = in_headless and "debug" or Log.config.level
 
   local _, packer = pcall(require, "packer")
   packer.init {
@@ -45,19 +41,19 @@ function M.init()
   }
 end
 
-function M.config()
-  M.init()
-  require("plugins").config()
+function M.init()
+  M.init_packer()
+  require("plugins").init()
 end
 
 function M.setup()
-  M.load(gconf.plugins.packers)
+  M.load(require("plugins").packers)
   require("plugins").setup()
 end
 
 function M.reload()
   require("plugins").config()
-  M.load(gconf.plugins.packers)
+  M.load(require("plugins").packers)
   require("plugins").setup()
 end
 
@@ -82,8 +78,8 @@ function M.load(configurations)
     Log:trace(debug.traceback())
   end
 
-  vim.g.colors_name = gconf.colorscheme
-  vim.cmd("colorscheme " .. gconf.colorscheme)
+  vim.g.colors_name = require("core.configs").configs.colorscheme
+  vim.cmd("colorscheme " .. require("core.configs").configs.colorscheme)
 end
 
 return M

@@ -1,7 +1,7 @@
 local M = {}
 
 M.config = function()
-  gconf.colorscheme = "onedark"
+  require("core.configs").configs.colorscheme = "onedark"
 end
 
 M.packers = {

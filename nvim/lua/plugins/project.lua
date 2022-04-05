@@ -9,8 +9,7 @@ M.packer = {
   disable = false,
 }
 
-function M.config()
-  gconf.plugins.project = {
+M.config = {
     ---@usage set to true to disable setting the current-woriking directory
     --- Manual mode doesn't automatically change your root directory, so you have
     --- the option to manually do so using `:ProjectRoot` command.
@@ -42,13 +41,18 @@ function M.config()
     ---@usage path to store the project history for use in telescope
     datapath = path.cache_dir,
   }
-end
 
 M.setup = function()
-  local project = require "project_nvim"
-  project.setup(gconf.plugins.project)
+  require("project_nvim").setup(M.config)
   require("telescope").load_extension "projects"
-  gconf.plugins.which_key["s"]["p"] = { ":lua require('plugins.projects').projects()<cr>", "projects" }
+  require("plugins.which_key").config.nmappings["s"]["p"] = { ":lua require('plugins.projects').projects()<cr>", "projects" }
+
+  -- Implicitly update nvim-tree when project module is active
+  require("plugins.nvim_tree").config.respect_buf_cwd = 1
+  require("plugins.nvim_tree").config.setup.update_cwd = true
+  require("plugins.nvim_tree").config.setup.disable_netrw = false
+  require("plugins.nvim_tree").config.setup.hijack_netrw = false
+  vim.g.netrw_banner = false
 end
 
 function M.projects()

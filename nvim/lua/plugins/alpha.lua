@@ -8,16 +8,12 @@ M.packer = {
   disable = false,
 }
 
-function M.config()
-  local alpha_dashboard = require "plugins.alpha.dashboard"
-  local alpha_startify = require "plugins.alpha.startify"
-  gconf.plugins.alpha = {
-    dashboard = { config = {}, section = alpha_dashboard.get_sections() },
-    startify = { config = {}, section = alpha_startify.get_sections() },
+M.config = {
+    dashboard = { config = {}, section = require("plugins.alpha.dashboard").get_sections() },
+    startify = { config = {}, section = require("plugins.alpha.startify").get_sections() },
     active = true,
     mode = "dashboard",
   }
-end
 
 local function resolve_buttons(theme_name, entries)
   local selected_theme = require("alpha.themes." .. theme_name)
@@ -39,7 +35,7 @@ end
 local function resolve_config(theme_name)
   local selected_theme = require("alpha.themes." .. theme_name)
   local resolved_section = selected_theme.section
-  local section = gconf.plugins.alpha[theme_name].section
+  local section = M.config[theme_name].section
 
   for name, el in pairs(section) do
     for k, v in pairs(el) do
@@ -62,7 +58,7 @@ local function configure_additional_autocmds()
       "set showtabline=0 | autocmd BufLeave <buffer> set showtabline=" .. vim.opt.showtabline._value,
     },
   }
-  if not gconf.plugins.lualine.options.globalstatus then
+  if not require("plugins.lualine").config.options.globalstatus then
     aucmds[#aucmds + 1] =
       -- https://github.com/goolord/alpha-nvim/issues/42
       {
@@ -77,8 +73,8 @@ end
 function M.setup()
   ---@diagnostic disable-next-line: different-requires
   local alpha = require "alpha"
-  local mode = gconf.plugins.alpha.mode
-  local config = gconf.plugins.alpha[mode].config
+  local mode = M.config.mode
+  local config = M.config[mode].config
 
   -- this makes it easier to use a completely custom configuration
   if vim.tbl_isempty(config) then

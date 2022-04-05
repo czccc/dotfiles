@@ -2,15 +2,7 @@ local M = {}
 local path = require "utils.path"
 local Log = require "core.log"
 
-M.config = function()
-  if path.is_mac then
-    gconf.keys.normal_mode["<A-Up>"] = gconf.keys.normal_mode["<C-Up>"]
-    gconf.keys.normal_mode["<A-Down>"] = gconf.keys.normal_mode["<C-Down>"]
-    gconf.keys.normal_mode["<A-Left>"] = gconf.keys.normal_mode["<C-Left>"]
-    gconf.keys.normal_mode["<A-Right>"] = gconf.keys.normal_mode["<C-Right>"]
-    Log:debug "Activated mac keymappings"
-  end
-
+M.setup = function()
   if path.is_windows then
     local sqlite_path = path.join(path.home_dir, "PATH", "sqlite3.dll")
     if not path.is_file(sqlite_path) then
@@ -19,9 +11,10 @@ M.config = function()
     Log:debug("Set sqlite dll path in Windows: " .. sqlite_path)
     vim.g.sqlite_clib_path = sqlite_path
 
-    gconf.plugins.neotree.filesystem.filtered_items.hide_gitignored = false
-    gconf.plugins.neotree.filesystem.follow_current_file = false
-    gconf.plugins.neotree.filesystem.use_libuv_file_watcher = false
+    local neotree = require("plugins.neotree")
+    neotree.config.filesystem.filtered_items.hide_gitignored = false
+    neotree.config.filesystem.follow_current_file = false
+    neotree.config.filesystem.use_libuv_file_watcher = false
   end
 end
 

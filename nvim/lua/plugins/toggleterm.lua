@@ -10,8 +10,8 @@ M.packer = {
   disable = false,
 }
 
-M.config = function()
-  gconf.plugins.terminal = {
+M.config = {
+  setup = {
     -- size can be a number or function which is passed the current terminal
     size = 20,
     open_mapping = [[<c-\>]],
@@ -42,38 +42,44 @@ M.config = function()
         background = "Normal",
       },
     },
-    -- Add executables on the config.lua
-    -- { exec, keymap, name}
-    -- gconf.plugins.terminal.execs = {{}} to overwrite
-    -- gconf.plugins.terminal.execs[#gconf.plugins.terminal.execs+1] = {"gdb", "tg", "GNU Debugger"}
-    execs = {
-      { "zsh", "<leader>tt", "Float", "float" },
-      { "zsh", "<leader>th", "Horizontal", "horizontal" },
-      { "zsh", "<leader>tv", "Vertical", "vertical" },
-      { "lazygit", "<leader>tg", "LazyGit", "float" },
-      { "gitui", "<leader>tG", "Git UI", "float" },
-      { "python", "<leader>tp", "Python", "float" },
-      { "htop", "<leader>tj", "htop", "float" },
-      { "ncdu", "<leader>tn", "ncdu", "float" },
-    },
-  }
-end
+  },
+  -- Add executables on the config.lua
+  -- { exec, keymap, name, layout}
+  execs = {
+    ["<leader>tt"] = { "zsh", "<leader>tt", "Float", "float" },
+    ["<leader>th"] = { "zsh", "<leader>th", "Horizontal", "horizontal" },
+    ["<leader>tv"] = { "zsh", "<leader>tv", "Vertical", "vertical" },
+    ["<leader>tg"] = { "lazygit", "<leader>tg", "LazyGit", "float" },
+    ["<leader>tG"] = { "gitui", "<leader>tG", "Git UI", "float" },
+    ["<leader>tp"] = { "python", "<leader>tp", "Python", "float" },
+    ["<leader>tj"] = { "htop", "<leader>tj", "htop", "float" },
+    ["<leader>tn"] = { "ncdu", "<leader>tn", "ncdu", "float" },
+  },
+}
 
 M.setup = function()
-  local terminal = require "toggleterm"
-  terminal.setup(gconf.plugins.terminal)
+  local status_ok, terminal = pcall(require, "toggleterm")
+  if not status_ok then
+    Log:warn "toggleterm not loaded"
+    return
+  end
+  local config = M.config
 
-  for i, exec in pairs(gconf.plugins.terminal.execs) do
+  terminal.setup(config.setup)
+  require("plugins.which_key").add_desc("<C-\\>", "Terminal", "n")
+
+  local c = 0
+  for _, exec in pairs(config.execs) do
+    c = c + 1
     local opts = {
       cmd = exec[1],
       keymap = exec[2],
       label = exec[3],
       -- NOTE: unable to consistently bind id/count <= 9, see #2146
-      count = i + 100,
-      direction = exec[4] or gconf.plugins.terminal.direction,
-      size = gconf.plugins.terminal.size,
+      count = c + 100,
+      direction = exec[4] or config.setup.direction,
+      size = config.setup.size,
     }
-
     M.add_exec(opts)
   end
   require("core.autocmds").define_augroups {
@@ -112,8 +118,8 @@ M.add_exec = function(opts)
   )
 
   require("core.keymap").load {
-    normal_mode = { [opts.keymap] = exec_func },
-    term_mode = { [opts.keymap] = exec_func },
+    ["n"] = { [opts.keymap] = exec_func },
+    ["t"] = { [opts.keymap] = exec_func },
   }
 
   local wk_status_ok, wk = pcall(require, "which-key")
@@ -127,7 +133,7 @@ end
 M._exec_toggle = function(opts)
   local Terminal = require("toggleterm.terminal").Terminal
   local term = Terminal:new { cmd = opts.cmd, count = opts.count, direction = opts.direction }
-  term:toggle(gconf.plugins.terminal.size, opts.direction)
+  term:toggle(M.config.setup.size, opts.direction)
 end
 
 -- ---Toggles a log viewer according to log.viewer.layout_config
@@ -138,7 +144,7 @@ end
 -- 		log_viewer = "less +F"
 -- 	end
 -- 	log_viewer = log_viewer .. " " .. logfile
--- 	local term_opts = vim.tbl_deep_extend("force", gconf.plugins.terminal, {
+-- 	local term_opts = vim.tbl_deep_extend("force", M.config.setup, {
 -- 		cmd = log_viewer,
 -- 		open_mapping = lvim.log.viewer.layout_config.open_mapping,
 -- 		direction = lvim.log.viewer.layout_config.direction,

@@ -48,15 +48,17 @@ M.setup = function()
     "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>",
     {}
   )
-  gconf.plugins.which_key.mappings["j"] = {
-    name = "Hop",
-    ["w"] = { "<cmd>HopWord<cr>", "HopWord" },
-    ["p"] = { "<cmd>HopPattern<cr>", "HopPattern" },
-    ["c"] = { "<cmd>HopChar2<cr>", "HopChar2" },
-    ["C"] = { "<cmd>HopChar1<cr>", "HopChar1" },
-    ["l"] = { "<cmd>HopLine<cr>", "HopLine" },
-    ["L"] = { "<cmd>HopLineStart<cr>", "HopLineStart" },
-  }
+  require("plugins.which_key").register({
+    ["j"] = {
+      name = "Hop",
+      ["w"] = { "<cmd>HopWord<cr>", "HopWord" },
+      ["p"] = { "<cmd>HopPattern<cr>", "HopPattern" },
+      ["c"] = { "<cmd>HopChar2<cr>", "HopChar2" },
+      ["C"] = { "<cmd>HopChar1<cr>", "HopChar1" },
+      ["l"] = { "<cmd>HopLine<cr>", "HopLine" },
+      ["L"] = { "<cmd>HopLineStart<cr>", "HopLineStart" },
+    },
+  })
   vim.cmd [[highlight HopNextKey gui=bold guifg=Orange]]
 end
 

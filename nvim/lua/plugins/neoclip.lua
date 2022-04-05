@@ -10,7 +10,7 @@ M.packer = {
     -- {'ibhagwan/fzf-lua'},
   },
   config = function()
-    require("plugins.neoclip").config()
+    require("plugins.neoclip").setup()
   end,
 }
 
@@ -27,7 +27,7 @@ local function all(tbl, check)
   return true
 end
 
-M.config = function()
+M.setup = function()
   local status_ok, neoclip = pcall(require, "neoclip")
   if not status_ok then
     Log:warn "neoclip: not found"
@@ -71,7 +71,9 @@ M.config = function()
     local dropdown = require("telescope.themes").get_dropdown(opts)
     require("telescope").extensions.neoclip.default(dropdown)
   end
-  gconf.plugins.which_key.mappings["y"] = { clip, "Neoclip" }
+  require("plugins.which_key").register({
+    ["y"] = { clip, "Neoclip" }
+  })
 end
 
 return M

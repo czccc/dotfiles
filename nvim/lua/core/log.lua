@@ -3,6 +3,24 @@ local path = require "utils.path"
 
 local logfile = string.format("%s/%s.log", path.cache_path, "neovim")
 
+Log.config = {
+  ---@usage can be { "trace", "debug", "info", "warn", "error", "fatal" },
+  level = "warn",
+  viewer = {
+    ---@usage this will fallback on "less +F" if not found
+    cmd = "lnav",
+    layout_config = {
+      ---'vertical' | 'horizontal' | 'window' | 'float',
+      direction = "horizontal",
+      open_mapping = "",
+      size = 40,
+      float_opts = {},
+    },
+  },
+  -- currently disabled due to instabilities
+  override_notify = false,
+}
+
 Log.levels = {
   TRACE = 1,
   DEBUG = 2,
@@ -20,7 +38,7 @@ function Log:init()
     return nil
   end
 
-  local log_level = Log.levels[(gconf.log.level):upper() or "WARN"]
+  local log_level = Log.levels[(self.config.level):upper() or "WARN"]
   local neovim_log = {
     neovim = {
       sinks = {
@@ -56,7 +74,7 @@ function Log:init()
   local logger = structlog.get_logger "neovim"
 
   -- Overwrite `vim.notify` to use the logger
-  if gconf.log.override_notify then
+  if self.config.override_notify then
     vim.notify = function(msg, vim_log_level, opts)
       notify_opts = opts or {}
 

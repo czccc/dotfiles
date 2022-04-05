@@ -1,7 +1,7 @@
 -- local path = require "utils.path"
 
 return {
-  -- templates_dir = path.join(path.runtime_dir, "site", "after", "ftplugin"),
+  setup = {},
   diagnostics = {
     signs = {
       active = true,
@@ -60,6 +60,52 @@ return {
     },
     insert_mode = {},
     visual_mode = {},
+  },
+  which_key_mapping = {
+    ["l"] = {
+      name = "LSP",
+      a = { "<cmd>lua require('plugins.telescope').code_actions()<cr>", "Code Action" },
+      f = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" },
+      j = { "<cmd>lua vim.diagnostic.goto_next()<cr>", "Next Diagnostic" },
+      k = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Prev Diagnostic" },
+      l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
+      q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
+      -- R = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
+      R = { "<cmd>lua require('renamer').rename()<cr>", "Rename" },
+      s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
+      S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace Symbols" },
+      w = { "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>", "Buffer Diagnostics" },
+      W = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
+
+      d = { "<cmd>lua require('plugins.telescope').lsp_definitions()<CR>", "Goto Definition" },
+      D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto declaration" },
+      r = { "<cmd>lua require('plugins.telescope').lsp_references()<CR>", "Goto references" },
+      i = { "<cmd>lua require('plugins.telescope').lsp_implementations()<CR>", "Goto Implementation" },
+      h = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", "show signature help" },
+
+      p = {
+        name = "Peek",
+        d = { "<cmd>lua require('lvim.lsp.peek').Peek('definition')<cr>", "Definition" },
+        t = { "<cmd>lua require('lvim.lsp.peek').Peek('typeDefinition')<cr>", "Type Definition" },
+        i = { "<cmd>lua require('lvim.lsp.peek').Peek('implementation')<cr>", "Implementation" },
+      },
+      u = {
+        name = "Utils",
+        i = { "<cmd>LspInfo<cr>", "Lsp Info" },
+        I = { "<cmd>LspInstallInfo<cr>", "Install" },
+        r = { "<cmd>LspRestart<cr>", "Restart" },
+      },
+      t = {
+        name = "+Trouble",
+        d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnosticss" },
+        f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
+        l = { "<cmd>Trouble loclist<cr>", "LocationList" },
+        q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
+        r = { "<cmd>Trouble lsp_references<cr>", "References" },
+        t = { "<cmd>TodoTrouble<cr>", "Todo" },
+        w = { "<cmd>Trouble workspace_diagnostics<cr>", "Diagnosticss" },
+      },
+    },
   },
   null_ls = {
     setup = {

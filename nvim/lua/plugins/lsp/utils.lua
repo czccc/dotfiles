@@ -3,7 +3,7 @@ local M = {}
 local tbl = require "utils.table"
 
 function M.show_line_diagnostics()
-  local config = gconf.lsp.diagnostics.float
+  local config = require("plugins.lsp").config.diagnostics.float
   config.scope = "line"
   return vim.diagnostic.open_float(0, config)
 end

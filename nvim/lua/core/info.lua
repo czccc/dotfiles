@@ -107,7 +107,7 @@ local function make_override_info(ft)
   end
   local overridden = vim.tbl_filter(function(name)
     return vim.tbl_contains(available, name)
-  end, gconf.lsp.override)
+  end, require("plugins.lsp").config.override)
 
   local info_lines = { "" }
   if #overridden == 0 then

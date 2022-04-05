@@ -67,27 +67,24 @@ M.setup = function()
   rust_tools.setup(opts)
 end
 
-local status_ok_wk, which_key = pcall(require, "which-key")
-if status_ok_wk then
-  which_key.register({
-    ["m"] = {
-      t = { "<cmd>RustToggleInlayHints<cr>", "Toggle Inlay Hints" },
-      r = { "<cmd>RustRunnables<cr>", "Runnables" },
-      d = { "<cmd>RustDebuggables<cr>", "Debuggables" },
-      e = { "<cmd>RustExpandMacro<cr>", "Expand Macro" },
-      c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
-      R = { "<cmd>RustReloadWorkspace<cr>", "Reload" },
-      a = { "<cmd>RustHoverActions<cr>", "Hover Actions" },
-      A = { "<cmd>RustHoverRange<cr>", "Hover Range" },
-      l = { "<cmd>RustJoinLines<cr>", "Join Lines" },
-      j = { "<cmd>RustMoveItemDown<cr>", "Move Item Down" },
-      k = { "<cmd>RustMoveItemUp<cr>", "Move Item Up" },
-      p = { "<cmd>RustParentModule<cr>", "Parent Module" },
-      s = { "<cmd>RustSSR<cr>", "Structural Search Replace" },
-      g = { "<cmd>RustViewCrateGraph<cr>", "View Crate Graph" },
-      S = { "<cmd>RustStartStandaloneServerForBuffer <cr>", "Standalone Server" },
-    },
-  }, gconf.plugins.which_key.opts)
-end
+require("plugins.which_key").register({
+  ["m"] = {
+    t = { "<cmd>RustToggleInlayHints<cr>", "Toggle Inlay Hints" },
+    r = { "<cmd>RustRunnables<cr>", "Runnables" },
+    d = { "<cmd>RustDebuggables<cr>", "Debuggables" },
+    e = { "<cmd>RustExpandMacro<cr>", "Expand Macro" },
+    c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
+    R = { "<cmd>RustReloadWorkspace<cr>", "Reload" },
+    a = { "<cmd>RustHoverActions<cr>", "Hover Actions" },
+    A = { "<cmd>RustHoverRange<cr>", "Hover Range" },
+    l = { "<cmd>RustJoinLines<cr>", "Join Lines" },
+    j = { "<cmd>RustMoveItemDown<cr>", "Move Item Down" },
+    k = { "<cmd>RustMoveItemUp<cr>", "Move Item Up" },
+    p = { "<cmd>RustParentModule<cr>", "Parent Module" },
+    s = { "<cmd>RustSSR<cr>", "Structural Search Replace" },
+    g = { "<cmd>RustViewCrateGraph<cr>", "View Crate Graph" },
+    S = { "<cmd>RustStartStandaloneServerForBuffer <cr>", "Standalone Server" },
+  },
+})
 
 return M

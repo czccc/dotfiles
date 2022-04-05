@@ -69,14 +69,11 @@ M.setup = function()
     },
   }
 
-  local status_ok_wk, which_key = pcall(require, "which-key")
-  if status_ok_wk then
-    which_key.register({
-      ["m"] = {
-        s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch Source Header" },
-      },
-    }, gconf.plugins.which_key.opts)
-  end
+  require("plugins.which_key").register({
+    ["m"] = {
+      s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch Source Header" },
+    },
+  })
 end
 
 return M

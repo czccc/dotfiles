@@ -4,7 +4,7 @@ M.packers = {
   {
     "hrsh7th/nvim-cmp",
     config = function()
-      require("cmp").setup(gconf.plugins.cmp)
+      require("plugins.cmp").setup_cmp()
     end,
     requires = {
       "L3MON4D3/LuaSnip",
@@ -39,7 +39,47 @@ M.packers = {
     end,
     requires = "nvim-treesitter/nvim-treesitter",
   },
+  {
+    -- "github/copilot.vim",
+    "gelfand/copilot.vim",
+    config = function()
+      require("plugins.cmp").setup_copilot()
+    end,
+    -- disable = true,
+  },
+  {
+    "hrsh7th/cmp-copilot",
+    config = function()
+      require("plugins.cmp").setup_cmp_copilot()
+    end,
+    -- disable = true,
+  },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     vim.schedule(function()
+  --       ---@diagnostic disable-next-line: different-requires
+  --       require "copilot"
+  --     end)
+  --   end,
+  -- },
+  -- {
+  --   "zbirenbaum/copilot-cmp",
+  --   after = { "copilot.lua", "nvim-cmp" },
+  -- },
 }
+
+M.config = {}
+
+M.setup_cmp = function ()
+  require("cmp").setup(M.config)
+end
+
+M.setup_cmp_copilot = function ()
+  M.config.formatting.source_names["copilot"] = "(Copilot)"
+  table.insert(M.config.sources, { name = "copilot" })
+end
 
 M.methods = {}
 
@@ -188,7 +228,7 @@ end
 
 M.methods.jumpable = jumpable
 
-M.config = function()
+M.init = function()
   local status_cmp_ok, cmp = pcall(require, "cmp")
   if not status_cmp_ok then
     return
@@ -198,7 +238,7 @@ M.config = function()
     return
   end
 
-  gconf.plugins.cmp = {
+  M.config = {
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false,
@@ -219,11 +259,11 @@ M.config = function()
         Color = " ",
         Constant = "ﲀ ",
         Constructor = " ",
-        Enum = "練",
+        Enum = " ",
         EnumMember = " ",
         Event = " ",
         Field = " ",
-        File = "",
+        File = " ",
         Folder = " ",
         Function = " ",
         Interface = "ﰮ ",
@@ -237,7 +277,7 @@ M.config = function()
         Struct = " ",
         Text = " ",
         TypeParameter = " ",
-        Unit = "塞",
+        Unit = " ",
         Value = " ",
         Variable = " ",
       },
@@ -259,10 +299,10 @@ M.config = function()
       },
       duplicates_default = 0,
       format = function(entry, vim_item)
-        vim_item.kind = gconf.plugins.cmp.formatting.kind_icons[vim_item.kind]
-        vim_item.menu = gconf.plugins.cmp.formatting.source_names[entry.source.name]
-        vim_item.dup = gconf.plugins.cmp.formatting.duplicates[entry.source.name]
-          or gconf.plugins.cmp.formatting.duplicates_default
+        vim_item.kind = M.config.formatting.kind_icons[vim_item.kind]
+        vim_item.menu = M.config.formatting.source_names[entry.source.name]
+        vim_item.dup = M.config.formatting.duplicates[entry.source.name]
+          or M.config.formatting.duplicates_default
         return vim_item
       end,
     },
@@ -276,6 +316,7 @@ M.config = function()
     },
     sources = {
       { name = "nvim_lsp" },
+      { name = "copilot", group_index = 2 },
       { name = "path", max_item_count = 5 },
       { name = "luasnip", max_item_count = 3 },
       { name = "cmp_tabnine" },
@@ -326,7 +367,7 @@ M.config = function()
       ["<C-Space>"] = cmp.mapping.complete(),
       ["<C-e>"] = cmp.mapping.abort(),
       ["<CR>"] = cmp.mapping(function(fallback)
-        if cmp.visible() and cmp.confirm(gconf.plugins.cmp.confirm_opts) then
+        if cmp.visible() and cmp.confirm(M.config.confirm_opts) then
           if jumpable() then
             luasnip.jump(1)
           end
@@ -343,6 +384,29 @@ M.config = function()
       end),
     },
   }
+end
+
+M.setup_copilot = function()
+  vim.g.copilot_no_tab_map = true
+  vim.g.copilot_assume_mapped = true
+  vim.g.copilot_tab_fallback = ""
+  vim.g.copilot_filetypes = {
+    ["*"] = false,
+    python = true,
+    lua = true,
+    go = true,
+    rust = true,
+    html = true,
+    c = true,
+    cpp = true,
+    java = true,
+    javascript = true,
+    typescript = true,
+    javascriptreact = true,
+    typescriptreact = true,
+    terraform = true,
+  }
+  vim.cmd [[ imap <silent><script><expr> <C-G> copilot#Accept("\<CR>") ]]
 end
 
 return M

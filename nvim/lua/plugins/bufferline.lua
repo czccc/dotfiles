@@ -55,10 +55,9 @@ local function custom_filter(buf, buf_nums)
   return (tab_num == last_tab and is_log) or (tab_num ~= last_tab and not is_log)
 end
 
-M.config = function()
-  gconf.plugins.bufferline = {
+M.config = {
     keymap = {
-      normal_mode = {
+      ["n"] = {
         ["<S-x>"] = ":BufDel<CR>",
         ["<TAB>"] = ":BufferLineCycleNext<CR>",
         ["<S-TAB>"] = ":BufferLineCyclePrev<CR>",
@@ -169,43 +168,46 @@ M.config = function()
       sort_by = "id",
     },
   }
-  gconf.plugins.which_key.mappings["c"] = { "<cmd>BufDel<CR>", "Close Buffer" }
-  gconf.plugins.which_key.mappings["b"] = {
-    name = "Buffers",
-    b = { "<cmd>lua require('plugins.telescope').find_buffers()<cr>", "Find Buffers" },
-    c = { "<cmd>BufDel<cr>", "Close Current" },
-    f = { "<cmd>b#<cr>", "Previous" },
-    h = { "<cmd>BufferLineCloseLeft<cr>", "Close to Left" },
-    l = { "<cmd>BufferLineCloseRight<cr>", "Close to Right" },
-    j = { "<cmd>BufferLineMovePrev<cr>", "Move Previous" },
-    k = { "<cmd>BufferLineMoveNext<cr>", "Move Next" },
-    p = { "<cmd>BufferLinePick<cr>", "Buffer Pick" },
-    d = { "<cmd>BufferLineSortByDirectory<cr>", "Sort by Directory" },
-    L = { "<cmd>BufferLineSortByExtension<cr>", "Sort by Extension" },
-    n = { "<cmd>BufferLineSortByTabs<cr>", "Sort by Tabs" },
-
-    ["g"] = {
-      name = "Buffer Goto",
-      ["1"] = { "<cmd>BufferLineGoToBuffer 1<cr>", "BufferGoto 1" },
-      ["2"] = { "<cmd>BufferLineGoToBuffer 2<cr>", "BufferGoto 2" },
-      ["3"] = { "<cmd>BufferLineGoToBuffer 3<cr>", "BufferGoto 3" },
-      ["4"] = { "<cmd>BufferLineGoToBuffer 4<cr>", "BufferGoto 4" },
-      ["5"] = { "<cmd>BufferLineGoToBuffer 5<cr>", "BufferGoto 5" },
-      ["6"] = { "<cmd>BufferLineGoToBuffer 6<cr>", "BufferGoto 6" },
-      ["7"] = { "<cmd>BufferLineGoToBuffer 7<cr>", "BufferGoto 7" },
-      ["8"] = { "<cmd>BufferLineGoToBuffer 8<cr>", "BufferGoto 8" },
-      ["9"] = { "<cmd>BufferLineGoToBuffer 9<cr>", "BufferGoto 9" },
-    },
-  }
-end
 
 M.setup = function()
-  require("core.keymap").load(gconf.plugins.bufferline.keymap)
+  require("core.keymap").load(M.config.keymap)
   ---@diagnostic disable-next-line: different-requires
   require("bufferline").setup {
-    options = gconf.plugins.bufferline.options,
-    highlights = gconf.plugins.bufferline.highlights,
+    options = M.config.options,
+    highlights = M.config.highlights,
   }
+
+  local which_key = require("plugins.which_key")
+  which_key.register({
+    ["c"] = { "<cmd>BufDel<CR>", "Close Buffer" },
+    ["b"] = {
+      name = "Buffers",
+      b = { "<cmd>lua require('plugins.telescope').find_buffers()<cr>", "Find Buffers" },
+      c = { "<cmd>BufDel<cr>", "Close Current" },
+      f = { "<cmd>b#<cr>", "Previous" },
+      h = { "<cmd>BufferLineCloseLeft<cr>", "Close to Left" },
+      l = { "<cmd>BufferLineCloseRight<cr>", "Close to Right" },
+      j = { "<cmd>BufferLineMovePrev<cr>", "Move Previous" },
+      k = { "<cmd>BufferLineMoveNext<cr>", "Move Next" },
+      p = { "<cmd>BufferLinePick<cr>", "Buffer Pick" },
+      d = { "<cmd>BufferLineSortByDirectory<cr>", "Sort by Directory" },
+      L = { "<cmd>BufferLineSortByExtension<cr>", "Sort by Extension" },
+      n = { "<cmd>BufferLineSortByTabs<cr>", "Sort by Tabs" },
+
+      ["g"] = {
+        name = "Buffer Goto",
+        ["1"] = { "<cmd>BufferLineGoToBuffer 1<cr>", "BufferGoto 1" },
+        ["2"] = { "<cmd>BufferLineGoToBuffer 2<cr>", "BufferGoto 2" },
+        ["3"] = { "<cmd>BufferLineGoToBuffer 3<cr>", "BufferGoto 3" },
+        ["4"] = { "<cmd>BufferLineGoToBuffer 4<cr>", "BufferGoto 4" },
+        ["5"] = { "<cmd>BufferLineGoToBuffer 5<cr>", "BufferGoto 5" },
+        ["6"] = { "<cmd>BufferLineGoToBuffer 6<cr>", "BufferGoto 6" },
+        ["7"] = { "<cmd>BufferLineGoToBuffer 7<cr>", "BufferGoto 7" },
+        ["8"] = { "<cmd>BufferLineGoToBuffer 8<cr>", "BufferGoto 8" },
+        ["9"] = { "<cmd>BufferLineGoToBuffer 9<cr>", "BufferGoto 9" },
+      },
+    }
+  })
 end
 
 return M
