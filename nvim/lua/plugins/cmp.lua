@@ -72,11 +72,11 @@ M.packers = {
 
 M.config = {}
 
-M.setup_cmp = function ()
+M.setup_cmp = function()
   require("cmp").setup(M.config)
 end
 
-M.setup_cmp_copilot = function ()
+M.setup_cmp_copilot = function()
   M.config.formatting.source_names["copilot"] = "(Copilot)"
   table.insert(M.config.sources, { name = "copilot" })
 end
@@ -301,8 +301,7 @@ M.init = function()
       format = function(entry, vim_item)
         vim_item.kind = M.config.formatting.kind_icons[vim_item.kind]
         vim_item.menu = M.config.formatting.source_names[entry.source.name]
-        vim_item.dup = M.config.formatting.duplicates[entry.source.name]
-          or M.config.formatting.duplicates_default
+        vim_item.dup = M.config.formatting.duplicates[entry.source.name] or M.config.formatting.duplicates_default
         return vim_item
       end,
     },

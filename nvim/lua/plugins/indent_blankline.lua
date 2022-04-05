@@ -92,7 +92,6 @@ M.config = {
 }
 
 M.setup = function()
-
   require("indent_blankline").setup(M.config)
   -- HACK: work-around for https://github.com/lukas-reineke/indent-blankline.nvim/issues/59
   vim.wo.colorcolumn = "99999"

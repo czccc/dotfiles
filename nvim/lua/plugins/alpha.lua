@@ -9,11 +9,11 @@ M.packer = {
 }
 
 M.config = {
-    dashboard = { config = {}, section = require("plugins.alpha.dashboard").get_sections() },
-    startify = { config = {}, section = require("plugins.alpha.startify").get_sections() },
-    active = true,
-    mode = "dashboard",
-  }
+  dashboard = { config = {}, section = require("plugins.alpha.dashboard").get_sections() },
+  startify = { config = {}, section = require("plugins.alpha.startify").get_sections() },
+  active = true,
+  mode = "dashboard",
+}
 
 local function resolve_buttons(theme_name, entries)
   local selected_theme = require("alpha.themes." .. theme_name)

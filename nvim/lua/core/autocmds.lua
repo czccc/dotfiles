@@ -162,5 +162,4 @@ function M.disable_code_lens_refresh()
   M.disable_augroup "lsp_code_lens_refresh"
 end
 
-
 return M

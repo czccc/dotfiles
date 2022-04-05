@@ -69,11 +69,11 @@ M.setup = function()
     },
   }
 
-  require("plugins.which_key").register({
+  require("plugins.which_key").register {
     ["m"] = {
       s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch Source Header" },
     },
-  })
+  }
 end
 
 return M

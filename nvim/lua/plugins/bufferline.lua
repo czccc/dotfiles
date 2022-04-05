@@ -56,118 +56,118 @@ local function custom_filter(buf, buf_nums)
 end
 
 M.config = {
-    keymap = {
-      ["n"] = {
-        ["<S-x>"] = ":BufDel<CR>",
-        ["<TAB>"] = ":BufferLineCycleNext<CR>",
-        ["<S-TAB>"] = ":BufferLineCyclePrev<CR>",
-        ["<A-<>"] = ":BufferLineMovePrev<CR>",
-        ["<A->>"] = ":BufferLineMoveNext<CR>",
+  keymap = {
+    ["n"] = {
+      ["<S-x>"] = ":BufDel<CR>",
+      ["<TAB>"] = ":BufferLineCycleNext<CR>",
+      ["<S-TAB>"] = ":BufferLineCyclePrev<CR>",
+      ["<A-<>"] = ":BufferLineMovePrev<CR>",
+      ["<A->>"] = ":BufferLineMoveNext<CR>",
+    },
+  },
+  highlights = {
+    background = {
+      gui = "italic",
+    },
+    buffer_selected = {
+      gui = "bold",
+    },
+  },
+  options = {
+    numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
+    close_command = "BufDel %d", -- can be a string | function, see "Mouse actions"
+    right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
+    left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
+    middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+    -- NOTE: this plugin is designed with this icon in mind,
+    -- and so changing this is NOT recommended, this is intended
+    -- as an escape hatch for people who cannot bear it for whatever reason
+    indicator_icon = "▎",
+    buffer_close_icon = "",
+    modified_icon = "●",
+    close_icon = "",
+    left_trunc_marker = "",
+    right_trunc_marker = "",
+    --- name_formatter can be used to change the buffer's label in the bufferline.
+    --- Please note some names can/will break the
+    --- bufferline so use this at your discretion knowing that it has
+    --- some limitations that will *NOT* be fixed.
+    name_formatter = function(buf) -- buf contains a "name", "path" and "bufnr"
+      -- remove extension from markdown files for example
+      if buf.name:match "%.md" then
+        return vim.fn.fnamemodify(buf.name, ":t:r")
+      end
+    end,
+    max_name_length = 18,
+    max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
+    tab_size = 18,
+    diagnostics = "nvim_lsp",
+    diagnostics_update_in_insert = false,
+    diagnostics_indicator = diagnostics_indicator,
+    -- NOTE: this will be called a lot so don't do any heavy processing here
+    custom_filter = custom_filter,
+    offsets = {
+      {
+        filetype = "undotree",
+        text = "Undotree",
+        highlight = "PanelHeading",
+        padding = 1,
+      },
+      {
+        filetype = "neo-tree",
+        text = "Explorer",
+        highlight = "PanelHeading",
+        padding = 1,
+      },
+      {
+        filetype = "NvimTree",
+        text = "Explorer",
+        highlight = "PanelHeading",
+        padding = 1,
+      },
+      {
+        filetype = "DiffviewFiles",
+        text = "Diff View",
+        highlight = "PanelHeading",
+        padding = 1,
+      },
+      {
+        filetype = "flutterToolsOutline",
+        text = "Flutter Outline",
+        highlight = "PanelHeading",
+      },
+      {
+        filetype = "packer",
+        text = "Packer",
+        highlight = "PanelHeading",
+        padding = 1,
+      },
+      {
+        filetype = "Outline",
+        text = "Symbol Outline",
+        highlight = "PanelHeading",
+        padding = 1,
+      },
+      {
+        filetype = "SidebarNvim",
+        text = "Sidebar",
+        highlight = "PanelHeading",
+        padding = 1,
       },
     },
-    highlights = {
-      background = {
-        gui = "italic",
-      },
-      buffer_selected = {
-        gui = "bold",
-      },
-    },
-    options = {
-      numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
-      close_command = "BufDel %d", -- can be a string | function, see "Mouse actions"
-      right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
-      left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
-      middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
-      -- NOTE: this plugin is designed with this icon in mind,
-      -- and so changing this is NOT recommended, this is intended
-      -- as an escape hatch for people who cannot bear it for whatever reason
-      indicator_icon = "▎",
-      buffer_close_icon = "",
-      modified_icon = "●",
-      close_icon = "",
-      left_trunc_marker = "",
-      right_trunc_marker = "",
-      --- name_formatter can be used to change the buffer's label in the bufferline.
-      --- Please note some names can/will break the
-      --- bufferline so use this at your discretion knowing that it has
-      --- some limitations that will *NOT* be fixed.
-      name_formatter = function(buf) -- buf contains a "name", "path" and "bufnr"
-        -- remove extension from markdown files for example
-        if buf.name:match "%.md" then
-          return vim.fn.fnamemodify(buf.name, ":t:r")
-        end
-      end,
-      max_name_length = 18,
-      max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-      tab_size = 18,
-      diagnostics = "nvim_lsp",
-      diagnostics_update_in_insert = false,
-      diagnostics_indicator = diagnostics_indicator,
-      -- NOTE: this will be called a lot so don't do any heavy processing here
-      custom_filter = custom_filter,
-      offsets = {
-        {
-          filetype = "undotree",
-          text = "Undotree",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "neo-tree",
-          text = "Explorer",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "NvimTree",
-          text = "Explorer",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "DiffviewFiles",
-          text = "Diff View",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "flutterToolsOutline",
-          text = "Flutter Outline",
-          highlight = "PanelHeading",
-        },
-        {
-          filetype = "packer",
-          text = "Packer",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "Outline",
-          text = "Symbol Outline",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "SidebarNvim",
-          text = "Sidebar",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-      },
-      show_buffer_icons = true, -- disable filetype icons for buffers
-      show_buffer_close_icons = true,
-      show_close_icon = false,
-      show_tab_indicators = true,
-      persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
-      -- can also be a table containing 2 custom separators
-      -- [focused and unfocused]. eg: { '|', '|' }
-      separator_style = "thin",
-      enforce_regular_tabs = false,
-      always_show_bufferline = true,
-      sort_by = "id",
-    },
-  }
+    show_buffer_icons = true, -- disable filetype icons for buffers
+    show_buffer_close_icons = true,
+    show_close_icon = false,
+    show_tab_indicators = true,
+    persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+    -- can also be a table containing 2 custom separators
+    -- [focused and unfocused]. eg: { '|', '|' }
+    separator_style = "thin",
+    enforce_regular_tabs = false,
+    always_show_bufferline = true,
+    sort_by = "id",
+  },
+}
 
 M.setup = function()
   require("core.keymap").load(M.config.keymap)
@@ -177,8 +177,8 @@ M.setup = function()
     highlights = M.config.highlights,
   }
 
-  local which_key = require("plugins.which_key")
-  which_key.register({
+  local which_key = require "plugins.which_key"
+  which_key.register {
     ["c"] = { "<cmd>BufDel<CR>", "Close Buffer" },
     ["b"] = {
       name = "Buffers",
@@ -206,8 +206,8 @@ M.setup = function()
         ["8"] = { "<cmd>BufferLineGoToBuffer 8<cr>", "BufferGoto 8" },
         ["9"] = { "<cmd>BufferLineGoToBuffer 9<cr>", "BufferGoto 9" },
       },
-    }
-  })
+    },
+  }
 end
 
 return M

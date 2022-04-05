@@ -29,7 +29,7 @@ M.setup = function()
   -- require("plugins").setup()
 end
 
-M.load_core = function ()
+M.load_core = function()
   leader_map()
   require "core.global"
   require("core.options").setup()
@@ -37,7 +37,7 @@ M.load_core = function ()
   require("core.autocmds").setup()
 end
 
-M.load_plugins = function ()
+M.load_plugins = function()
   require("core.log"):init()
   require("core.pack").init()
   require("plugins").init()

@@ -71,9 +71,9 @@ M.setup = function()
     local dropdown = require("telescope.themes").get_dropdown(opts)
     require("telescope").extensions.neoclip.default(dropdown)
   end
-  require("plugins.which_key").register({
-    ["y"] = { clip, "Neoclip" }
-  })
+  require("plugins.which_key").register {
+    ["y"] = { clip, "Neoclip" },
+  }
 end
 
 return M

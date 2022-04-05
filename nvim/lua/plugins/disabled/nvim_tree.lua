@@ -130,7 +130,6 @@ M.config = {
 require("plugins.which_key").config.nmappings["e"] = { "<cmd>NvimTreeFocus<CR>", "Explorer" }
 require("plugins.which_key").config.nmappings["E"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
 
-
 M.setup = function()
   local status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
   if not status_ok then

@@ -67,7 +67,7 @@ M.setup = function()
   rust_tools.setup(opts)
 end
 
-require("plugins.which_key").register({
+require("plugins.which_key").register {
   ["m"] = {
     t = { "<cmd>RustToggleInlayHints<cr>", "Toggle Inlay Hints" },
     r = { "<cmd>RustRunnables<cr>", "Runnables" },
@@ -85,6 +85,6 @@ require("plugins.which_key").register({
     g = { "<cmd>RustViewCrateGraph<cr>", "View Crate Graph" },
     S = { "<cmd>RustStartStandaloneServerForBuffer <cr>", "Standalone Server" },
   },
-})
+}
 
 return M

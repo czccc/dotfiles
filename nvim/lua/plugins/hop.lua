@@ -48,7 +48,7 @@ M.setup = function()
     "<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>",
     {}
   )
-  require("plugins.which_key").register({
+  require("plugins.which_key").register {
     ["j"] = {
       name = "Hop",
       ["w"] = { "<cmd>HopWord<cr>", "HopWord" },
@@ -58,7 +58,7 @@ M.setup = function()
       ["l"] = { "<cmd>HopLine<cr>", "HopLine" },
       ["L"] = { "<cmd>HopLineStart<cr>", "HopLineStart" },
     },
-  })
+  }
   vim.cmd [[highlight HopNextKey gui=bold guifg=Orange]]
 end
 
