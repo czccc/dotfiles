@@ -24,6 +24,7 @@ end
 M.setup_async_tasks = function()
   vim.cmd [[ let g:asynctask_template = '~/.config/nvim/task_template.ini' ]]
   vim.cmd [[ let g:asynctasks_extra_config = ['~/.config/nvim/tasks.ini'] ]]
+  vim.cmd [[ let g:asynctasks_mode = 'term' ]]
   vim.cmd [[ let g:asynctasks_term_pos = 'bottom' ]]
   vim.cmd [[ let g:asynctasks_term_rows = 10 ]]
   vim.cmd [[ let g:asynctasks_term_reuse = 1 ]]

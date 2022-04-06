@@ -1,5 +1,20 @@
 local M = {}
 
+local executor = {}
+
+executor.latest_buf_id = nil
+executor.execute_command = function(command, args, cwd)
+  local cmd_str = "AsyncRun -mode=term -rows=10 -cwd=" .. cwd .. " " .. command
+  for _, value in ipairs(args) do
+    cmd_str = cmd_str .. " " .. value
+  end
+
+  local status_ok, _ = pcall(vim.cmd, cmd_str)
+  if not status_ok then
+    print("Unable spawn command: " .. cmd_str)
+  end
+end
+
 M.setup = function()
   local status_ok, rust_tools = pcall(require, "rust-tools")
   if not status_ok then
@@ -13,7 +28,7 @@ M.setup = function()
     tools = {
       autoSetHints = true,
       hover_with_actions = true,
-      executor = require("rust-tools/executors").termopen, -- can be quickfix or termopen
+      executor = executor, -- can be quickfix or termopen
       runnables = {
         use_telescope = true,
         prompt_prefix = "  ",
