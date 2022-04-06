@@ -121,6 +121,7 @@ M.config = {
       i = { "<cmd>lua require('plugins.telescope').installed_plugins()<cr>", "Installed Plugins" },
       k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
       j = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
+      l = { "<cmd>Telescope resume<cr>", "Resume" },
       m = { "<cmd>Telescope commands<cr>", "Commands" },
       M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
       p = { "<cmd>lua require('plugins.telescope').projects()<cr>", "Projects" },

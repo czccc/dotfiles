@@ -238,10 +238,10 @@ M.config = {
 M.setup = function()
   vim.cmd [[ let g:neo_tree_remove_legacy_commands = 1 ]]
 
-  vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
-  vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
-  vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
-  vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+  -- vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
+  -- vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+  -- vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
+  -- vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
   require("neo-tree").setup(M.config)
 
@@ -250,17 +250,18 @@ M.setup = function()
     ["E"] = { "<cmd>Neotree toggle<CR>", "Explorer" },
   }
 
-  vim.cmd [[highlight! link NeoTreeDirectoryIcon NvimTreeFolderIcon]]
-  vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeFolderName]]
-  vim.cmd [[highlight! link NeoTreeSymbolicLinkTarget NvimTreeSymlink]]
-  vim.cmd [[highlight! link NeoTreeRootName NvimTreeRootFolder]]
-  vim.cmd [[highlight! link NeoTreeDirectoryName NvimTreeOpenedFolderName]]
-  vim.cmd [[highlight! link NeoTreeFileNameOpened NvimTreeOpenedFile]]
+  -- require("core.colors").define_links("NeoTreeDirectoryIcon", "NvimTreeFolderIcon")
+  -- require("core.colors").define_links("NeoTreeDirectoryName", "NvimTreeFolderName")
+  -- require("core.colors").define_links("NeoTreeSymbolicLinkTarget", "NvimTreeSymlink")
+  -- require("core.colors").define_links("NeoTreeRootName", "NvimTreeRootFolder")
+  -- require("core.colors").define_links("NeoTreeDirectoryName", "NvimTreeFolderName")
+  -- require("core.colors").define_links("NeoTreeFileNameOpened", "NvimTreeOpenedFile")
 
-  vim.cmd [[ highlight NeoTreeGitModified guifg=Orange ]]
-  -- vim.cmd [[ highlight NeoTreeGitAdded guifg=#109868 ]]
-  -- vim.cmd [[ highlight NeoTreeDirectoryName guifg=#51afef ]]
-  -- vim.cmd [[ highlight NeoTreeCursorLine guibg=#323842 ]]
+  require("core.colors").define_styles("NeoTreeFileNameOpened", { gui = "italic" })
+  require("core.colors").define_styles("NeoTreeGitModified", { guifg = "Orange" })
+  -- require("core.colors").define_styles("NeoTreeGitAdded", { guifg = "#109868" })
+  -- require("core.colors").define_styles("NeoTreeDirectoryName", { guifg = "#51afef" })
+  -- require("core.colors").define_styles("NeoTreeCursorLine", { guibg = "#323842" })
 
   require("core.autocmds").define_augroups {
     neotree_tab_key = {

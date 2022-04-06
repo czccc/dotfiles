@@ -43,6 +43,7 @@ M.load_plugins = function()
   require("plugins").init()
   require("core.osconf").setup()
   require("core.pack").setup()
+  require("core.colors").setup()
 end
 
 return M

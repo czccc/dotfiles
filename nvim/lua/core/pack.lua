@@ -77,9 +77,7 @@ function M.load(configurations)
     Log:warn "problems detected while loading plugins' configurations"
     Log:trace(debug.traceback())
   end
-
-  vim.g.colors_name = require("core.configs").configs.colorscheme
-  vim.cmd("colorscheme " .. require("core.configs").configs.colorscheme)
+  require("core.colors").setup()
 end
 
 return M

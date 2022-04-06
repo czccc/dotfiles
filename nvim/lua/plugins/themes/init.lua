@@ -1,7 +1,7 @@
 local M = {}
 
-M.config = function()
-  require("core.configs").configs.colorscheme = "onedark"
+M.init = function()
+  require("core.colors").colorscheme = "onedark"
 end
 
 M.packers = {
@@ -11,10 +11,6 @@ M.packers = {
     config = function()
       vim.g.vscode_style = "dark"
     end,
-  },
-  {
-    "shaunsingh/nord.nvim",
-    opt = true,
   },
   {
     "folke/tokyonight.nvim",
@@ -30,7 +26,7 @@ M.packers = {
       require("plugins.themes").setup_kanagawa()
     end,
   },
-  -- { "LunarVim/onedarker.nvim" },
+  { "LunarVim/onedarker.nvim" },
   {
     "navarasu/onedark.nvim",
     -- opt = true,
@@ -38,9 +34,16 @@ M.packers = {
       require("plugins.themes").setup_onedark()
     end,
   },
+  -- {
+  --   "olimorris/onedarkpro.nvim",
+  --   -- opt = true,
+  --   config = function()
+  --     require("plugins.themes").setup_onedark_pro()
+  --   end,
+  -- },
   {
     "NTBBloodbath/doom-one.nvim",
-    opt = true,
+    -- opt = true,
     config = function()
       require("plugins.themes").setup_doom_one()
     end,
@@ -110,6 +113,7 @@ M.setup_onedark = function()
     ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
     -- toggle theme style ---
     toggle_style_key = "<leader>vs", -- Default keybinding to toggle
+    -- toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
     toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
 
     -- Change code style ---
@@ -117,7 +121,7 @@ M.setup_onedark = function()
     -- You can configure multiple style with comma seperated, For e.g., keywords = 'italic,bold'
     code_style = {
       comments = "italic",
-      -- keywords = "none",
+      keywords = "italic",
       -- functions = "none",
       -- strings = "none",
       -- variables = "none",
@@ -140,10 +144,59 @@ M.setup_onedark = function()
     },
   }
   require("onedark").load()
-  vim.cmd [[ highlight! link LspReferenceText Visual ]]
-  vim.cmd [[ highlight! link LspReferenceRead Visual ]]
-  vim.cmd [[ highlight! link LspReferenceWrite Visual ]]
-  vim.cmd [[ highlight! link FocusedSymbol Visual ]]
+  local cl = require "core.colors"
+  cl.define_links("LspReferenceText", "Visual")
+  cl.define_links("LspReferenceRead", "Visual")
+  cl.define_links("LspReferenceWrite", "Visual")
+  cl.define_links("FocusedSymbol", "Visual")
+  cl.setup_colorscheme()
+end
+
+M.setup_onedark_pro = function()
+  vim.o.background = "dark"
+  require("onedarkpro").setup {
+    -- Theme can be overwritten with 'onedark' or 'onelight' as a string
+    theme = function()
+      if vim.o.background == "dark" then
+        return "onedark"
+      else
+        return "onelight"
+      end
+    end,
+    colors = {}, -- Override default colors by specifying colors for 'onelight' or 'onedark' themes
+    hlgroups = {}, -- Override default highlight groups
+    filetype_hlgroups = {}, -- Override default highlight groups for specific filetypes
+    plugins = { -- Override which plugins highlight groups are loaded
+      native_lsp = true,
+      polygot = true,
+      treesitter = true,
+      -- NOTE: Other plugins have been omitted for brevity
+    },
+    styles = {
+      strings = "NONE", -- Style that is applied to strings
+      comments = "NONE", -- Style that is applied to comments
+      keywords = "NONE", -- Style that is applied to keywords
+      functions = "NONE", -- Style that is applied to functions
+      variables = "NONE", -- Style that is applied to variables
+    },
+    options = {
+      bold = true, -- Use the themes opinionated bold styles?
+      italic = true, -- Use the themes opinionated italic styles?
+      underline = false, -- Use the themes opinionated underline styles?
+      undercurl = false, -- Use the themes opinionated undercurl styles?
+      cursorline = true, -- Use cursorline highlighting?
+      transparency = false, -- Use a transparent background?
+      terminal_colors = false, -- Use the theme's colors for Neovim's :terminal?
+      window_unfocussed_color = true, -- When the window is out of focus, change the normal background?
+    },
+  }
+  -- require("onedarkpro").load()
+  local cl = require "core.colors"
+  cl.define_links("LspReferenceText", "Visual")
+  cl.define_links("LspReferenceRead", "Visual")
+  cl.define_links("LspReferenceWrite", "Visual")
+  cl.define_links("FocusedSymbol", "Visual")
+  cl.setup_colorscheme()
 end
 
 M.setup_doom_one = function()

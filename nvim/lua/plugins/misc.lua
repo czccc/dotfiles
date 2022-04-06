@@ -58,10 +58,38 @@ M.packers = {
     event = "BufWinEnter",
     disable = false,
   },
+  -- {
+  --   "tpope/vim-surround",
+  -- },
+  {
+    "machakann/vim-sandwich",
+    config = function()
+      require("plugins.misc").setup_sandwich()
+    end,
+  },
 }
 
-M.config = function() end
+M.config = {}
 
 M.setup = function() end
+
+M.setup_sandwich = function()
+  vim.cmd [[
+    let g:sandwich_no_default_key_mappings = 1
+    silent! nmap <unique><silent> Sd <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
+    silent! nmap <unique><silent> Sr <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
+    silent! nmap <unique><silent> Sdb <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+    silent! nmap <unique><silent> Srb <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+
+    let g:operator_sandwich_no_default_key_mappings = 1
+    let g:textobj_sandwich_no_default_key_mappings = 1
+    " add
+    silent! map <unique> Sa <Plug>(operator-sandwich-add)
+    " delet[e
+    silent! xmap <unique> Sd <Plug>(operator-sandwich-delete)
+    " replace
+    silent! xmap <uni]que> Sr <Plug>(operator-sandwich-replace)
+  ]]
+end
 
 return M
