@@ -4,15 +4,29 @@ local executor = {}
 
 executor.latest_buf_id = nil
 executor.execute_command = function(command, args, cwd)
-  local cmd_str = "AsyncRun -mode=term -rows=10 -cwd=" .. cwd .. " " .. command
-  for _, value in ipairs(args) do
-    cmd_str = cmd_str .. " " .. value
-  end
+  local utils = require "rust-tools.utils.utils"
+  local full_command = utils.chain_commands {
+    utils.make_command_from_args("cd", { cwd }),
+    utils.make_command_from_args(command, args),
+  }
 
-  local status_ok, _ = pcall(vim.cmd, cmd_str)
-  if not status_ok then
-    print("Unable spawn command: " .. cmd_str)
+  utils.delete_buf(executor.latest_buf_id)
+  executor.latest_buf_id = vim.api.nvim_create_buf(false, true)
+
+  utils.split(false, executor.latest_buf_id)
+  utils.resize(false, "-15")
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("i", true, true, true), "", true)
+  vim.api.nvim_buf_set_keymap(executor.latest_buf_id, "n", "<Esc>", ":q<CR>", { noremap = true })
+  vim.api.nvim_buf_set_keymap(executor.latest_buf_id, "n", "<CR>", "i", { noremap = true })
+  vim.api.nvim_buf_set_keymap(executor.latest_buf_id, "n", "<Tab>", "<C-w>k", { noremap = true })
+
+  -- run the command
+  vim.fn.termopen(full_command)
+
+  local function onDetach(_, _)
+    executor.latest_buf_id = nil
   end
+  vim.api.nvim_buf_attach(executor.latest_buf_id, false, { on_detach = onDetach })
 end
 
 M.setup = function()
