@@ -131,14 +131,18 @@ M.setup_onedark = function()
     colors = {}, -- Override default colors
     highlights = {
       StatusLine = { bg = "$bg1" },
+      SignColumn = { bg = "none" },
       -- StatusLineNC = { bg = "#2d3343" },
       Visual = { bg = "#404859" },
       -- Visual = { bg = "$bg3" },
       TSField = { fg = "$red" },
       TSOperator = { fg = "$purple" },
       TSVariable = { fg = "$red" },
+      TSProperty = { fg = "$red" },
       TSFuncMacro = { fg = "$orange" },
       TSFuncBuiltin = { fg = "$orange" },
+      TSConstant = { fg = "$orange" },
+      packerStatusSuccess = { fg = "$green" },
     }, -- Override highlight groups
 
     -- Plugins Config --

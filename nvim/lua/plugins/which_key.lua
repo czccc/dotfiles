@@ -135,6 +135,7 @@ M.config = {
       s = { "<cmd>SymbolsOutline<cr>", "Symbol Outline" },
       D = { "<cmd>DiffviewFileHistory<cr>", "diffview: diff HEAD" },
       d = { "<cmd>DiffviewOpen<cr>", "diffview: diff HEAD" },
+      u = { "<cmd>UndotreeToggle<cr>", "Undo Tree" },
       e = { "<cmd>SidebarNvimToggle<CR>", "Sidebar" },
       a = { "<cmd>Alpha<CR>", "Dashboard" },
       S = {
@@ -143,6 +144,14 @@ M.config = {
         r = { "<cmd>RestoreSession<cr>", "RestoreSession" },
         d = { "<cmd>DeleteSession<cr>", "DeleteSession" },
       },
+    },
+    ["v"] = {
+      name = "View",
+      s = { "<cmd>SymbolsOutline<cr>", "Symbol Outline" },
+      D = { "<cmd>DiffviewFileHistory<cr>", "Diff File" },
+      d = { "<cmd>DiffviewOpen<cr>", "Diff HEAD" },
+      u = { "<cmd>UndotreeToggle<cr>", "Undo Tree" },
+      e = { "<cmd>SidebarNvimToggle<CR>", "Sidebar" },
     },
     ["t"] = {
       name = "Termianl",
