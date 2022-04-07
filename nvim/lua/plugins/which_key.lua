@@ -152,6 +152,10 @@ M.config = {
       d = { "<cmd>DiffviewOpen<cr>", "Diff HEAD" },
       u = { "<cmd>UndotreeToggle<cr>", "Undo Tree" },
       e = { "<cmd>SidebarNvimToggle<CR>", "Sidebar" },
+      t = { "<cmd>TSHighlightCapturesUnderCursor<CR>", "TS Highlight" },
+      p = { "<cmd>TSPlaygroundToggle<CR>", "TS Playground" },
+      m = { "<cmd>messages<CR>", "Messages" },
+      n = { "<cmd>Notifications<CR>", "Notifications" },
     },
     ["t"] = {
       name = "Termianl",
