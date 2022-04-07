@@ -121,7 +121,7 @@ M.setup_onedark = function()
     -- You can configure multiple style with comma seperated, For e.g., keywords = 'italic,bold'
     code_style = {
       comments = "italic",
-      keywords = "italic,bold",
+      keywords = "bold",
       functions = "none",
       strings = "none",
       variables = "none",
@@ -154,6 +154,7 @@ M.setup_onedark = function()
   cl.define_links("LspReferenceRead", "Visual")
   cl.define_links("LspReferenceWrite", "Visual")
   cl.define_links("FocusedSymbol", "Visual")
+  cl.define_links("Search", "Visual")
   cl.define_links("OperatorSandwichChange", "IncSearch")
   cl.define_links("OperatorSandwichDelete", "IncSearch")
   cl.define_links("OperatorSandwichAdd", "IncSearch")

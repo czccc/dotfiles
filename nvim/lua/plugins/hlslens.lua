@@ -79,6 +79,15 @@ M.setup_hlslens = function()
 
   hlslens.setup(opts)
   require("plugins.hlslens").set_hlslens_keymaps()
+  require("core.colors").define_links("HlSearchNear", "WildMenu")
+  require("core.colors").define_links("HlSearchLensNear", "WildMenu")
+  require("core.colors").define_links("HlSearchFloat", "Visual")
+  require("core.colors").define_links("HlSearchLens", "Visual")
+
+  -- local status_ok_sl, scroller = pcall(require, "scroller.handlers.search")
+  -- if status_ok_sl then
+  --   pcall(scroller.setup)
+  -- end
 
   -- vim.cmd [[highlight default link HlSearchNear WildMenu]]
   -- vim.cmd [[highlight default link HlSearchLens Visual]]
@@ -110,7 +119,7 @@ M.setup_scrollbar = function()
         priority = 0,
         color = nil,
         cterm = nil,
-        highlight = "Search",
+        highlight = "DiagnosticVirtualTextInfo",
       },
       Error = {
         text = { "-", "=" },

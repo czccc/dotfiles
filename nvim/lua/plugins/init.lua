@@ -78,6 +78,28 @@ M.setup = function()
   require("plugins.lsp").setup()
 end
 
+M.reload = function()
+  M.packers = {}
+  for _, plugin_file in ipairs(plugin_files) do
+    local status_ok, plugin = pcall(require_clean, plugin_file)
+    if not status_ok then
+      Log:error("Unable to require file " .. plugin)
+      print("Unable to require file " .. plugin)
+    end
+    if plugin.init then
+      pcall(plugin.init)
+    end
+    if plugin.packer then
+      M.packers[#M.packers + 1] = plugin.packer
+    end
+    if plugin.packers then
+      for _, plugin_packer in ipairs(plugin.packers) do
+        M.packers[#M.packers + 1] = plugin_packer
+      end
+    end
+  end
+end
+
 M.test = {}
 
 function M:register(x)

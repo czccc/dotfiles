@@ -21,7 +21,7 @@ end
 
 M.setup = function()
   leader_map()
-  require("core.options"):setup()
+  require("core.options").setup()
   require("core.keymap").setup()
 
   require("core.autocmds").setup()
@@ -44,6 +44,21 @@ M.load_plugins = function()
   require("core.osconf").setup()
   require("core.pack").setup()
   require("core.colors").setup()
+end
+
+M.reload = function()
+  _G.packer_plugins = _G.packer_plugins or {}
+  for k, v in pairs(_G.packer_plugins) do
+    if k ~= "packer.nvim" then
+      _G.packer_plugins[v] = nil
+    end
+  end
+
+  require("plugins").reload()
+  require("core.osconf").setup()
+  require("core.pack").setup()
+
+  vim.notify "Reloaded"
 end
 
 return M

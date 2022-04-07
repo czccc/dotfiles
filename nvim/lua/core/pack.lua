@@ -1,11 +1,11 @@
 local M = {}
 local path = require "utils.path"
 local Log = require "core.log"
+local compile_path = path.pack_compile_path
 
 function M.init_packer()
   local install_path = path.pack_install_dir
   local package_root = path.pack_dir
-  local compile_path = path.pack_compile_path
   local in_headless = #vim.api.nvim_list_uis() == 0
 
   -- local github_proxy = "https://hub.fastgit.xyz/"
@@ -51,10 +51,29 @@ function M.setup()
   require("plugins").setup()
 end
 
-function M.reload()
-  require("plugins").config()
-  M.load(require("plugins").packers)
-  require("plugins").setup()
+-- packer expects a space separated list
+local function pcall_packer_command(cmd, kwargs)
+  local status_ok, msg = pcall(function()
+    require("packer")[cmd](unpack(kwargs or {}))
+  end)
+  if not status_ok then
+    Log:warn(cmd .. " failed with: " .. vim.inspect(msg))
+    Log:trace(vim.inspect(vim.fn.eval "v:errmsg"))
+  end
+end
+
+function M.clean()
+  if vim.fn.delete(compile_path) == 0 then
+    Log:debug "deleted packer_compiled.lua"
+  end
+end
+
+function M.recompile()
+  M.cache_clear()
+  pcall_packer_command "compile"
+  if path.is_file(compile_path) then
+    Log:debug "generated packer_compiled.lua"
+  end
 end
 
 function M.load(configurations)
@@ -66,6 +85,7 @@ function M.load(configurations)
     return
   end
   local status_ok, _ = xpcall(function()
+    packer.reset()
     packer.startup(function(use)
       use { "wbthomason/packer.nvim" }
       for _, plugin in pairs(configurations) do

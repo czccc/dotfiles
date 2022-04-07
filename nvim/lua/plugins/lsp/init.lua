@@ -118,7 +118,7 @@ function M.common_on_exit(_, _)
   end
 end
 
-function M.common_on_init(client, bufnr)
+function M.common_on_init(client, _)
   -- if M.config.on_init_callback then
   --   M.config.on_init_callback(client, bufnr)
   --   Log:debug "Called lsp.on_init_callback"

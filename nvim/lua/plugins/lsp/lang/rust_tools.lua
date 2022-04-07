@@ -5,11 +5,11 @@ local executor = {}
 executor.latest_buf_id = nil
 executor.execute_command = function(command, args, cwd)
   local utils = require "rust-tools.utils.utils"
-  local full_command = utils.chain_commands {
-    utils.make_command_from_args("cd", { cwd }),
-    utils.make_command_from_args(command, args),
-  }
-
+  -- local full_command = utils.chain_commands {
+  --   utils.make_command_from_args("cd", { cwd }),
+  --   utils.make_command_from_args(command, args),
+  -- }
+  local full_command = utils.make_command_from_args(command, args)
   utils.delete_buf(executor.latest_buf_id)
   executor.latest_buf_id = vim.api.nvim_create_buf(false, true)
 
@@ -21,7 +21,7 @@ executor.execute_command = function(command, args, cwd)
   vim.api.nvim_buf_set_keymap(executor.latest_buf_id, "n", "<Tab>", "<C-w>k", { noremap = true })
 
   -- run the command
-  vim.fn.termopen(full_command)
+  vim.fn.termopen(full_command, { cwd = cwd })
 
   local function onDetach(_, _)
     executor.latest_buf_id = nil

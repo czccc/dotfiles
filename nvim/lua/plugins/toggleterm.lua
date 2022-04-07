@@ -13,12 +13,18 @@ M.packer = {
 M.config = {
   setup = {
     -- size can be a number or function which is passed the current terminal
-    size = 20,
+    size = function(term)
+      if term.direction == "horizontal" then
+        return 15
+      elseif term.direction == "vertical" then
+        return vim.o.columns * 0.4
+      end
+    end,
     open_mapping = [[<c-\>]],
     hide_numbers = true, -- hide the number column in toggleterm buffers
     shade_filetypes = {},
-    shade_terminals = true,
-    shading_factor = 2, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
+    shade_terminals = false,
+    shading_factor = false, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
     start_in_insert = true,
     insert_mappings = true, -- whether or not the open mapping applies in insert mode
     persist_size = false,
@@ -78,7 +84,6 @@ M.setup = function()
       -- NOTE: unable to consistently bind id/count <= 9, see #2146
       count = c + 100,
       direction = exec[4] or config.setup.direction,
-      size = config.setup.size,
     }
     M.add_exec(opts)
   end
@@ -111,7 +116,7 @@ M.add_exec = function(opts)
   end
 
   local exec_func = string.format(
-    "<cmd>lua require('plugins.toggleterm')._exec_toggle({ cmd = '%s', count = %d, direction = '%s'})<CR>",
+    "<cmd>lua require('plugins.toggleterm')._exec_toggle({ cmd = '%s', count = %d, direction = '%s' })<CR>",
     opts.cmd,
     opts.count,
     opts.direction
@@ -132,8 +137,13 @@ end
 
 M._exec_toggle = function(opts)
   local Terminal = require("toggleterm.terminal").Terminal
-  local term = Terminal:new { cmd = opts.cmd, count = opts.count, direction = opts.direction }
-  term:toggle(M.config.setup.size, opts.direction)
+  local term = Terminal:new {
+    cmd = opts.cmd,
+    hidden = true,
+    count = opts.count,
+    direction = opts.direction,
+  }
+  term:toggle()
 end
 
 -- ---Toggles a log viewer according to log.viewer.layout_config
