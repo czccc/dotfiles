@@ -201,6 +201,19 @@ local components = {
     end,
     -- cond = conditions.large_window,
   },
+  gps = {
+    function()
+      local status_ok, gps = pcall(require, "nvim-gps")
+      if not status_ok then
+        return ""
+      end
+      if not gps.is_avaliable() then
+        return ""
+      end
+      return gps.get_location()
+    end,
+    cond = conditions.large_window,
+  },
   location = {
     "location",
     -- cond = conditions.wide_window,
@@ -334,6 +347,7 @@ M.config = {
       components.filetype,
       components.filename,
       components.diff,
+      components.gps,
       components.lsp_progress,
       "%=",
     },

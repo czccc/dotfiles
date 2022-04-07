@@ -34,13 +34,13 @@ M.packers = {
       require("plugins.themes").setup_onedark()
     end,
   },
-  -- {
-  --   "olimorris/onedarkpro.nvim",
-  --   -- opt = true,
-  --   config = function()
-  --     require("plugins.themes").setup_onedark_pro()
-  --   end,
-  -- },
+  {
+    "olimorris/onedarkpro.nvim",
+    -- opt = true,
+    config = function()
+      require("plugins.themes").setup_onedark_pro()
+    end,
+  },
   {
     "NTBBloodbath/doom-one.nvim",
     -- opt = true,
@@ -112,7 +112,7 @@ M.setup_onedark = function()
     term_colors = true, -- Change terminal color as per the selected theme style
     ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
     -- toggle theme style ---
-    toggle_style_key = "<leader>vs", -- Default keybinding to toggle
+    toggle_style_key = "<NOP>", -- Default keybinding to toggle
     -- toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
     toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
 
@@ -121,19 +121,24 @@ M.setup_onedark = function()
     -- You can configure multiple style with comma seperated, For e.g., keywords = 'italic,bold'
     code_style = {
       comments = "italic",
-      keywords = "italic",
-      -- functions = "none",
-      -- strings = "none",
-      -- variables = "none",
+      keywords = "italic,bold",
+      functions = "none",
+      strings = "none",
+      variables = "none",
     },
 
     -- Custom Highlights --
     colors = {}, -- Override default colors
     highlights = {
-      StatusLine = { bg = "#2d3343" },
-      Visual = { bg = "#404859" },
-      -- FocusedSymbol = { bg = "#404859" },
+      StatusLine = { bg = "$bg1" },
       -- StatusLineNC = { bg = "#2d3343" },
+      Visual = { bg = "#404859" },
+      -- Visual = { bg = "$bg3" },
+      TSField = { fg = "$red" },
+      TSOperator = { fg = "$purple" },
+      TSVariable = { fg = "$red" },
+      TSFuncMacro = { fg = "$orange" },
+      TSFuncBuiltin = { fg = "$orange" },
     }, -- Override highlight groups
 
     -- Plugins Config --
@@ -143,12 +148,15 @@ M.setup_onedark = function()
       background = false, -- use background color for virtual text
     },
   }
-  require("onedark").load()
+  -- require("onedark").load()
   local cl = require "core.colors"
   cl.define_links("LspReferenceText", "Visual")
   cl.define_links("LspReferenceRead", "Visual")
   cl.define_links("LspReferenceWrite", "Visual")
   cl.define_links("FocusedSymbol", "Visual")
+  cl.define_links("OperatorSandwichChange", "IncSearch")
+  cl.define_links("OperatorSandwichDelete", "IncSearch")
+  cl.define_links("OperatorSandwichAdd", "IncSearch")
   cl.setup_colorscheme()
 end
 
@@ -164,7 +172,10 @@ M.setup_onedark_pro = function()
       end
     end,
     colors = {}, -- Override default colors by specifying colors for 'onelight' or 'onedark' themes
-    hlgroups = {}, -- Override default highlight groups
+    hlgroups = {
+      StatusLine = { bg = "#33373e" },
+      StatusLineNC = { bg = "#33373e" },
+    }, -- Override default highlight groups
     filetype_hlgroups = {}, -- Override default highlight groups for specific filetypes
     plugins = { -- Override which plugins highlight groups are loaded
       native_lsp = true,

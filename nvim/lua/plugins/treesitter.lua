@@ -11,6 +11,33 @@ M.packers = {
     end,
   },
   {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+  },
+  {
+    "nvim-treesitter/playground",
+    -- cmd: TSHighlightCapturesUnderCursor  TSPlaygroundToggle
+  },
+  {
+    "p00f/nvim-ts-rainbow",
+  },
+  {
+    "andymass/vim-matchup",
+  },
+  {
+    "romgrk/nvim-treesitter-context",
+    -- cmd: TSContextEnable, TSContextDisable and TSContextToggle
+    -- highlight: TreesitterContext
+    config = function()
+      require("plugins.treesitter").setup_context()
+    end,
+  },
+  {
+    "SmiteshP/nvim-gps",
+    config = function()
+      require("plugins.treesitter").setup_gps()
+    end,
+  },
+  {
     "JoosepAlviste/nvim-ts-context-commentstring",
     event = "BufReadPost",
   },
@@ -31,6 +58,7 @@ M.opts = {
     "rust",
     "java",
     "yaml",
+    "query",
   }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   ignore_install = {},
   matchup = {
@@ -93,19 +121,27 @@ M.opts = {
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
         ["]f"] = "@function.outer",
-        ["]]"] = "@class.outer",
+        ["]c"] = "@class.outer",
       },
       goto_next_end = {
         ["]F"] = "@function.outer",
-        ["]["] = "@class.outer",
+        ["]C"] = "@class.outer",
       },
       goto_previous_start = {
         ["[f"] = "@function.outer",
-        ["[["] = "@class.outer",
+        ["[c"] = "@class.outer",
       },
       goto_previous_end = {
         ["[F"] = "@function.outer",
-        ["[]"] = "@class.outer",
+        ["[C"] = "@class.outer",
+      },
+    },
+    lsp_interop = {
+      enable = true,
+      border = "none",
+      peek_definition_code = {
+        ["<leader>lpf"] = "@function.outer",
+        ["<leader>lpF"] = "@class.outer",
       },
     },
   },
@@ -132,9 +168,11 @@ M.opts = {
     },
   },
   rainbow = {
-    enable = false,
+    enable = true,
     extended_mode = true, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
     max_file_lines = 1000, -- Do not enable for files with more than 1000 lines, int
+    -- colors = {}, -- table of hex strings
+    -- termcolors = {} -- table of colour name strings
   },
 }
 
@@ -152,6 +190,155 @@ function M.setup()
   end
 
   treesitter_configs.setup(M.opts)
+end
+
+M.setup_gps = function()
+  require("nvim-gps").setup {
+
+    disable_icons = false, -- Setting it to true will disable all icons
+
+    icons = {
+      ["class-name"] = " ", -- Classes and class-like objects
+      ["function-name"] = " ", -- Functions
+      ["method-name"] = " ", -- Methods (functions inside class-like objects)
+      ["container-name"] = "⛶ ", -- Containers (example: lua tables)
+      ["tag-name"] = "炙", -- Tags (example: html tags)
+    },
+
+    -- Add custom configuration per language or
+    -- Disable the plugin for a language
+    -- Any language not disabled here is enabled by default
+    languages = {
+      -- Some languages have custom icons
+      ["json"] = {
+        icons = {
+          ["array-name"] = " ",
+          ["object-name"] = " ",
+          ["null-name"] = "[] ",
+          ["boolean-name"] = "ﰰﰴ ",
+          ["number-name"] = "# ",
+          ["string-name"] = " ",
+        },
+      },
+      ["latex"] = {
+        icons = {
+          ["title-name"] = "# ",
+          ["label-name"] = " ",
+        },
+      },
+      ["norg"] = {
+        icons = {
+          ["title-name"] = " ",
+        },
+      },
+      ["toml"] = {
+        icons = {
+          ["table-name"] = " ",
+          ["array-name"] = " ",
+          ["boolean-name"] = "ﰰﰴ ",
+          ["date-name"] = " ",
+          ["date-time-name"] = " ",
+          ["float-name"] = " ",
+          ["inline-table-name"] = " ",
+          ["integer-name"] = "# ",
+          ["string-name"] = " ",
+          ["time-name"] = " ",
+        },
+      },
+      ["verilog"] = {
+        icons = {
+          ["module-name"] = " ",
+        },
+      },
+      ["yaml"] = {
+        icons = {
+          ["mapping-name"] = " ",
+          ["sequence-name"] = " ",
+          ["null-name"] = "[] ",
+          ["boolean-name"] = "ﰰﰴ ",
+          ["integer-name"] = "# ",
+          ["float-name"] = " ",
+          ["string-name"] = " ",
+        },
+      },
+      ["yang"] = {
+        icons = {
+          ["module-name"] = " ",
+          ["augment-path"] = " ",
+          ["container-name"] = " ",
+          ["grouping-name"] = " ",
+          ["typedef-name"] = " ",
+          ["identity-name"] = " ",
+          ["list-name"] = "﬘ ",
+          ["leaf-list-name"] = " ",
+          ["leaf-name"] = " ",
+          ["action-name"] = " ",
+        },
+      },
+
+      -- Disable for particular languages
+      -- ["bash"] = false, -- disables nvim-gps for bash
+      -- ["go"] = false,   -- disables nvim-gps for golang
+
+      -- Override default setting for particular languages
+      -- ["ruby"] = {
+      --	separator = '|', -- Overrides default separator with '|'
+      --	icons = {
+      --		-- Default icons not specified in the lang config
+      --		-- will fallback to the default value
+      --		-- "container-name" will fallback to default because it's not set
+      --		["function-name"] = '',    -- to ensure empty values, set an empty string
+      --		["tag-name"] = ''
+      --		["class-name"] = '::',
+      --		["method-name"] = '#',
+      --	}
+      --}
+    },
+
+    separator = " > ",
+
+    -- limit for amount of context shown
+    -- 0 means no limit
+    depth = 0,
+
+    -- indicator used when context hits depth limit
+    depth_limit_indicator = "..",
+  }
+end
+
+M.setup_context = function()
+  require("treesitter-context").setup {
+    enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+    throttle = true, -- Throttles plugin updates (may improve performance)
+    max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+    patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+      -- For all filetypes
+      -- Note that setting an entry here replaces all other patterns for this entry.
+      -- By setting the 'default' entry below, you can control which nodes you want to
+      -- appear in the context window.
+      default = {
+        "class",
+        "function",
+        "method",
+        -- 'for', -- These won't appear in the context
+        -- 'while',
+        -- 'if',
+        -- 'switch',
+        -- 'case',
+      },
+      -- Example for a specific filetype.
+      -- If a pattern is missing, *open a PR* so everyone can benefit.
+      --   rust = {
+      --       'impl_item',
+      --   },
+    },
+    exact_patterns = {
+      -- Example for a specific filetype with Lua patterns
+      -- Treat patterns.rust as a Lua pattern (i.e "^impl_item$" will
+      -- exactly match "impl_item" only)
+      -- rust = true,
+    },
+  }
 end
 
 return M

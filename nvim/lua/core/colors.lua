@@ -51,6 +51,7 @@ M.setup = function()
     },
   }
   M.setup_colorscheme()
+  M.setup_highlights()
 end
 
 return M
