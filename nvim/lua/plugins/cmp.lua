@@ -40,26 +40,22 @@ M.packers = {
     requires = "nvim-treesitter/nvim-treesitter",
   },
   {
-    -- "github/copilot.vim",
-    "gelfand/copilot.vim",
+    "github/copilot.vim",
+    -- "gelfand/copilot.vim",
     config = function()
       require("plugins.cmp").setup_copilot()
     end,
     -- disable = true,
   },
-  {
-    "hrsh7th/cmp-copilot",
-    config = function()
-      require("plugins.cmp").setup_cmp_copilot()
-    end,
-    -- disable = true,
-  },
+  -- {
+  --   "hrsh7th/cmp-copilot",
+  --   -- disable = true,
+  -- },
   -- {
   --   "zbirenbaum/copilot.lua",
   --   event = "InsertEnter",
   --   config = function()
   --     vim.schedule(function()
-  --       ---@diagnostic disable-next-line: different-requires
   --       require "copilot"
   --     end)
   --   end,
@@ -71,15 +67,6 @@ M.packers = {
 }
 
 M.config = {}
-
-M.setup_cmp = function()
-  require("cmp").setup(M.config)
-end
-
-M.setup_cmp_copilot = function()
-  M.config.formatting.source_names["copilot"] = "(Copilot)"
-  table.insert(M.config.sources, { name = "copilot" })
-end
 
 M.methods = {}
 
@@ -228,13 +215,15 @@ end
 
 M.methods.jumpable = jumpable
 
-M.init = function()
+M.setup_cmp = function()
   local status_cmp_ok, cmp = pcall(require, "cmp")
   if not status_cmp_ok then
+    vim.cmd [[ packadd cmp ]]
     return
   end
   local status_luasnip_ok, luasnip = pcall(require, "luasnip")
   if not status_luasnip_ok then
+    vim.cmd [[ packadd luasnip ]]
     return
   end
 
@@ -290,6 +279,7 @@ M.init = function()
         vsnip = "(Snippet)",
         luasnip = "(Snippet)",
         buffer = "(Buffer)",
+        copilot = "(Copilot)",
       },
       duplicates = {
         buffer = 1,
@@ -333,12 +323,17 @@ M.init = function()
       ["<C-f>"] = cmp.mapping.scroll_docs(4),
       -- TODO: potentially fix emmet nonsense
       ["<Tab>"] = cmp.mapping(function(fallback)
+        -- local copilot_keys = vim.fn["copilot#Accept"] ""
+        -- print("bbb" .. copilot_keys)
         if cmp.visible() then
           cmp.select_next_item()
         elseif luasnip.expandable() then
           luasnip.expand()
         elseif jumpable() then
           luasnip.jump(1)
+          -- elseif copilot_keys ~= "" then
+          --   -- print("aaa" .. copilot_keys)
+          --   vim.api.nvim_feedkeys(copilot_keys, "i", true)
         elseif check_backspace() then
           fallback()
         elseif is_emmet_active() then
@@ -365,6 +360,13 @@ M.init = function()
 
       ["<C-Space>"] = cmp.mapping.complete(),
       ["<C-e>"] = cmp.mapping.abort(),
+      ["<Esc>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.abort()
+        else
+          fallback()
+        end
+      end),
       ["<CR>"] = cmp.mapping(function(fallback)
         if cmp.visible() and cmp.confirm(M.config.confirm_opts) then
           if jumpable() then
@@ -383,6 +385,7 @@ M.init = function()
       end),
     },
   }
+  require("cmp").setup(M.config)
 end
 
 M.setup_copilot = function()
@@ -405,7 +408,7 @@ M.setup_copilot = function()
     typescriptreact = true,
     terraform = true,
   }
-  vim.cmd [[ imap <silent><script><expr> <C-G> copilot#Accept("\<CR>") ]]
+  vim.cmd [[ imap <silent><script><expr> <C-L> copilot#Accept("\<CR>") ]]
 end
 
 return M

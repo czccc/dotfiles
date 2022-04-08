@@ -5,7 +5,16 @@ M.packers = {
   { "nvim-lua/plenary.nvim" },
   { "Tastyep/structlog.nvim" },
   { "kyazdani42/nvim-web-devicons" },
-  { "antoinemadec/FixCursorHold.nvim" },
+  {
+    "henriquehbr/nvim-startup.lua",
+    config = function()
+      require("nvim-startup").setup()
+    end,
+  },
+  {
+    "antoinemadec/FixCursorHold.nvim",
+    event = "BufRead",
+  },
   { "mtdl9/vim-log-highlighting", ft = { "text", "log" } },
   { "b0o/schemastore.nvim" },
   {
@@ -66,12 +75,14 @@ M.packers = {
     config = function()
       require("plugins.misc").setup_sandwich()
     end,
+    event = "BufRead",
   },
   {
     "mbbill/undotree",
     config = function()
       require("plugins.misc").setup_undotree()
     end,
+    cmd = { "UndotreeToggle" },
   },
   {
     "chentau/marks.nvim",

@@ -9,7 +9,6 @@ local plugin_files = {
 
   "plugins.themes",
 
-  -- "plugins.nvim_tree",
   "plugins.neotree",
   "plugins.bufferline",
   "plugins.gitsigns",
@@ -20,7 +19,6 @@ local plugin_files = {
   "plugins.treesitter",
   "plugins.trouble",
   "plugins.cmp",
-  -- "plugins.copilot",
   "plugins.comment",
 
   "plugins.tmux",

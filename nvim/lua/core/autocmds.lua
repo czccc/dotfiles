@@ -23,6 +23,7 @@ M.autocommands = {
     { "FileType", "alpha,floaterm", "nnoremap <silent> <buffer> q :q<CR>" },
     { "FileType", "qf,help,man", "nnoremap <silent> <buffer> q :close<CR>" },
     { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" },
+    { "FileType", "lspinfo", "nnoremap <silent> <buffer> <Esc> :close<CR>" },
   },
   buffer_setting = {
     { "TermOpen", "*", "setlocal nonumber norelativenumber" },

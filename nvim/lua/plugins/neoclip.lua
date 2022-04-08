@@ -12,6 +12,7 @@ M.packer = {
   config = function()
     require("plugins.neoclip").setup()
   end,
+  event = "BufRead",
 }
 
 local function is_whitespace(line)

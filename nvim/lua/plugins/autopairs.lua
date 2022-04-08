@@ -6,7 +6,7 @@ M.packer = {
   config = function()
     require("plugins.autopairs").setup()
   end,
-  disable = false,
+  disable = true,
 }
 
 M.config = {

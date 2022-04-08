@@ -11,10 +11,10 @@ M.packers = {
     config = function()
       vim.g.vscode_style = "dark"
     end,
+    disable = true,
   },
   {
     "folke/tokyonight.nvim",
-    -- opt = true,
     config = function()
       require("plugins.themes").setup_tokyonight()
     end,
@@ -25,8 +25,12 @@ M.packers = {
     config = function()
       require("plugins.themes").setup_kanagawa()
     end,
+    disable = true,
   },
-  { "LunarVim/onedarker.nvim" },
+  {
+    "LunarVim/onedarker.nvim",
+    disable = true,
+  },
   {
     "navarasu/onedark.nvim",
     -- opt = true,
@@ -40,6 +44,7 @@ M.packers = {
     config = function()
       require("plugins.themes").setup_onedark_pro()
     end,
+    disable = true,
   },
   {
     "NTBBloodbath/doom-one.nvim",
@@ -47,6 +52,7 @@ M.packers = {
     config = function()
       require("plugins.themes").setup_doom_one()
     end,
+    disable = true,
   },
   {
     "EdenEast/nightfox.nvim",
@@ -54,6 +60,7 @@ M.packers = {
     config = function()
       require("plugins.themes").setup_nightfox()
     end,
+    disable = true,
   },
 }
 
