@@ -139,7 +139,7 @@ M.setup_session_manager = function()
   -- open NvimTree without focusing the explorer
   -- you can put this line in session manager's setup configuration, in your init.lua, or anywhere as long as it is called
   require("core.autocmds").define_augroups {
-    session_manager = {
+    user_session_manager = {
       {
         "User",
         "SessionLoadPost",
@@ -235,10 +235,12 @@ function M.close_explorer()
 end
 
 function M.restore_explorer()
+  ---@diagnostic disable-next-line: unused-local
   local neotree_status_ok, neotree = pcall(require, "neo-tree.command")
   if neotree_status_ok then
-    pcall(neotree.execute, { action = "close" })
-    pcall(neotree.execute, { action = "show" })
+    -- pcall(neotree.execute, { action = "close" })
+    -- pcall(neotree.execute, { action = "focus" })
+    pcall(vim.cmd, [[ Neotree filesystem show reveal ]])
     pcall(vim.cmd, vim.api.nvim_replace_termcodes("normal <C-w>=", true, true, true))
     return
   end

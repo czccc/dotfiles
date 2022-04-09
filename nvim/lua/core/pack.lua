@@ -25,7 +25,7 @@ function M.init_packer()
     compile_path = compile_path,
     log = { level = log_level },
     git = {
-      clone_timeout = 300,
+      clone_timeout = 30,
       subcommands = {
         -- this is more efficient than what Packer is using
         fetch = "fetch --no-tags --no-recurse-submodules --update-shallow --progress",
@@ -38,6 +38,11 @@ function M.init_packer()
         return require("packer.util").float { border = "rounded" }
       end,
     },
+    profile = {
+      enable = false,
+      threshold = 1, -- integer in milliseconds, plugins which load faster than this won't be shown in profile output
+    },
+    autoremove = true,
   }
 end
 

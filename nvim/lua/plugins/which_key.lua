@@ -80,6 +80,7 @@ M.config = {
   mappings = {},
   vmappings = {},
   nmappings = {
+    ["="] = { "<C-w>=", "Resize Windows" },
     ["w"] = { "<cmd>w!<CR>", "Save" },
     ["q"] = { "<cmd>q!<CR>", "Quit" },
     ["Q"] = { "<cmd>wqa<cr>", "Quit" },
@@ -134,6 +135,7 @@ M.config = {
       name = "Utils",
       i = { "<cmd>lua require('core.info').toggle_popup(vim.bo.filetype)<cr>", "Info" },
       a = { "<cmd>Alpha<CR>", "Dashboard" },
+      p = { "<cmd>lua require('utils.startup').setup({print=true})<cr>", "Startup Time" },
       s = {
         name = "Session",
       },

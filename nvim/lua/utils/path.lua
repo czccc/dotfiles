@@ -1,12 +1,13 @@
-local path = {}
+local Path = {}
 local uv = vim.loop
 
-path.os_name = vim.loop.os_uname().sysname
-path.is_mac = path.os_name == "Darwin"
-path.is_linux = path.os_name == "Linux"
-path.is_windows = path.os_name == "Windows_NT"
-path.home_dir = path.is_windows and os.getenv "USERPROFILE" or os.getenv "HOME"
-path.in_headless = #vim.api.nvim_list_uis() == 0
+Path.os_name = vim.loop.os_uname().sysname
+Path.is_mac = Path.os_name == "Darwin"
+Path.is_linux = Path.os_name == "Linux"
+Path.is_windows = Path.os_name == "Windows_NT"
+Path.is_wsl = Path.is_linux and vim.fn.has "wsl" ~= 0
+Path.home_dir = Path.is_windows and os.getenv "USERPROFILE" or os.getenv "HOME"
+Path.in_headless = #vim.api.nvim_list_uis() == 0
 
 -- local function get_separator()
 --     if path.is_windows then
@@ -15,22 +16,22 @@ path.in_headless = #vim.api.nvim_list_uis() == 0
 --     return '/'
 -- end
 
-path.separator = vim.loop.os_uname().version:match "Windows" and "\\" or "/"
-path.join = function(...)
-  return table.concat({ ... }, path.separator)
+Path.separator = vim.loop.os_uname().version:match "Windows" and "\\" or "/"
+Path.join = function(...)
+  return table.concat({ ... }, Path.separator)
 end
 
-function path.is_file(path)
+function Path.is_file(path)
   local stat = uv.fs_stat(path)
   return stat and stat.type == "file" or false
 end
 
-function path.is_directory(path)
+function Path.is_directory(path)
   local stat = uv.fs_stat(path)
   return stat and stat.type == "directory" or false
 end
 
-function path.write_file(path, txt, flag)
+function Path.write_file(path, txt, flag)
   local data = type(txt) == "string" and txt or vim.inspect(txt)
   uv.fs_open(path, flag, 438, function(open_err, fd)
     assert(not open_err, open_err)
@@ -43,38 +44,38 @@ function path.write_file(path, txt, flag)
   end)
 end
 
-function path.require_clean(module)
+function Path.require_clean(module)
   package.loaded[module] = nil
   _G[module] = nil
   local _, requested = pcall(require, module)
   return requested
 end
 
-path.runtime_dir = vim.fn.stdpath "data"
-path.config_dir = vim.fn.stdpath "config"
-path.cache_dir = vim.fn.stdpath "cache"
+Path.runtime_dir = vim.fn.stdpath "data"
+Path.config_dir = vim.fn.stdpath "config"
+Path.cache_dir = vim.fn.stdpath "cache"
 
-path.site_dir = path.join(vim.fn.stdpath "data", "site")
-path.pack_dir = path.join(path.runtime_dir, "site", "pack")
-path.pack_install_dir = path.join(path.runtime_dir, "site", "pack", "packer", "start", "packer.nvim")
-path.pack_compile_path = path.join(path.config_dir, "plugin", "packer_compiled.lua")
+Path.site_dir = Path.join(vim.fn.stdpath "data", "site")
+Path.pack_dir = Path.join(Path.runtime_dir, "site", "pack")
+Path.pack_install_dir = Path.join(Path.runtime_dir, "site", "pack", "packer", "start", "packer.nvim")
+Path.pack_compile_path = Path.join(Path.config_dir, "plugin", "packer_compiled.lua")
 
-path.session_dir = path.join(path.runtime_dir, "sessions")
-path.dap_install_path = path.join(path.runtime_dir, "dap_install")
-path.lsp_install_path = path.join(path.runtime_dir, "lsp_servers")
+Path.session_dir = Path.join(Path.runtime_dir, "sessions")
+Path.dap_install_path = Path.join(Path.runtime_dir, "dap_install")
+Path.lsp_install_path = Path.join(Path.runtime_dir, "lsp_servers")
 
-path.cache_path = vim.fn.stdpath "cache"
+Path.cache_path = vim.fn.stdpath "cache"
 
 local create_dir = function()
   local data_dir = {
-    path.join(path.cache_path, "backup"),
-    path.join(path.cache_path, "sessions"),
-    path.join(path.cache_path, "swap"),
-    path.join(path.cache_path, "tags"),
-    path.join(path.cache_path, "undo"),
-    path.join(path.site_path, "lua"),
+    Path.join(Path.cache_path, "backup"),
+    Path.join(Path.cache_path, "sessions"),
+    Path.join(Path.cache_path, "swap"),
+    Path.join(Path.cache_path, "tags"),
+    Path.join(Path.cache_path, "undo"),
+    Path.join(Path.site_path, "lua"),
   }
-  os.execute("mkdir -p " .. path.cache_path)
+  os.execute("mkdir -p " .. Path.cache_path)
   for _, v in pairs(data_dir) do
     if vim.fn.isdirectory(v) == 0 then
       os.execute("mkdir -p " .. v)
@@ -82,6 +83,6 @@ local create_dir = function()
   end
 end
 
-path.create_dir = create_dir
+Path.create_dir = create_dir
 
-return path
+return Path

@@ -6,12 +6,12 @@ M.packers = {
   { "Tastyep/structlog.nvim" },
   { "lewis6991/impatient.nvim" },
   { "kyazdani42/nvim-web-devicons" },
-  {
-    "henriquehbr/nvim-startup.lua",
-    config = function()
-      require("nvim-startup").setup()
-    end,
-  },
+  -- {
+  --   "henriquehbr/nvim-startup.lua",
+  --   config = function()
+  --     require("nvim-startup").setup()
+  --   end,
+  -- },
   {
     "antoinemadec/FixCursorHold.nvim",
     event = "BufRead",

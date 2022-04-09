@@ -16,6 +16,22 @@ M.setup = function()
     neotree.config.filesystem.follow_current_file = false
     neotree.config.filesystem.use_libuv_file_watcher = false
   end
+  if path.is_wsl then
+    vim.cmd [[
+        let g:clipboard = {
+              \   'name': 'win32yank-wsl',
+              \   'copy': {
+              \      '+': 'win32yank.exe -i --crlf',
+              \      '*': 'win32yank.exe -i --crlf',
+              \    },
+              \   'paste': {
+              \      '+': 'win32yank.exe -o --lf',
+              \      '*': 'win32yank.exe -o --lf',
+              \   },
+              \   'cache_enabled': 0,
+              \ }
+    ]]
+  end
 end
 
 return M
