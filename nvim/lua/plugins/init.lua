@@ -14,6 +14,8 @@ local plugin_files = {
   "plugins.gitsigns",
   "plugins.lualine",
   "plugins.autopairs",
+  "plugins.wilder",
+  "plugins.alpha",
 
   "plugins.telescope",
   "plugins.treesitter",
@@ -26,9 +28,8 @@ local plugin_files = {
   "plugins.async",
 
   -- "plugins.project",
-  "plugins.workspaces",
+  -- "plugins.workspaces",
   "plugins.session",
-  "plugins.possession",
 
   "plugins.lsp",
   "plugins.dap",

@@ -4,6 +4,7 @@ M.packers = {
   { "nvim-lua/popup.nvim" },
   { "nvim-lua/plenary.nvim" },
   { "Tastyep/structlog.nvim" },
+  { "lewis6991/impatient.nvim" },
   { "kyazdani42/nvim-web-devicons" },
   {
     "henriquehbr/nvim-startup.lua",
@@ -37,18 +38,6 @@ M.packers = {
       require("colorizer").setup({ "*" }, { css = true })
     end,
     event = { "BufRead" },
-  },
-  {
-    "gelguy/wilder.nvim",
-    -- event = { "CursorHold", "CmdlineEnter" },
-    rocks = { "luarocks-fetch-gitrec", "pcre2" },
-    requires = { "romgrk/fzy-lua-native" },
-    config = function()
-      local path = require "utils.path"
-      vim.cmd(string.format("source %s", path.join(path.config_dir, "vimscript", "wilder.vim")))
-    end,
-    run = ":UpdateRemotePlugins",
-    disable = false,
   },
   {
     "ethanholz/nvim-lastplace",

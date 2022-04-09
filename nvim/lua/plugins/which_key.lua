@@ -30,6 +30,7 @@ M.config = {
       },
       spelling = { enabled = true, suggestions = 20 }, -- use which-key for spelling hints
     },
+    operators = { gc = "Comments", c = "Change" },
     icons = {
       breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
       separator = "➜", -- symbol used between a key and it's label
@@ -45,6 +46,7 @@ M.config = {
       height = { min = 4, max = 25 }, -- min and max height of the columns
       width = { min = 20, max = 50 }, -- min and max width of the columns
       spacing = 3, -- spacing between columns
+      align = "left", -- align columns left, center or right
     },
     hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ " }, -- hide mapping boilerplate
     show_help = true, -- show help message on the command line when the popup is visible
@@ -124,7 +126,7 @@ M.config = {
       l = { "<cmd>Telescope resume<cr>", "Resume" },
       m = { "<cmd>Telescope commands<cr>", "Commands" },
       M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
-      p = { "<cmd>lua require('plugins.telescope').projects()<cr>", "Projects" },
+      p = { "Projects" }, -- filled by other plugins
       r = { "<cmd>Telescope registers<cr>", "Registers" },
       s = { "<cmd>Telescope<cr>", "Telescope" },
     },
@@ -133,10 +135,7 @@ M.config = {
       i = { "<cmd>lua require('core.info').toggle_popup(vim.bo.filetype)<cr>", "Info" },
       a = { "<cmd>Alpha<CR>", "Dashboard" },
       s = {
-        name = "+Session",
-        s = { "<cmd>SaveSession<cr>", "SaveSession" },
-        r = { "<cmd>RestoreSession<cr>", "RestoreSession" },
-        d = { "<cmd>DeleteSession<cr>", "DeleteSession" },
+        name = "Session",
       },
     },
     ["v"] = {

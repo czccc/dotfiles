@@ -171,8 +171,17 @@ M.opts = {
     enable = true,
     extended_mode = true, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
     max_file_lines = 1000, -- Do not enable for files with more than 1000 lines, int
-    -- colors = {}, -- table of hex strings
+    colors = {
+      -- "#ca72e4",
+      -- "#97ca72",
+      -- "#ef5f6b",
+      -- "#d99a5e",
+      -- "#5ab0f6",
+      -- "#ebc275",
+      -- "#4dbdcb",
+    }, -- table of hex strings
     -- termcolors = {} -- table of colour name strings
+    require("core.colors").define_styles("rainbowcol1", { guifg = "#4dbdcb" }),
   },
 }
 

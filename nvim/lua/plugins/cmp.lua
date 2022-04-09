@@ -343,7 +343,7 @@ M.setup_cmp = function()
         end
       end, {
         "i",
-        "s",
+        "c",
       }),
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
@@ -355,7 +355,7 @@ M.setup_cmp = function()
         end
       end, {
         "i",
-        "s",
+        "c",
       }),
 
       ["<C-Space>"] = cmp.mapping.complete(),

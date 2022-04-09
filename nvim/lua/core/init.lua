@@ -1,5 +1,4 @@
 local M = {}
--- local Log = require "core.log"
 
 local leader_map = function()
   -- vim.api.nvim_set_keymap("", "<Space>", "<Nop>", { noremap = true, silent = true })
@@ -9,27 +8,9 @@ local leader_map = function()
   -- vim.api.nvim_set_keymap("x", " ", "", {noremap = true})
 end
 
-M.config = function()
-  require "core.global"
-  require("core.log"):init()
-  -- require("core.autocmds").config()
-  require("core.pack").init()
-  require("plugins").init()
-
-  require("core.osconf").setup()
-end
-
-M.setup = function()
-  leader_map()
-  require("core.options").setup()
-  require("core.keymap").setup()
-
-  require("core.autocmds").setup()
-  require("core.pack").setup()
-  -- require("plugins").setup()
-end
-
 M.load_core = function()
+  pcall(require, "impatient")
+  -- require("impatient").enable_profile()
   leader_map()
   require "core.global"
   require("core.options").setup()

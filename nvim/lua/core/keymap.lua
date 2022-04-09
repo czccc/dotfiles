@@ -7,6 +7,7 @@ M.keys = {
   ["i"] = {
     ["<C-a>"] = "<ESC>ggVG",
     ["<C-s>"] = "<ESC>:w<CR>",
+    ["<C-z>"] = "<C-G>u<C-U>",
 
     ["jk"] = "<ESC>",
     ["kj"] = "<ESC>",

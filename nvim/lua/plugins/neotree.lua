@@ -59,6 +59,10 @@ M.config = {
       folder_empty = "ﰊ",
       default = "*",
     },
+    modified = {
+      symbol = "",
+      highlight = "NeoTreeModified",
+    },
     name = {
       trailing_slash = false,
       use_git_status_colors = true,
@@ -75,8 +79,8 @@ M.config = {
         -- untracked = "",
         untracked = "✚",
         ignored = "",
-        -- unstaged = "",
-        unstaged = "",
+        unstaged = "",
+        -- unstaged = "",
         staged = "",
         conflict = "",
       },
@@ -243,6 +247,12 @@ M.setup = function()
   require("plugins.which_key").register {
     ["e"] = { "<cmd>Neotree filesystem reveal<CR>", "Explorer" },
     ["E"] = { "<cmd>Neotree toggle<CR>", "Explorer" },
+    ["v"] = {
+      ["g"] = { "<cmd>Neotree git_status left<cr>", "Git Status" },
+      ["G"] = { "<cmd>Neotree git_status float<cr>", "Git Status" },
+      ["b"] = { "<cmd>Neotree buffers left<cr>", "Buffers" },
+      ["B"] = { "<cmd>Neotree buffers float<cr>", "Buffers" },
+    },
   }
 
   -- require("core.colors").define_links("NeoTreeDirectoryIcon", "NvimTreeFolderIcon")
