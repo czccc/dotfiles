@@ -19,23 +19,50 @@ M.packer = {
 }
 
 M.set_hlslens_keymaps = function()
-  local opts = { noremap = true, silent = true }
-  vim.api.nvim_set_keymap(
-    "n",
-    "n",
-    "<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>",
-    opts
-  )
-  vim.api.nvim_set_keymap(
-    "n",
-    "N",
-    "<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>",
-    opts
-  )
-  vim.api.nvim_set_keymap("n", "*", "*<Cmd>lua require('hlslens').start()<CR>", opts)
-  vim.api.nvim_set_keymap("n", "#", "#<Cmd>lua require('hlslens').start()<CR>", opts)
-  vim.api.nvim_set_keymap("n", "g*", "g*<Cmd>lua require('hlslens').start()<CR>", opts)
-  vim.api.nvim_set_keymap("n", "g#", "g#<Cmd>lua require('hlslens').start()<CR>", opts)
+  local wk = require "plugins.which_key"
+  wk.register({
+    ["n"] = {
+      "<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>",
+      "Search Next",
+    },
+    ["N"] = {
+      "<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>",
+      "Search Previous",
+    },
+    ["*"] = {
+      "*<Cmd>lua require('hlslens').start()<CR>",
+      "Search Cursor Word Forward",
+    },
+    ["#"] = {
+      "#<Cmd>lua require('hlslens').start()<CR>",
+      "Search Cursor Word Backward",
+    },
+    ["g*"] = {
+      "g*<Cmd>lua require('hlslens').start()<CR>",
+      "Search Cursor Word Forward",
+    },
+    ["g#"] = {
+      "g#<Cmd>lua require('hlslens').start()<CR>",
+      "Search Cursor Word Backward",
+    },
+  }, wk.config.opts)
+  -- local opts = { noremap = true, silent = true }
+  -- vim.api.nvim_set_keymap(
+  --   "n",
+  --   "n",
+  --   "<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>",
+  --   opts
+  -- )
+  -- vim.api.nvim_set_keymap(
+  --   "n",
+  --   "N",
+  --   "<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>",
+  --   opts
+  -- )
+  -- vim.api.nvim_set_keymap("n", "*", "*<Cmd>lua require('hlslens').start()<CR>", opts)
+  -- vim.api.nvim_set_keymap("n", "#", "#<Cmd>lua require('hlslens').start()<CR>", opts)
+  -- vim.api.nvim_set_keymap("n", "g*", "g*<Cmd>lua require('hlslens').start()<CR>", opts)
+  -- vim.api.nvim_set_keymap("n", "g#", "g#<Cmd>lua require('hlslens').start()<CR>", opts)
 end
 
 M.setup_hlslens = function()
@@ -46,7 +73,7 @@ M.setup_hlslens = function()
   local opts = {
     auto_enable = true,
     calm_down = true,
-    enable_incsearch = false,
+    enable_incsearch = true,
     nearest_only = false,
     override_lens = function(render, plist, nearest, idx, r_idx)
       local sfw = vim.v.searchforward == 1

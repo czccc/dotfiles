@@ -63,7 +63,8 @@ M.config = {
 
 M.setup = function()
   require("tmux").setup(M.config)
-  require("plugins.which_key").register {
+  local wk = require "plugins.which_key"
+  wk.register {
     ["t"] = {
       ["m"] = {
         name = "Tmux",
@@ -74,6 +75,12 @@ M.setup = function()
       },
     },
   }
+  wk.register({
+    ["<C-h>"] = "Move Left",
+    ["<C-j>"] = "Move Bottom",
+    ["<C-k>"] = "Move Up",
+    ["<C-l>"] = "Move Right",
+  }, wk.config.opts)
 end
 
 return M

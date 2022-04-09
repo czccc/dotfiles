@@ -199,6 +199,19 @@ function M.setup()
   end
 
   treesitter_configs.setup(M.opts)
+
+  local wk = require "plugins.which_key"
+  wk.register(M.opts.textobjects.select.keymaps, { mode = "o", prefix = "", preset = true })
+  wk.register({
+    ["]f"] = "Next Function Start",
+    ["]c"] = "Next Class Start",
+    ["]F"] = "Next Function End",
+    ["]C"] = "Next Class End",
+    ["[f"] = "Previous Function Start",
+    ["[c"] = "Previous Class Start",
+    ["[F"] = "Previous Function End",
+    ["[C"] = "Previous Class End",
+  }, { mode = "n", prefix = "", preset = true })
 end
 
 M.setup_gps = function()

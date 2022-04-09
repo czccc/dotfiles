@@ -77,7 +77,14 @@ M.config = {
   },
   -- NOTE: Prefer using : over <cmd> as the latter avoids going back in normal-mode.
   -- see https://neovim.io/doc/user/map.html#:map-cmd
-  mappings = {},
+  mappings = {
+    ["["] = { name = "Previous Move" },
+    ["]"] = { name = "Next Move" },
+    ["g"] = { name = "Goto" },
+    ["z"] = { name = "Fold" },
+    ["S"] = { name = "Sandwich" },
+    ["<Leader>"] = { name = "Leader" },
+  },
   vmappings = {},
   nmappings = {
     ["="] = { "<C-w>=", "Resize Windows" },
