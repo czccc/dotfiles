@@ -62,6 +62,7 @@ M.config = {
 }
 
 M.setup = function()
+  ---@diagnostic disable-next-line: redundant-parameter
   require("tmux").setup(M.config)
   local wk = require "plugins.which_key"
   wk.register {
