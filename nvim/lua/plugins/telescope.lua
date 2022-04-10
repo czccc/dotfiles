@@ -17,9 +17,9 @@ M.packers = {
     "nvim-telescope/telescope-frecency.nvim",
     requires = { "tami5/sqlite.lua" },
   },
-  {
-    "nvim-telescope/telescope-file-browser.nvim",
-  },
+  -- {
+  --   "nvim-telescope/telescope-file-browser.nvim",
+  -- },
   {
     "nvim-telescope/telescope-ui-select.nvim",
   },
@@ -188,7 +188,7 @@ function M.setup()
   telescope.setup(M.config)
   require("telescope").load_extension "fzf"
   require("telescope").load_extension "frecency"
-  require("telescope").load_extension "file_browser"
+  -- require("telescope").load_extension "file_browser"
   require("telescope").load_extension "ui-select"
 
   require("core.autocmds").define_augroups {
@@ -299,6 +299,14 @@ function M.git_files()
   require("telescope.builtin").git_files(opts)
 end
 
+function M.project_search()
+  local ok = pcall(require("telescope.builtin").git_files)
+
+  if not ok then
+    require("telescope.builtin").find_files()
+  end
+end
+
 function M.live_grep()
   local opts = ivy_opts()
   opts.file_ignore_patterns = {
@@ -314,14 +322,15 @@ function M.live_grep()
   require("telescope.builtin").live_grep(opts)
 end
 
+local visual_selection = function()
+  local save_previous = vim.fn.getreg "a"
+  vim.api.nvim_command 'silent! normal! "ayiw'
+  local selection = vim.fn.trim(vim.fn.getreg "a")
+  vim.fn.setreg("a", save_previous)
+  return vim.fn.substitute(selection, [[\n]], [[\\n]], "g")
+end
+
 function M.grep_cursor_string()
-  local visual_selection = function()
-    local save_previous = vim.fn.getreg "a"
-    vim.api.nvim_command 'silent! normal! "ayiw'
-    local selection = vim.fn.trim(vim.fn.getreg "a")
-    vim.fn.setreg("a", save_previous)
-    return vim.fn.substitute(selection, [[\n]], [[\\n]], "g")
-  end
   local opts = ivy_opts()
   opts.default_text = visual_selection()
   opts.file_ignore_patterns = {
@@ -335,6 +344,12 @@ function M.grep_cursor_string()
     "%.ttf",
   }
   require("telescope.builtin").live_grep(opts)
+end
+
+function M.curbuf_grep_cursor_string()
+  local opts = ivy_opts()
+  opts.default_text = visual_selection()
+  require("telescope.builtin").current_buffer_fuzzy_find(opts)
 end
 
 function M.workspace_frequency()

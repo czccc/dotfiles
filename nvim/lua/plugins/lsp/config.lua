@@ -46,8 +46,8 @@ return {
   buffer_mappings = {
     normal_mode = {
       ["K"] = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Show hover" },
-      ["g["] = { "<cmd>lua vim.diagnostic.goto_next()<cr>", "Diagnostic Next" },
-      ["g]"] = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Diagnostic Prev" },
+      ["g]"] = { "<cmd>lua vim.diagnostic.goto_next()<cr>", "Diagnostic Next" },
+      ["g["] = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Diagnostic Prev" },
       ["ga"] = { "<cmd>lua require('plugins.telescope').code_actions()<CR>", "Code Action" },
       ["gd"] = { "<cmd>lua require('plugins.telescope').lsp_definitions()<CR>", "Goto Definition" },
       ["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto declaration" },
@@ -57,6 +57,8 @@ return {
       ["gt"] = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Goto Type Definition" },
       ["gp"] = { "<cmd>lua require('plugins.lsp.peek').Peek('definition')<CR>", "Peek definition" },
       ["gl"] = { "<cmd>lua require('plugins.lsp.utils').show_line_diagnostics()<CR>", "Line diagnostics" },
+      ["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<cr>", "Next Diagnostic" },
+      ["[d"] = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Previous Diagnostic" },
     },
     insert_mode = {},
     visual_mode = {},

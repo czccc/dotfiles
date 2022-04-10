@@ -29,6 +29,7 @@ function M:setup()
     -- },
 
     null_ls.builtins.code_actions.shellcheck,
+    null_ls.builtins.code_actions.gitsigns,
   }
 
   local default_opts = require("plugins.lsp").get_common_opts()

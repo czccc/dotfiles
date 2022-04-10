@@ -59,6 +59,7 @@ M.config = {
     delay = 1000,
     ignore_whitespace = false,
   },
+  current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
   current_line_blame_formatter_opts = {
     relative_time = false,
   },
@@ -83,7 +84,8 @@ M.config = {
 M.setup = function()
   local gitsigns = require "gitsigns"
   gitsigns.setup(M.config)
-  require("plugins.which_key").register {
+  local wk = require "plugins.which_key"
+  wk.register {
     ["g"] = {
       name = "Git",
       j = { "<cmd>lua require 'gitsigns'.next_hunk()<cr>", "Next Hunk" },
@@ -108,8 +110,20 @@ M.setup = function()
         "<cmd>Gitsigns diffthis HEAD<cr>",
         "Git Diff",
       },
+      t = {
+        name = "Toggle",
+        s = { "<cmd>Gitsigns toggle_signcolumn<cr>", "Toggle Signcolumn" },
+        n = { "<cmd>Gitsigns toggle_numhl<cr>", "Toggle Numhl" },
+        l = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle Linehl" },
+        w = { "<cmd>Gitsigns toggle_word_diff<cr>", "Toggle Word Diff" },
+        b = { "<cmd>Gitsigns toggle_current_line_blame<cr>", "Toggle Line Blame" },
+      },
     },
   }
+  wk.register({
+    ["]g"] = { "<cmd>lua require 'gitsigns'.next_hunk()<cr>", "Next Git Hunk" },
+    ["[g"] = { "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", "Previous Git Hunk" },
+  }, { mode = "n", prefix = "", preset = true })
 end
 
 return M
