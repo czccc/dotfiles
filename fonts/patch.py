@@ -39,6 +39,7 @@ class Info:
                     )
 
     def download(self):
+        self.check_md()
         if self.need_dl:
             print("Downloading {}".format(self.url))
             self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -90,19 +91,17 @@ def parser():
     args = argparse.ArgumentParser()
     args.add_argument("name", choices=font_infos.keys())
     args.add_argument("--proxy", type=bool, default=True)
-    args.add_argument("--cmd", default="wget")
     args = args.parse_args()
     info = font_infos[args.name]
     if args.proxy:
         info.set_proxy()
-    info.check_md()
     return info
 
 
 def main():
     info = parser()
     info.download()
-    # info.patch()
+    info.patch()
 
 
 if __name__ == "__main__":
