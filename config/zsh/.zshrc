@@ -15,7 +15,7 @@ DOTFILES_DIR=${HOME}/dotfiles
 
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   # Using dotfiles dir to get zimfw plugin manager if missing.
-  mkdir -p ${ZIM_HOME} && ln -s ${DOTFILES_DIR}/config/zsh/zimfw.zsh ${ZIM_HOME}/zimfw.zsh
+  mkdir -p ${ZIM_HOME} && cp ${DOTFILES_DIR}/config/zsh/zimfw.zsh ${ZIM_HOME}/zimfw.zsh
   # Using curl to download zimfw plugin manager if missing.
   # curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
   #     https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
@@ -35,5 +35,15 @@ source ${ZIM_HOME}/init.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export TERM=xterm-256color
 
 alias gcl='git clone --recurse-submodules'
+alias vim='nvim'
+alias t='tmux -As0'
+alias tm='tmux'
+alias nv='nvim'
+# alias n='nvim'
+alias lg='lazygit'
+
