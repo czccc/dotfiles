@@ -40,8 +40,9 @@ export LANG=en_US.UTF-8
 export TERM=xterm-256color
 
 alias gcl='git clone --recurse-submodules'
+alias vz='vim ~/.zshrc && source ~/.zshrc'
 alias vim='nvim'
-alias t='tmux -As0'
+alias t='tmux new -As0'
 alias tm='tmux'
 alias nv='nvim'
 # alias n='nvim'
