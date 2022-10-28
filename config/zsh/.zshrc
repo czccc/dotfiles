@@ -1,46 +1,34 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-zstyle ':zim' disable-version-check yes
-zstyle ':zim:input' double-dot-expand yes
-zstyle ':zim:git' aliases-prefix 'g'
-zstyle ':zim:zmodule' use 'degit'
-
-ZIM_HOME=${XDG_CACHE_HOME:-$HOME/.cache}/zim
-DOTFILES_DIR=${HOME}/dotfiles
-
-if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
-  # Using dotfiles dir to get zimfw plugin manager if missing.
-  mkdir -p ${ZIM_HOME} && cp ${DOTFILES_DIR}/config/zsh/zimfw.zsh ${ZIM_HOME}/zimfw.zsh
-  # Using curl to download zimfw plugin manager if missing.
-  # curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
-  #     https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  # using wget to download zimfw plugin manager if missing.
-  # mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
-  #     https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-fi
-
-# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init -q
-fi
-
-# Initialize modules.
-source ${ZIM_HOME}/init.zsh
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-export TERM=xterm-256color
+# export TERM=xterm-256color
 
-alias gcl='git clone --recurse-submodules'
-alias vz='vim ~/.zshrc && source ~/.zshrc'
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:=$HOME/.config}"
+export ZDOTDIR="${ZDOTDIR:=$XDG_CONFIG_HOME/zsh}"
+export DOTFILES_DIR=${HOME}/dotfiles
+# source "$ZDOTDIR/.zshenv"
+if [[ -s "$ZDOTDIR/.zshenv" ]]; then
+  source "$ZDOTDIR/.zshenv"
+fi
+
+if [[ ! -e ${ZDOTDIR}/.prezto ]]; then
+  echo "Init zsh config in ZDOTDIR=\"${ZDOTDIR}\""
+  mkdir -p ${ZDOTDIR} 
+  ln -s ${DOTFILES_DIR}/config/zsh/prezto ${ZDOTDIR}/.zprezto
+  # ln -s ${DOTFILES_DIR}/config/zsh/.zpreztorc ${ZDOTDIR}/.zpreztorc
+  setopt EXTENDED_GLOB
+  for rcfile in "${ZDOTDIR}"/.zprezto/runcoms/^README.md(.N); do
+    ln -s "$rcfile" "${ZDOTDIR}/.${rcfile:t}"
+  done
+fi
+
+# Source Prezto.
+if [[ -s "${ZDOTDIR}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR}/.zprezto/init.zsh"
+fi
+
+alias ll='ls -alh'
+alias l='ls -alh'
+
 alias vim='nvim'
 alias t='tmux new -As0'
 alias tm='tmux'
@@ -48,3 +36,7 @@ alias nv='nvim'
 # alias n='nvim'
 alias lg='lazygit'
 
+alias gcl='git clone --recurse-submodules'
+
+alias vz="vim ~/.zshrc && source ~/.zshrc"
+alias vzp="vim ${ZDOTDIR}/.zpreztorc && source ~/.zshrc"
