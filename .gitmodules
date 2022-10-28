@@ -1,3 +1,6 @@
 [submodule "nvim"]
 	path = nvim
 	url = git@github.com:czccc/nvim.git
+[submodule "config/zsh/prezto"]
+	path = config/zsh/prezto
+	url = git@github.com:czccc/prezto.git
