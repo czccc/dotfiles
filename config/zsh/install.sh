@@ -1,11 +1,11 @@
-
+#!/usr/bin/zsh
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:=$HOME/.config}"
 ZDOTDIR="${ZDOTDIR:=$XDG_CONFIG_HOME/zsh}"
 DOTFILES_DIR=${HOME}/dotfiles
 
 if [[ ! -e ${ZDOTDIR}/.zprezto ]]; then
   echo "Init zsh config in ZDOTDIR=\"${ZDOTDIR}\""
-  mkdir -p ${ZDOTDIR} 
+  mkdir -p ${ZDOTDIR}
   ln -s ${DOTFILES_DIR}/config/zsh/prezto ${ZDOTDIR}/.zprezto
   if [[ -s ${HOME}/.zshrc ]]; then
     echo "Found old .zshrc! Move to .zshrc_bk"
