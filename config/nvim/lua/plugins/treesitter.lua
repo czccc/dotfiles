@@ -21,6 +21,10 @@ return {
         "yaml",
         "query",
         "markdown",
+        "markdown_inline",
+        "vim",
+        "regex",
+        "bash",
         "norg",
       }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
       ignore_install = {},

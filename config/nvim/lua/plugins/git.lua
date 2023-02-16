@@ -97,7 +97,7 @@ return {
       utils.keymap.group("n", "<Leader>g", "Git")
       utils.keymap.group("n", "yog", "GitSigns")
     end,
-    config = function(spec, opts)
+    config = function(_, opts)
       local gitsigns = require("gitsigns")
       gitsigns.setup(opts)
     end,

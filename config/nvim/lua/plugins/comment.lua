@@ -1,10 +1,28 @@
 local utils = require("utils")
 
 return {
+
+  -- comments
+  { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
+  {
+    "echasnovski/mini.comment",
+    event = "VeryLazy",
+    opts = {
+      hooks = {
+        pre = function()
+          require("ts_context_commentstring.internal").update_commentstring({})
+        end,
+      },
+    },
+    config = function(_, opts)
+      require("mini.comment").setup(opts)
+    end,
+  },
   {
     "numToStr/Comment.nvim",
     lazy = true,
     event = "BufReadPost",
+    enabled = false,
     opts = {
       ---Add a space b/w comment and the line
       ---@type boolean

@@ -1,6 +1,55 @@
 local utils = require("utils")
 
 return {
+
+  -- add to treesitter
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        vim.list_extend(opts.ensure_installed, { "lua" })
+      end
+    end,
+  },
+
+  -- correctly setup lspconfig
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        lua_ls = {
+          -- mason = false, -- set to false if you don't want this server to be installed with mason
+          settings = {
+            Lua = {
+              format = {
+                enable = false,
+                -- Put format options here
+                -- NOTE: the value should be STRING!!
+                defaultConfig = {
+                  indent_style = "space",
+                  indent_size = "2",
+                },
+              },
+              diagnostics = {
+                globals = { "vim" },
+              },
+              workspace = {
+                checkThirdParty = false,
+                library = {
+                  [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                  [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                  [utils.join(vim.fn.stdpath("config"), "lua")] = true,
+                },
+                maxPreload = 100000,
+                preloadFileSize = 10000,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   {
     "folke/neodev.nvim",
     lazy = true,
@@ -27,35 +76,6 @@ return {
         -- in your lsp start options
         lspconfig = true,
       })
-      local lspconfig = {
-        settings = {
-          Lua = {
-            format = {
-              enable = false,
-              -- Put format options here
-              -- NOTE: the value should be STRING!!
-              defaultConfig = {
-                indent_style = "space",
-                indent_size = "2",
-              },
-            },
-            diagnostics = {
-              globals = { "vim" },
-            },
-            workspace = {
-              checkThirdParty = false,
-              library = {
-                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                [utils.join(vim.fn.stdpath("config"), "lua")] = true,
-              },
-              maxPreload = 100000,
-              preloadFileSize = 10000,
-            },
-          },
-        },
-      }
-      require("lspconfig")["sumneko_lua"].setup(lspconfig)
     end,
   },
 }

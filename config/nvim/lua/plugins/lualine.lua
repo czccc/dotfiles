@@ -316,7 +316,10 @@ local components = {
     -- cond = conditions.wide_window,
     color = { fg = colors.yellow },
   },
-  progress = { "progress", cond = conditions.wide_window, color = {} },
+  progress = {
+    "progress",
+    cond = conditions.wide_window,
+  },
   spaces = {
     function()
       if not vim.api.nvim_buf_get_option(0, "expandtab") then
@@ -409,7 +412,29 @@ local components = {
     end,
     padding = { left = 0, right = 0 },
     color = { fg = colors.blue },
-    cond = nil,
+  },
+  recording = {
+    function()
+      return require("noice").api.status.mode.get()
+    end,
+    cond = function()
+      return package.loaded["noice"] and require("noice").api.status.mode.has()
+    end,
+    color = { fg = colors.orange },
+  },
+  keymap = {
+    function()
+      return require("noice").api.status.command.get()
+    end,
+    cond = function()
+      return package.loaded["noice"] and require("noice").api.status.command.has()
+    end,
+    color = { fg = colors.green },
+  },
+  updates = {
+    require("lazy.status").updates,
+    cond = require("lazy.status").has_updates,
+    color = { fg = colors.orange },
   },
 }
 
@@ -418,6 +443,9 @@ return {
     "nvim-lualine/lualine.nvim",
     lazy = false,
     event = "VimEnter",
+    -- dependencies = {
+    --   "folke/noice.nvim",
+    -- },
     opts = {
       options = {
         icons_enabled = true,
@@ -445,11 +473,15 @@ return {
         },
         lualine_c = {
           components.diff,
-          components.navic,
-          components.lsp_progress,
+          -- components.navic,
+          -- components.lsp_progress,
           "%=",
         },
         lualine_x = {
+          components.recording,
+          components.keymap,
+          components.updates,
+
           components.diagnostics,
           components.testing,
           -- components.testing1,
@@ -459,7 +491,7 @@ return {
           components.spaces,
           components.encoding,
           components.fileformat,
-          components.clock,
+          -- components.clock,
           components.location,
           components.scrollbar,
         },

@@ -24,95 +24,167 @@ executor.execute_command = function(command, args, cwd)
 end
 
 return {
+  -- add json to treesitter
   {
-    "simrat39/rust-tools.nvim",
-    lazy = true,
-    ft = { "rust", "rs" },
-    config = function()
-      local rust_tools = require("rust-tools")
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        vim.list_extend(opts.ensure_installed, { "rust", "toml" })
+      end
+    end,
+  },
 
-      local opts = {
-        tools = {
-          autoSetHints = true,
-          hover_with_actions = true,
-          executor = executor, -- can be quickfix or termopen
-          runnables = {
-            use_telescope = true,
-            prompt_prefix = "  ",
-            selection_caret = "  ",
-            entry_prefix = "  ",
-            initial_mode = "insert",
-            selection_strategy = "reset",
-            sorting_strategy = "descending",
-            layout_strategy = "vertical",
-            layout_config = {
-              width = 0.3,
-              height = 0.50,
-              preview_cutoff = 0,
-              prompt_position = "bottom",
-            },
-          },
-          debuggables = {
-            use_telescope = true,
-          },
-          inlay_hints = {
-            only_current_line = false,
-            show_parameter_hints = true,
-            parameter_hints_prefix = "<-",
-            other_hints_prefix = "=>",
-            max_len_align = false,
-            max_len_align_padding = 1,
-            right_align = false,
-            right_align_padding = 7,
-            highlight = "Comment",
-          },
-          hover_actions = {
-            border = {
-              { "╭", "FloatBorder" },
-              { "─", "FloatBorder" },
-              { "╮", "FloatBorder" },
-              { "│", "FloatBorder" },
-              { "╯", "FloatBorder" },
-              { "─", "FloatBorder" },
-              { "╰", "FloatBorder" },
-              { "│", "FloatBorder" },
-            },
-            auto_focus = true,
+  -- correctly setup lspconfig
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "simrat39/rust-tools.nvim",
+    },
+    opts = {
+      -- make sure mason installs the server
+      servers = {
+        rust_analyzer = {
+          settings = {
+            ["rust-analyzer"] = {},
           },
         },
-        server = {
-          standalone = true,
-          on_attach = function(client, bufnr)
-            require("utils.lsp").common_on_attach(client, bufnr)
-            -- utils.load_wk({
-            --   name = "Module",
-            --   t = { "<cmd>RustToggleInlayHints<cr>", "Toggle Inlay Hints" },
-            --   r = { "<cmd>RustRunnables<cr>", "Runnables" },
-            --   d = { "<cmd>RustDebuggables<cr>", "Debuggables" },
-            --   e = { "<cmd>RustExpandMacro<cr>", "Expand Macro" },
-            --   c = { "<cmd>RustOpenCargo<cr>", "Open Cargo" },
-            --   R = { "<cmd>RustReloadWorkspace<cr>", "Reload" },
-            --   a = { "<cmd>RustHoverActions<cr>", "Hover Actions" },
-            --   A = { "<cmd>RustHoverRange<cr>", "Hover Range" },
-            --   l = { "<cmd>RustJoinLines<cr>", "Join Lines" },
-            --   j = { "<cmd>RustMoveItemDown<cr>", "Move Item Down" },
-            --   k = { "<cmd>RustMoveItemUp<cr>", "Move Item Up" },
-            --   p = { "<cmd>RustParentModule<cr>", "Parent Module" },
-            --   s = { "<cmd>RustSSR<cr>", "Structural Search Replace" },
-            --   g = { "<cmd>RustViewCrateGraph<cr>", "View Crate Graph" },
-            --   S = { "<cmd>RustStartStandaloneServerForBuffer<cr>", "Standalone Server" },
-            -- }, { prefix = "<Leader>m", mode = "n", opts = { buffer = bufnr } })
-          end,
-          settings = {
-            ["rust-analyzer"] = {
-              checkOnSave = {
-                command = "clippy",
+      },
+      setup = {
+        rust_analyzer = function()
+          require("rust-tools").setup({
+            tools = {
+              autoSetHints = true,
+              executor = executor, -- can be quickfix or termopen
+              runnables = {
+                use_telescope = true,
+                prompt_prefix = "  ",
+                selection_caret = "  ",
+                entry_prefix = "  ",
+                initial_mode = "insert",
+                selection_strategy = "reset",
+                sorting_strategy = "descending",
+                layout_strategy = "vertical",
+                layout_config = {
+                  width = 0.3,
+                  height = 0.50,
+                  preview_cutoff = 0,
+                  prompt_position = "bottom",
+                },
+              },
+              debuggables = {
+                use_telescope = true,
+              },
+              inlay_hints = {
+                only_current_line = false,
+                show_parameter_hints = true,
+                parameter_hints_prefix = "<-",
+                other_hints_prefix = "=>",
+                max_len_align = false,
+                max_len_align_padding = 1,
+                right_align = false,
+                right_align_padding = 7,
+                highlight = "Comment",
+              },
+              hover_actions = {
+                border = {
+                  { "╭", "FloatBorder" },
+                  { "─", "FloatBorder" },
+                  { "╮", "FloatBorder" },
+                  { "│", "FloatBorder" },
+                  { "╯", "FloatBorder" },
+                  { "─", "FloatBorder" },
+                  { "╰", "FloatBorder" },
+                  { "│", "FloatBorder" },
+                },
+                auto_focus = true,
               },
             },
-          },
-        },
-      }
-      rust_tools.setup(opts)
-    end,
+            server = {
+              standalone = true,
+              settings = {
+                ["rust-analyzer"] = {
+                  checkOnSave = {
+                    command = "clippy",
+                  },
+                },
+              },
+              on_attach = function(client, buffer)
+                local utils = require("utils")
+                utils.keymap.set(
+                  "n",
+                  "<Leader>mt",
+                  "<cmd>RustToggleInlayHints<cr>",
+                  { desc = "Toggle Inlay Hints", buffer = buffer }
+                )
+                utils.keymap.set("n", "<Leader>mr", "<cmd>RustRunnables<cr>", { desc = "Runnables", buffer = buffer })
+                utils.keymap.set(
+                  "n",
+                  "<Leader>md",
+                  "<cmd>RustDebuggables<cr>",
+                  { desc = "Debuggables", buffer = buffer }
+                )
+                utils.keymap.set(
+                  "n",
+                  "<Leader>me",
+                  "<cmd>RustExpandMacro<cr>",
+                  { desc = "Expand Macro", buffer = buffer }
+                )
+                utils.keymap.set("n", "<Leader>mc", "<cmd>RustOpenCargo<cr>", { desc = "Open Cargo", buffer = buffer })
+                utils.keymap.set(
+                  "n",
+                  "<Leader>mR",
+                  "<cmd>RustReloadWorkspace<cr>",
+                  { desc = "Reload Workspace", buffer = buffer }
+                )
+                utils.keymap.set(
+                  "n",
+                  "<Leader>ma",
+                  "<cmd>RustHoverActions<cr>",
+                  { desc = "Hover Actions", buffer = buffer }
+                )
+                utils.keymap.set(
+                  "n",
+                  "<Leader>mA",
+                  "<cmd>RustHoverRange<cr>",
+                  { desc = "Hover Range", buffer = buffer }
+                )
+                utils.keymap.set(
+                  "n",
+                  "<Leader>ml",
+                  "<cmd>RustMoveItemDown<cr>",
+                  { desc = "Move Item Down", buffer = buffer }
+                )
+                utils.keymap.set(
+                  "n",
+                  "<Leader>mj",
+                  "<cmd>RustMoveItemUp<cr>",
+                  { desc = "Move Item Up", buffer = buffer }
+                )
+                utils.keymap.set(
+                  "n",
+                  "<Leader>mp",
+                  "<cmd>RustParentModule<cr>",
+                  { desc = "Parent Module", buffer = buffer }
+                )
+                utils.keymap.set("n", "<Leader>ms", "<cmd>RustSSR<cr>", { desc = "SSR", buffer = buffer })
+                utils.keymap.set(
+                  "n",
+                  "<Leader>mg",
+                  "<cmd>RustViewCrateGraph<cr>",
+                  { desc = "View Crate Graph", buffer = buffer }
+                )
+                utils.keymap.set(
+                  "n",
+                  "<Leader>mS",
+                  "<cmd>RustStartStandaloneServerForBuffer<cr>",
+                  { desc = "Standalone Server", buffer = buffer }
+                )
+              end,
+            },
+          })
+          return true
+        end,
+      },
+    },
   },
 }

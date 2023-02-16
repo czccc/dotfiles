@@ -85,6 +85,8 @@ return {
         IlluminatedWordText = { fmt = "none" },
         IlluminatedWordRead = { fmt = "none" },
         IlluminatedWordWrite = { fmt = "none" },
+
+        BufferLineFill = { bg = "$bg0" },
       }, -- Override highlight groups
 
       -- Plugins Config --

@@ -16,7 +16,7 @@ return {
     keys = {
       { "<leader>ua", "<cmd>Alpha<cr>", mode = "n", desc = "Alpha" },
     },
-    config = function(spec, opts)
+    config = function(_, opts)
       local function make_infos()
         local v = vim.version()
         local infos = {}

@@ -18,49 +18,45 @@ local function switch_source_header_splitcmd(bufnr, splitcmd)
   end
 end
 
-return {
-  {
-    "p00f/clangd_extensions.nvim",
-    lazy = true,
-    ft = { "c", "cpp", "objc", "objcpp" },
-    config = function()
-      local clangd_extensions = require("clangd_extensions")
+local clangd_flags = {
+  "--background-index",
+  "-j=12",
+  "--all-scopes-completion",
+  "--pch-storage=disk",
+  "--clang-tidy",
+  "--log=error",
+  "--completion-style=detailed",
+  "--header-insertion=iwyu",
+  "--header-insertion-decorators",
+  -- "--enable-config",
+  "--offset-encoding=utf-16",
+  -- "--ranking-model=heuristics",
+  -- "--folding-ranges",
+}
 
-      local clangd_flags = {
-        "--background-index",
-        "-j=12",
-        "--all-scopes-completion",
-        "--pch-storage=disk",
-        "--clang-tidy",
-        "--log=error",
-        "--completion-style=detailed",
-        "--header-insertion=iwyu",
-        "--header-insertion-decorators",
-        -- "--enable-config",
-        "--offset-encoding=utf-16",
-        -- "--ranking-model=heuristics",
-        -- "--folding-ranges",
-      }
-      clangd_extensions.setup({
-        server = {
-          -- options to pass to nvim-lspconfig
-          -- i.e. the arguments to require("lspconfig").clangd.setup({})
+return {
+
+  -- add to treesitter
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        vim.list_extend(opts.ensure_installed, { "c", "cpp" })
+      end
+    end,
+  },
+
+  -- correctly setup lspconfig
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "p00f/clangd_extensions.nvim",
+    },
+    opts = {
+      -- make sure mason installs the server
+      servers = {
+        clangd = {
           cmd = { "clangd", table.unpack(clangd_flags) },
-          on_attach = function(client, bufnr)
-            require("utils.lsp").common_on_attach(client, bufnr)
-            -- utils.load_wk({
-            --   name = "Module",
-            --   s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch Source Header" },
-            --   S = { "<cmd>ClangdSwitchSourceHeaderSplit<cr>", "Split Source Header" },
-            --   v = { "<cmd>ClangdSwitchSourceHeaderVSplit<cr>", "VSplit Source Header" },
-            --   i = { "<cmd>ClangdSymbolInfo<cr>", "Symbol Info" },
-            --   t = { "<cmd>ClangdTypeHierarchy<cr>", "Type Hierarchy" },
-            --   T = { "<cmd>ClangdToggleInlayHints<cr>", "Toggle Inlay Hints" },
-            --   m = { "<cmd>ClangdMemoryUsage<cr>", "Memory Usage" },
-            --   a = { "<cmd>ClangdAST<cr>", "AST" },
-            -- }, { prefix = "<Leader>m", mode = "n", opts = { buffer = bufnr } })
-          end,
-          capabilities = require("utils.lsp").common_capabilities(),
           commands = {
             ClangdSwitchSourceHeader = {
               function()
@@ -81,45 +77,63 @@ return {
               description = "Open source/header in a new split",
             },
           },
+          on_attach = function(client, buffer)
+            if client.name == "clangd" then
+              -- require("clangd_extensions").setup({})
+              local utils = require("utils")
+              utils.keymap.set(
+                "n",
+                "<Leader>ms",
+                "<cmd>ClangdSwitchSourceHeader<cr>",
+                { desc = "Switch Source Header", buffer = buffer }
+              )
+              utils.keymap.set(
+                "n",
+                "<Leader>mS",
+                "<cmd>ClangdSwitchSourceHeaderSplit<cr>",
+                { desc = "Split Source Header", buffer = buffer }
+              )
+              utils.keymap.set(
+                "n",
+                "<Leader>mv",
+                "<cmd>ClangdSwitchSourceHeaderVSplit<cr>",
+                { desc = "VSplit Source Header", buffer = buffer }
+              )
+              utils.keymap.set(
+                "n",
+                "<Leader>mi",
+                "<cmd>ClangdSymbolInfo<cr>",
+                { desc = "Symbol Info", buffer = buffer }
+              )
+              utils.keymap.set(
+                "n",
+                "<Leader>mt",
+                "<cmd>ClangdTypeHierarchy<cr>",
+                { desc = "Type Hierarchy", buffer = buffer }
+              )
+              utils.keymap.set(
+                "n",
+                "<Leader>mT",
+                "<cmd>ClangdToggleInlayHints<cr>",
+                { desc = "Toggle Inlay Hints", buffer = buffer }
+              )
+              utils.keymap.set(
+                "n",
+                "<Leader>mm",
+                "<cmd>ClangdMemoryUsage<cr>",
+                { desc = "Memory Usage", buffer = buffer }
+              )
+              utils.keymap.set("n", "<Leader>ma", "<cmd>ClangdAST<cr>", { desc = "AST", buffer = buffer })
+            end
+          end,
         },
-        extensions = {
-          -- defaults:
-          -- Automatically set inlay hints (type hints)
-          autoSetHints = true,
-          -- Whether to show hover actions inside the hover window
-          -- This overrides the default hover handler
-          hover_with_actions = true,
-          -- These apply to the default ClangdSetInlayHints command
-          inlay_hints = {
-            -- Only show inlay hints for the current line
-            only_current_line = false,
-            -- Event which triggers a refersh of the inlay hints.
-            -- You can make this "CursorMoved" or "CursorMoved,CursorMovedI" but
-            -- not that this may cause  higher CPU usage.
-            -- This option is only respected when only_current_line and
-            -- autoSetHints both are true.
-            only_current_line_autocmd = "CursorHold",
-            -- wheter to show parameter hints with the inlay hints or not
-            show_parameter_hints = true,
-            -- whether to show variable name before type hints with the inlay hints or not
-            show_variable_name = false,
-            -- prefix for parameter hints
-            parameter_hints_prefix = "<- ",
-            -- prefix for all the other hints (type, chaining)
-            other_hints_prefix = "=> ",
-            -- whether to align to the length of the longest line in the file
-            max_len_align = false,
-            -- padding from the left if max_len_align is true
-            max_len_align_padding = 1,
-            -- whether to align to the extreme right or not
-            right_align = false,
-            -- padding from the right if right_align is true
-            right_align_padding = 7,
-            -- The color of the hints
-            highlight = "Comment",
-          },
-        },
-      })
-    end,
+      },
+      setup = {
+        clangd = function(_, opts)
+          require("clangd_extensions").setup({ server = opts })
+          return true
+        end,
+      },
+    },
   },
 }

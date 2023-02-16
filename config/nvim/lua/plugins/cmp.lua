@@ -1,14 +1,5 @@
 return {
   {
-    "danymat/neogen",
-    lazy = true,
-    opts = { snippet_engine = "luasnip" },
-    dependencies = {
-      "L3MON4D3/LuaSnip",
-      "nvim-treesitter/nvim-treesitter",
-    },
-  },
-  {
     "L3MON4D3/LuaSnip",
     lazy = true,
     event = { "InsertEnter" },
@@ -103,7 +94,6 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "f3fora/cmp-spell",
       "hrsh7th/cmp-cmdline",
       "dmitmel/cmp-cmdline-history",
       "hrsh7th/cmp-nvim-lua",
@@ -125,21 +115,11 @@ return {
       end
 
       local config = {
-        confirm_opts = {
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = false,
-        },
-        completion = {
-          ---@usage The minimum length of a word to complete on.
-          keyword_length = 1,
-        },
         view = {
           entries = { name = "custom", selection_order = "near_cursor" },
         },
         experimental = {
-          ghost_text = false,
-          native_menu = false,
-          custom_menu = true,
+          ghost_text = { hl_group = "LspCodeLens" },
         },
         formatting = {
           format = require("utils.lspkind").cmp_format({ maxwidth = 50 }),
@@ -161,57 +141,21 @@ return {
           { name = "buffer", max_item_count = 5, keyword_length = 3 },
         },
         mapping = cmp.mapping.preset.insert({
-          ["<Down>"] = {
-            i = cmp.mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Select }),
-          },
-          ["<Up>"] = {
-            i = cmp.mapping.select_prev_item({ behavior = types.cmp.SelectBehavior.Select }),
-          },
-          ["<C-n>"] = {
-            i = function()
+          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<CR>"] = cmp.mapping.confirm({ select = false }),
+          ["<Esc>"] = {
+            i = function(fallback)
               if cmp.visible() then
-                cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
-              else
-                cmp.complete()
-              end
-            end,
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert })
+                cmp.abort()
+              elseif luasnip.expand_or_locally_jumpable() then
+                luasnip.session.current_nodes[vim.api.nvim_get_current_buf()] = nil
+                fallback()
               else
                 fallback()
               end
             end,
-          },
-          ["<C-p>"] = {
-            i = function()
-              if cmp.visible() then
-                cmp.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert })
-              else
-                cmp.complete()
-              end
-            end,
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
-              else
-                fallback()
-              end
-            end,
-          },
-          ["<C-y>"] = {
-            i = cmp.mapping.complete({}),
-            c = cmp.mapping.complete({}),
-          },
-          ["<C-e>"] = {
-            i = cmp.mapping.abort(),
-            c = cmp.mapping.close(),
-          },
-          ["<C-d>"] = {
-            i = cmp.mapping.scroll_docs(-4),
-          },
-          ["<C-f>"] = {
-            i = cmp.mapping.scroll_docs(4),
           },
           ["<Tab>"] = {
             i = function(fallback)
@@ -247,13 +191,6 @@ return {
                 fallback()
               end
             end,
-            c = function()
-              if cmp.visible() then
-                cmp.select_next_item()
-              else
-                feedkey("<C-z>", "n")
-              end
-            end,
           },
           ["<S-Tab>"] = {
             i = function(fallback)
@@ -272,35 +209,7 @@ return {
                 fallback()
               end
             end,
-            c = function()
-              if cmp.visible() then
-                cmp.select_prev_item()
-              else
-                feedkey("<C-z>", "n")
-              end
-            end,
           },
-          ["<Esc>"] = {
-            i = function(fallback)
-              if cmp.visible() then
-                cmp.abort()
-              elseif luasnip.expand_or_locally_jumpable() then
-                luasnip.session.current_nodes[vim.api.nvim_get_current_buf()] = nil
-                fallback()
-              else
-                fallback()
-              end
-            end,
-            -- c = function(fallback)
-            --   if cmp.visible() then
-            --     cmp.close()
-            --   else
-            --     -- feedkey("<C-c>", "i")
-            --     fallback()
-            --   end
-            -- end,
-          },
-          ["<CR>"] = { i = cmp.mapping.confirm({ select = false }) },
         }),
       }
       cmp.setup(config)
@@ -309,28 +218,18 @@ return {
         sources = {
           { name = "path" },
           { name = "cmdline" },
-          { name = "cmdline_history", max_item_count = 5, keyword_length = 3 },
+          { name = "cmdline_history", max_item_count = 3, keyword_length = 3 },
           { name = "nvim_lua" },
         },
         formatting = {
           format = require("utils.lspkind").cmp_format({}),
         },
       })
-      cmp.setup.cmdline("/", {
+      cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
           { name = "buffer" },
-          { name = "cmdline_history", max_item_count = 5, keyword_length = 3 },
-        },
-        formatting = {
-          format = require("utils.lspkind").cmp_format({}),
-        },
-      })
-      cmp.setup.cmdline("?", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = "buffer" },
-          { name = "cmdline_history", max_item_count = 5, keyword_length = 3 },
+          { name = "cmdline_history", max_item_count = 3, keyword_length = 3 },
         },
         formatting = {
           format = require("utils.lspkind").cmp_format({}),
@@ -338,9 +237,7 @@ return {
       })
       cmp.setup.filetype("markdown", {
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
           { name = "buffer", max_item_count = 5 },
-          { name = "spell" },
         }),
       })
     end,

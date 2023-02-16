@@ -2,160 +2,24 @@ local utils = require("utils")
 
 return {
   {
-    "folke/todo-comments.nvim",
-    lazy = true,
-    event = { "BufReadPost" },
-    cmd = { "TodoTelescope" },
-    opts = {
-      highlight = { max_line_len = 120 },
-      colors = {
-        error = { "DiagnosticError" },
-        warning = { "DiagnosticWarn" },
-        info = { "DiagnosticInfo" },
-        hint = { "DiagnosticHint" },
-        hack = { "Function" },
-        ref = { "FloatBorder" },
-        default = { "Identifier" },
-      },
-    },
-    keys = {
-      { "<Leader>ft", "<cmd>TodoTelescope<cr>", desc = "Todo" },
-    },
-    dependencies = { "nvim-lua/plenary.nvim" },
-  },
-  {
     "stevearc/dressing.nvim",
     lazy = true,
-    event = { "VeryLazy" },
-    opts = {
-      input = {
-        enabled = true,
-        -- Default prompt string
-        default_prompt = "Input:",
-      },
-      select = {
-        -- Set to false to disable the vim.ui.select implementation
-        enabled = true,
-
-        -- Priority list of preferred vim.select implementations
-        backend = { "telescope", "fzf_lua", "fzf", "builtin", "nui" },
-
-        -- Options for telescope selector
-        -- These are passed into the telescope picker directly. Can be used like:
-        -- telescope = require('telescope.themes').get_ivy({...})
-        telescope = nil,
-
-        -- Used to override format_item. See :help dressing-format
-        format_item_override = {},
-
-        -- see :help dressing_get_config
-        get_config = nil,
-      },
-    },
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.select(...)
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.input = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.input(...)
+      end
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
-    -- event = "VimEnter",
-    lazy = true,
     cmd = { "Telescope" },
-    opts = {
-      defaults = {
-        prompt_prefix = " ",
-        selection_caret = " ",
-        entry_prefix = "  ",
-        initial_mode = "insert",
-        selection_strategy = "reset",
-        sorting_strategy = "descending",
-        layout_strategy = "horizontal",
-        layout_config = {
-          width = 0.75,
-          preview_cutoff = 120,
-          horizontal = {
-            mirror = false,
-            preview_width = 0.6,
-          },
-          vertical = { mirror = false },
-        },
-        vimgrep_arguments = {
-          "rg",
-          "--color=never",
-          "--no-heading",
-          "--with-filename",
-          "--line-number",
-          "--column",
-          "--smart-case",
-          "--hidden",
-          "--glob=!.git/",
-        },
-        file_ignore_patterns = {
-          "vendor/*",
-          "%.lock",
-          "__pycache__/*",
-          "%.sqlite3",
-          "%.ipynb",
-          "node_modules/*",
-          "%.jpg",
-          "%.jpeg",
-          "%.png",
-          "%.svg",
-          "%.otf",
-          "%.ttf",
-          ".git/",
-          "%.webp",
-          ".dart_tool/",
-          ".github/",
-          ".gradle/",
-          ".idea/",
-          ".settings/",
-          ".vscode/",
-          "__pycache__/",
-          "build/",
-          "env/",
-          "gradle/",
-          "node_modules/",
-          "target/",
-          "%.pdb",
-          "%.dll",
-          "%.class",
-          "%.exe",
-          "%.cache",
-          "%.ico",
-          "%.pdf",
-          "%.dylib",
-          "%.jar",
-          "%.docx",
-          "%.met",
-          "smalljre_*/*",
-          ".vale/",
-        },
-        path_display = { shorten = 10 },
-        winblend = 6,
-        border = {},
-        borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-        color_devicons = true,
-        set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-        pickers = {
-          find_files = {
-            hidden = true,
-          },
-          live_grep = {
-            --@usage don't include the filename in the search results
-            -- only_sort_text = true,
-          },
-        },
-      },
-      extensions = {
-        fzf = {
-          fuzzy = true, -- false will only do exact matching
-          override_generic_sorter = true, -- override the generic sorter
-          override_file_sorter = true, -- override the file sorter
-          case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-        },
-        frecency = {
-          -- show_scores = true,
-        },
-      },
-    },
     init = function()
       utils.keymap.group("n", "<Leader>f", "Find Files")
       utils.keymap.group("n", "<Leader>s", "Search")
@@ -235,6 +99,9 @@ return {
           },
           mappings = {
             i = {
+              ["<c-t>"] = function(...)
+                return require("trouble.providers.telescope").open_with_trouble(...)
+              end,
               ["<C-n>"] = actions.move_selection_next,
               ["<C-p>"] = actions.move_selection_previous,
               ["<C-j>"] = actions.cycle_history_next,
@@ -249,60 +116,12 @@ return {
               ["<M-p>"] = action_layout.toggle_preview,
             },
           },
-          file_ignore_patterns = {
-            "vendor/*",
-            "%.lock",
-            "__pycache__/*",
-            "%.sqlite3",
-            "%.ipynb",
-            "node_modules/*",
-            "%.jpg",
-            "%.jpeg",
-            "%.png",
-            "%.svg",
-            "%.otf",
-            "%.ttf",
-            ".git/",
-            "%.webp",
-            ".dart_tool/",
-            ".github/",
-            ".gradle/",
-            ".idea/",
-            ".settings/",
-            ".vscode/",
-            "__pycache__/",
-            "build/",
-            "env/",
-            "gradle/",
-            "node_modules/",
-            "target/",
-            "%.pdb",
-            "%.dll",
-            "%.class",
-            "%.exe",
-            "%.cache",
-            "%.ico",
-            "%.pdf",
-            "%.dylib",
-            "%.jar",
-            "%.docx",
-            "%.met",
-            "smalljre_*/*",
-            ".vale/",
-          },
           path_display = { shorten = 10 },
           winblend = 6,
-          border = {},
-          borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-          color_devicons = true,
           set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
           pickers = {
             find_files = {
               find_command = { "fd", "--type=file", "--hidden", "--smart-case", "--strip-cwd-prefix" },
-            },
-            live_grep = {
-              --@usage don't include the filename in the search results
-              -- only_sort_text = true,
             },
           },
         },
@@ -318,23 +137,6 @@ return {
 
       require("lazy").load({ plugins = { "telescope-fzf-native.nvim" } })
       require("telescope").load_extension("fzf")
-
-      -- utils.Group(
-      --   "UserTelescopeFoldFix",
-      --   {
-      --     "BufRead",
-      --     "*",
-      --     function()
-      --       utils.AuCmd("BufWinEnter", "*", "normal! zx"):once():set()
-      --     end,
-      --   }
-      -- -- {
-      -- --   "User",
-      -- --   "TelescopePreviewerLoaded",
-      -- --   "setlocal number relativenumber wrap list",
-      -- -- },
-      -- )
-      -- utils.AuCmd("User", "TelescopePreviewerLoaded", "setlocal number relativenumber wrap list"),
     end,
     keys = {
 
@@ -409,29 +211,25 @@ return {
       { "<Leader>ss", utils.telescope.builtin("builtin"), desc = "Telescope" },
     },
     dependencies = {
-      "nvim-lua/popup.nvim",
       "nvim-lua/plenary.nvim",
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-      },
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
   },
   {
     "nvim-telescope/telescope-frecency.nvim",
-    lazy = true,
     event = { "VeryLazy" },
     dependencies = { "tami5/sqlite.lua", "nvim-telescope/telescope.nvim" },
-    config = function(spec, opt)
+    config = function(_, _)
       require("telescope").load_extension("frecency")
     end,
     keys = {
       {
         "<Leader>fr",
-        -- function()
-        --   local opts = { default_text = "CWD" }
-        --   require("telescope").extensions.frecency.frecency(opts)
-        -- end,
+        "<cmd>Telescope frecency default_text=:CWD:<cr>",
+        desc = "Frequency in CWD",
+      },
+      {
+        "<Leader>fR",
         "<cmd>Telescope frecency<cr>",
         desc = "Frequency",
       },
@@ -441,29 +239,8 @@ return {
     "ThePrimeagen/harpoon",
     lazy = true,
     event = { "VeryLazy" },
-    opts = {
-      global_settings = {
-        -- sets the marks upon calling `toggle` on the ui, instead of require `:w`.
-        save_on_toggle = false,
-
-        -- saves the harpoon file upon every change. disabling is unrecommended.
-        save_on_change = true,
-
-        -- sets harpoon to run the command immediately as it's passed to the terminal when calling `sendCommand`.
-        enter_on_sendcmd = false,
-
-        -- closes any tmux windows harpoon that harpoon creates when you close Neovim.
-        tmux_autoclose_windows = false,
-
-        -- filetypes that you want to prevent from adding to the harpoon list menu.
-        excluded_filetypes = { "harpoon" },
-
-        -- set marks specific to each git branch inside git repository
-        mark_branch = false,
-      },
-    },
-    config = function(_, opts)
-      require("harpoon").setup(opts)
+    config = function(_, _)
+      require("harpoon").setup({})
       require("telescope").load_extension("harpoon")
     end,
     keys = {
@@ -474,5 +251,28 @@ return {
       { "<Leader>fp", utils.lazy_require("harpoon.ui", "nav_prev"), desc = "Harpoon Previous" },
     },
     dependencies = { "nvim-telescope/telescope.nvim" },
+  },
+  {
+    "folke/trouble.nvim",
+    cmd = { "TroubleToggle", "Trouble" },
+    opts = { use_diagnostic_signs = true },
+    keys = {
+      { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
+      { "<leader>xX", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
+      { "<leader>xL", "<cmd>TroubleToggle loclist<cr>", desc = "Location List (Trouble)" },
+      { "<leader>xQ", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List (Trouble)" },
+    },
+  },
+  {
+    "folke/todo-comments.nvim",
+    lazy = true,
+    event = { "BufReadPost" },
+    cmd = { "TodoTrouble", "TodoTelescope" },
+    config = true,
+    keys = {
+      { "<leader>fT", "<cmd>TodoTrouble<cr>", desc = "Todo Trouble" },
+      { "<Leader>ft", "<cmd>TodoTelescope<cr>", desc = "Todo Telescope" },
+    },
+    dependencies = { "nvim-lua/plenary.nvim" },
   },
 }

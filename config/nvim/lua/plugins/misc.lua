@@ -1,7 +1,8 @@
 return {
   { "nvim-lua/popup.nvim", lazy = true },
-  { "nvim-lua/plenary.nvim", lazy = true },
+  { "nvim-lua/plenary.nvim", lazy = false },
   { "kyazdani42/nvim-web-devicons", lazy = true },
+  { "tpope/vim-repeat", event = "VeryLazy" },
   {
     "karb94/neoscroll.nvim",
     lazy = true,
@@ -12,7 +13,7 @@ return {
     "norcalli/nvim-colorizer.lua",
     lazy = true,
     event = { "BufRead" },
-    config = function(spec, opts)
+    config = function(_, _)
       require("colorizer").setup({ "*" }, { css = true })
     end,
     keys = {

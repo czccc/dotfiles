@@ -22,8 +22,8 @@ M.setup = function()
   -- lazy setup
   local lazy_opts = {
     defaults = {
-      lazy = false, -- should plugins be lazy-loaded?
-      version = nil, -- "*" to enable this to try installing the latest stable versions of plugins
+      lazy = true, -- should plugins be lazy-loaded?
+      version = false, -- "*" to enable this to try installing the latest stable versions of plugins
     },
     concurrency = 10, ---@type number limit the maximum amount of concurrent tasks
     git = {
@@ -39,17 +39,6 @@ M.setup = function()
       notify = true, -- get a notification when changes are found
     },
     performance = {
-      cache = {
-        enabled = true,
-        path = vim.fn.stdpath("cache") .. "/lazy/cache",
-        -- Once one of the following events triggers, caching will be disabled.
-        -- To cache all modules, set this to `{}`, but that is not recommended.
-        -- The default is to disable on:
-        --  * VimEnter: not useful to cache anything else beyond startup
-        --  * BufReadPre: this will be triggered early when opening a file from the command line directly
-        disable_events = { "UIEnter", "BufReadPre" },
-        ttl = 3600 * 24 * 5, -- keep unused modules for up to 5 days
-      },
       rtp = {
         disabled_plugins = {
           "2html_plugin",
