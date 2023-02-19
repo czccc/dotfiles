@@ -12,14 +12,6 @@ return {
   -- correctly setup lspconfig
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      "ray-x/go.nvim",
-      build = ':lua require("go.install").update_all_sync()',
-      dependencies = {
-        "ray-x/guihua.lua",
-        "nvim-treesitter/nvim-treesitter",
-      },
-    },
     opts = {
       servers = {
         gopls = {
@@ -73,11 +65,20 @@ return {
           end,
         },
       },
-      setup = {
-        gopls = function()
-          require("go").setup({})
-        end,
-      },
     },
+  },
+  {
+    "ray-x/go.nvim",
+    build = ':lua require("go.install").update_all_sync()',
+    dependencies = {
+      "ray-x/guihua.lua",
+      "nvim-treesitter/nvim-treesitter",
+      "neovim/nvim-lspconfig",
+    },
+    ft = { "go", "gomod" },
+    event = { "CmdlineEnter" },
+    config = function(_, _)
+      require("go").setup({})
+    end,
   },
 }

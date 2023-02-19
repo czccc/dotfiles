@@ -34,11 +34,9 @@ return {
         timeout_ms = 1000,
       },
       -- LSP Server Settings
-      ---@type lspconfig.options
       servers = {},
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
-      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         -- example to setup with typescript.nvim
         -- tsserver = function(_, opts)
@@ -52,9 +50,7 @@ return {
     init = function()
       utils.keymap.group("n", "<Leader>l", "LSP")
     end,
-    config = function(spec, opts)
-      local lspconfig = require("lspconfig")
-
+    config = function(_, opts)
       -- setup diagnostic and sign
       for _, sign in ipairs(utils.icons.diagnostic) do
         vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
@@ -136,7 +132,7 @@ return {
               custom_fix = " Fix",
             },
             finder = {
-              max_height = 0.8,
+              max_height = 0.9,
               keys = { jump_to = "p", vsplit = "s", split = "S" },
             },
             code_action = {
@@ -219,7 +215,7 @@ return {
         "flake8",
       },
     },
-    config = function(plugin, opts)
+    config = function(_, opts)
       require("mason").setup(opts)
       local mr = require("mason-registry")
       for _, tool in ipairs(opts.ensure_installed) do

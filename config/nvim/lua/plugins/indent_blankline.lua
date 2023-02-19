@@ -39,11 +39,10 @@ return {
       use_treesitter = false,
       show_foldtext = false,
       show_current_context = true,
-      show_current_context_start = false,
+      show_current_context_start = true,
     },
     init = function()
       vim.g.indent_blankline_char = "▏"
-      -- vim.api.nvim_create_autocmd("CursorMoved", { command = "IndentBlanklineRefresh" })
     end,
     cmd = {
       "IndentBlanklineRefresh",
@@ -61,7 +60,7 @@ return {
     "echasnovski/mini.indentscope",
     version = false, -- wait till new 0.7.0 release to put it back on semver
     event = { "BufReadPre", "BufNewFile" },
-    -- enabled = false,
+    enabled = false,
     opts = {
       symbol = "▏",
       options = { try_as_border = true },

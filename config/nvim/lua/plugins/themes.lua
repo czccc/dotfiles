@@ -87,6 +87,8 @@ return {
         IlluminatedWordWrite = { fmt = "none" },
 
         BufferLineFill = { bg = "$bg0" },
+
+        IndentBlankLineContextChar = { fg = "$blue" },
       }, -- Override highlight groups
 
       -- Plugins Config --

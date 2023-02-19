@@ -35,7 +35,7 @@ M.keys = {
 
 function M.set_keymaps(client, buffer)
   local Keys = require("lazy.core.handler.keys")
-  local keymaps = {} ---@type table<string,LazyKeys|{has?:string}>
+  local keymaps = {}
 
   for _, value in ipairs(M.keys) do
     local keys = Keys.parse(value)

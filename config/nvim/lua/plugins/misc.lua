@@ -30,11 +30,12 @@ return {
       vim.g.sandwich_no_default_key_mappings = 1
       vim.g.operator_sandwich_no_default_key_mappings = 1
       vim.g.textobj_sandwich_no_default_key_mappings = 1
+      require("utils").keymap.group("x", "gz", "Sandwich")
     end,
     keys = {
-      { "Sa", "<Plug>(operator-sandwich-add)", mode = "x", desc = "Sandwich Add" },
-      { "Sd", "<Plug>(operator-sandwich-delete)", mode = "x", desc = "Sandwich Delete" },
-      { "Sr", "<Plug>(operator-sandwich-replace)", mode = "x", desc = "Sandwich Replace" },
+      { "gza", "<Plug>(operator-sandwich-add)", mode = "x", desc = "Sandwich Add" },
+      { "gzd", "<Plug>(operator-sandwich-delete)", mode = "x", desc = "Sandwich Delete" },
+      { "gzr", "<Plug>(operator-sandwich-replace)", mode = "x", desc = "Sandwich Replace" },
     },
   },
   {

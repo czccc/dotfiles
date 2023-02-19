@@ -49,9 +49,6 @@ return {
   -- correctly setup lspconfig
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      "p00f/clangd_extensions.nvim",
-    },
     opts = {
       -- make sure mason installs the server
       servers = {
@@ -77,63 +74,71 @@ return {
               description = "Open source/header in a new split",
             },
           },
-          on_attach = function(client, buffer)
-            if client.name == "clangd" then
-              -- require("clangd_extensions").setup({})
-              local utils = require("utils")
-              utils.keymap.set(
-                "n",
-                "<Leader>ms",
-                "<cmd>ClangdSwitchSourceHeader<cr>",
-                { desc = "Switch Source Header", buffer = buffer }
-              )
-              utils.keymap.set(
-                "n",
-                "<Leader>mS",
-                "<cmd>ClangdSwitchSourceHeaderSplit<cr>",
-                { desc = "Split Source Header", buffer = buffer }
-              )
-              utils.keymap.set(
-                "n",
-                "<Leader>mv",
-                "<cmd>ClangdSwitchSourceHeaderVSplit<cr>",
-                { desc = "VSplit Source Header", buffer = buffer }
-              )
-              utils.keymap.set(
-                "n",
-                "<Leader>mi",
-                "<cmd>ClangdSymbolInfo<cr>",
-                { desc = "Symbol Info", buffer = buffer }
-              )
-              utils.keymap.set(
-                "n",
-                "<Leader>mt",
-                "<cmd>ClangdTypeHierarchy<cr>",
-                { desc = "Type Hierarchy", buffer = buffer }
-              )
-              utils.keymap.set(
-                "n",
-                "<Leader>mT",
-                "<cmd>ClangdToggleInlayHints<cr>",
-                { desc = "Toggle Inlay Hints", buffer = buffer }
-              )
-              utils.keymap.set(
-                "n",
-                "<Leader>mm",
-                "<cmd>ClangdMemoryUsage<cr>",
-                { desc = "Memory Usage", buffer = buffer }
-              )
-              utils.keymap.set("n", "<Leader>ma", "<cmd>ClangdAST<cr>", { desc = "AST", buffer = buffer })
-            end
+          on_attach = function(_, buffer)
+            -- stylua: ignore start
+            local utils = require("utils")
+            utils.keymap.set("n", "<Leader>ms", "<cmd>ClangdSwitchSourceHeader<cr>", { desc = "Switch Source Header", buffer = buffer })
+            utils.keymap.set("n", "<Leader>mS", "<cmd>ClangdSwitchSourceHeaderSplit<cr>", { desc = "Split Source Header", buffer = buffer })
+            utils.keymap.set("n", "<Leader>mv", "<cmd>ClangdSwitchSourceHeaderVSplit<cr>", { desc = "VSplit Source Header", buffer = buffer })
+            utils.keymap.set("n", "<Leader>mi", "<cmd>ClangdSymbolInfo<cr>", { desc = "Symbol Info", buffer = buffer })
+            utils.keymap.set("n", "<Leader>mt", "<cmd>ClangdTypeHierarchy<cr>", { desc = "Type Hierarchy", buffer = buffer })
+            utils.keymap.set("n", "<Leader>mT", "<cmd>ClangdToggleInlayHints<cr>", { desc = "Toggle Inlay Hints", buffer = buffer })
+            utils.keymap.set("n", "<Leader>mm", "<cmd>ClangdMemoryUsage<cr>", { desc = "Memory Usage", buffer = buffer })
+            utils.keymap.set("n", "<Leader>ma", "<cmd>ClangdAST<cr>", { desc = "AST", buffer = buffer })
+            -- stylua: ignore end
           end,
         },
       },
       setup = {
-        clangd = function(_, opts)
-          require("clangd_extensions").setup({ server = opts })
+        clangd = function()
           return true
         end,
       },
     },
+  },
+  {
+    "p00f/clangd_extensions.nvim",
+    ft = { "c", "cpp", "objc" },
+    dependencies = {
+      "neovim/nvim-lspconfig",
+    },
+    opts = {
+      cmd = { "clangd", table.unpack(clangd_flags) },
+      commands = {
+        ClangdSwitchSourceHeader = {
+          function()
+            switch_source_header_splitcmd(0, "edit")
+          end,
+          description = "Open source/header in current buffer",
+        },
+        ClangdSwitchSourceHeaderVSplit = {
+          function()
+            switch_source_header_splitcmd(0, "vsplit")
+          end,
+          description = "Open source/header in a new vsplit",
+        },
+        ClangdSwitchSourceHeaderSplit = {
+          function()
+            switch_source_header_splitcmd(0, "split")
+          end,
+          description = "Open source/header in a new split",
+        },
+      },
+      on_attach = function(_, buffer)
+        -- stylua: ignore start
+        local utils = require("utils")
+        utils.keymap.set("n", "<Leader>ms", "<cmd>ClangdSwitchSourceHeader<cr>", { desc = "Switch Source Header", buffer = buffer })
+        utils.keymap.set("n", "<Leader>mS", "<cmd>ClangdSwitchSourceHeaderSplit<cr>", { desc = "Split Source Header", buffer = buffer })
+        utils.keymap.set("n", "<Leader>mv", "<cmd>ClangdSwitchSourceHeaderVSplit<cr>", { desc = "VSplit Source Header", buffer = buffer })
+        utils.keymap.set("n", "<Leader>mi", "<cmd>ClangdSymbolInfo<cr>", { desc = "Symbol Info", buffer = buffer })
+        utils.keymap.set("n", "<Leader>mt", "<cmd>ClangdTypeHierarchy<cr>", { desc = "Type Hierarchy", buffer = buffer })
+        utils.keymap.set("n", "<Leader>mT", "<cmd>ClangdToggleInlayHints<cr>", { desc = "Toggle Inlay Hints", buffer = buffer })
+        utils.keymap.set("n", "<Leader>mm", "<cmd>ClangdMemoryUsage<cr>", { desc = "Memory Usage", buffer = buffer })
+        -- stylua: ignore end
+      end,
+    },
+    config = function(_, opts)
+      require("clangd_extensions").setup({ server = opts })
+    end,
   },
 }

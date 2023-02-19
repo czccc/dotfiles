@@ -130,7 +130,7 @@ local bufferline = {
     { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
     { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Previous Buffer" },
 
-    { "<Leader>bb", require("utils.telescope").find_buffers, desc = "Find Buffer" },
+    { "<Leader>bb", require("utils.telescope").dropdown("buffers"), desc = "Find Buffer" },
     { "<Leader>bc", "<cmd>BufDel<cr>", desc = "Close Current" },
     { "<Leader>bC", "<cmd>BufferLinePickClose<cr>", desc = "Buffer Pick Close" },
     { "<Leader>bf", "<cmd>b#<cr>", desc = "Previous" },
