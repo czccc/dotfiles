@@ -1,24 +1,24 @@
 return {
-  -- Configure LazyVim to load gruvbox
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "onedark",
-    },
-  },
+
+  { "folke/trouble.nvim", opts = { use_diagnostic_signs = true } },
+  { "neovim/nvim-lspconfig", opts = { diagnostics = { float = { border = "rounded" } } } },
+  { "echasnovski/mini.indentscope", opts = { symbol = "▏" } },
+  { "SmiteshP/nvim-navic", opts = { highlight = false, separator = " > " } },
+  { "folke/edgy.nvim", opts = { wo = { winhighlight = "" } } },
+
   {
     "navarasu/onedark.nvim",
     lazy = false,
     priority = 1000,
     opts = {
       -- Main options --
-      style = "cool",                                                                      -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-      transparent = false,                                                                 -- Show/hide background
-      term_colors = false,                                                                 -- Change terminal color as per the selected theme style
-      ending_tildes = false,                                                               -- Show the end-of-buffer tildes. By default they are hidden
-      cmp_itemkind_reverse = false,                                                        -- reverse item kind highlights in cmp menu
+      style = "cool", -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+      transparent = false, -- Show/hide background
+      term_colors = true, -- Change terminal color as per the selected theme style
+      ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
+      cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
       -- toggle theme style ---
-      toggle_style_key = "<NOP>",                                                          -- Default keybinding to toggle
+      toggle_style_key = "<NOP>", -- Default keybinding to toggle
       -- toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
       toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
 
@@ -44,7 +44,17 @@ return {
         -- Visual = { bg = "#404859" },
         Visual = { bg = "$bg3" },
         -- Search = { fg = "none", bg = "$bg3" },
-        CursorLineNr = { fg = "$yellow", fmt = "bold" },
+        -- CursorLineNr = { fg = "$yellow", fmt = "bold" },
+
+        VertSplit = { fg = "$bg0" },
+        WinSeparator = { fg = "$bg1", fmt = "bold" },
+        NeoTreeVertSplit = { fg = "$bg1", fmt = "bold" },
+        NvimTreeWinSeparator = { fg = "$bg1", fmt = "bold" },
+        NeoTreeWinSeparator = { fg = "$bg1", bg = "$bg0", fmt = "bold" },
+
+        -- Terminal = { bg = "$bg0" },
+        FloatBorder = { fg = "gray", bg = "$bg0" },
+        NormalFloat = { bg = "$bg0" },
 
         ["@field"] = { fg = "$red" },
         ["@operator"] = { fg = "$purple" },
@@ -58,8 +68,6 @@ return {
         cTSConstant = { fg = "$orange" },
         TSPunctBracket = { fg = "$purple" },
 
-        packerStatusSuccess = { fg = "$green" },
-
         CmpItemAbbrMatch = { fg = "$green" },
         CmpItemAbbrMatchFuzzy = { fg = "$green" },
 
@@ -68,9 +76,6 @@ return {
         OperatorSandwichAdd = { fg = "$bg0", bg = "$orange" },
 
         HlSearchLens = { bg = "$bg3" },
-
-        NeoTreeVertSplit = { fg = "$bg0", bg = "$bg_d" },
-        NeoTreeWinSeparator = { fg = "$bg_d", bg = "$bg_d" },
 
         rainbowcol1 = { fg = "$purple" },
 
@@ -100,12 +105,12 @@ return {
 
       -- Plugins Config --
       diagnostics = {
-        darker = false,     -- darker colors for diagnostic
-        undercurl = true,   -- use undercurl instead of underline for diagnostics
+        darker = true, -- darker colors for diagnostic
+        undercurl = true, -- use undercurl instead of underline for diagnostics
         background = false, -- use background color for virtual text
       },
     },
-    config = function(spec, opts)
+    config = function(_, opts)
       require("onedark").setup(opts)
       -- load the colorscheme here
       vim.cmd.colorscheme("onedark")

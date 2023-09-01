@@ -2,7 +2,6 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
-
 -- cursor blink
 vim.cmd([[set guicursor+=a:-blinkwait5-blinkoff5-blinkon5]])
 
@@ -24,7 +23,6 @@ vim.opt.wildignore = {
   ".git,.svn",
 }
 
-
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 vim.wo.foldmethod = "expr"
 vim.wo.foldlevel = 5
@@ -32,4 +30,20 @@ vim.wo.foldlevel = 5
 -- foldnestmax = 5,
 vim.wo.foldminlines = 1
 vim.wo.foldtext =
-[[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').'...'.trim(getline(v:foldend)) . ' (' . (v:foldend - v:foldstart + 1) . ' lines)']]
+  [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').'...'.trim(getline(v:foldend)) . ' (' . (v:foldend - v:foldstart + 1) . ' lines)']]
+
+if vim.loop.os_uname().sysname == "Linux" and vim.fn.has("wsl") ~= 0 then
+  vim.cmd([[let g:clipboard = {
+    \   'name': 'WslClipboard',
+    \   'copy': {
+    \      '+': 'clip.exe',
+    \      '*': 'clip.exe',
+    \    },
+    \   'paste': {
+    \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \   },
+    \   'cache_enabled': 0,
+    \ }
+  ]])
+end

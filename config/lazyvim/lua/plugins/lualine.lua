@@ -61,13 +61,12 @@ local colors = {
   diff_text = "#265478",
 }
 
-
 local components = {
   left = {
     function()
       return "▊"
     end,
-    color = { fg = colors.blue },      -- Sets highlighting of component
+    color = { fg = colors.blue }, -- Sets highlighting of component
     padding = { left = 0, right = 1 }, -- We don't need space before this
   },
   mode = {
@@ -175,12 +174,12 @@ local components = {
   },
   filename = {
     "filename",
-    file_status = true,      -- Displays file status (readonly status, modified status)
+    file_status = true, -- Displays file status (readonly status, modified status)
     path = 1,
-    shorting_target = 150,   -- Shortens path to leave 80 spaces in the window
+    shorting_target = 150, -- Shortens path to leave 80 spaces in the window
     symbols = {
-      modified = "[+]",      -- Text to show when the file is modified.
-      readonly = "[-]",      -- Text to show when the file is non-modifiable or readonly.
+      modified = "[+]", -- Text to show when the file is modified.
+      readonly = "[-]", -- Text to show when the file is non-modifiable or readonly.
       unnamed = "[No Name]", -- Text to show for unnamed buffers.
     },
     cond = conditions.buffer_not_empty,
@@ -296,7 +295,7 @@ local components = {
       -- add client
       local buf_clients = vim.lsp.get_active_clients()
       if #buf_clients > 0 then
-        table.insert(buf_client_names, "ﲀ")
+        table.insert(buf_client_names, "")
       end
 
       return table.concat(buf_client_names, " ")
@@ -329,14 +328,10 @@ local components = {
   },
   navic = {
     function()
-      local status_ok, navic = pcall(require, "nvim-navic")
-      if not status_ok then
-        return ""
-      end
-      if not navic.is_available() then
-        return ""
-      end
-      return navic.get_location()
+      return require("nvim-navic").get_location()
+    end,
+    cond = function()
+      return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
     end,
   },
   location = {
@@ -464,6 +459,33 @@ local components = {
     cond = require("lazy.status").has_updates,
     color = { fg = colors.orange },
   },
+  noice_command = {
+    function()
+      return require("noice").api.status.command.get()
+    end,
+    cond = function()
+      return package.loaded["noice"] and require("noice").api.status.command.has()
+    end,
+    color = { fg = colors.green },
+  },
+  noice_mode = {
+    function()
+      return require("noice").api.status.mode.get()
+    end,
+    cond = function()
+      return package.loaded["noice"] and require("noice").api.status.mode.has()
+    end,
+    color = { fg = colors.green },
+  },
+  dap = {
+    function()
+      return "  " .. require("dap").status()
+    end,
+    cond = function()
+      return package.loaded["dap"] and require("dap").status() ~= ""
+    end,
+    color = { fg = colors.green },
+  },
 }
 
 return {
@@ -497,13 +519,14 @@ return {
         },
         lualine_c = {
           components.diff,
-          -- components.navic,
+          components.navic,
           -- components.lsp_progress,
           "%=",
         },
         lualine_x = {
           components.recording,
-          components.keymap,
+          components.noice_command,
+          components.noice_mode,
           components.updates,
 
           components.diagnostics,

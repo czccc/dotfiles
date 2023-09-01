@@ -16,13 +16,11 @@ local function map(mode, lhs, rhs, opts)
   end
 end
 
-
 -- Move Blocks
 map("x", "J", "<cmd>move '>+1<CR>gv-gv<CR>", { desc = "Move Block Down" })
 map("x", "K", "<cmd>move '>-2<CR>gv-gv<CR>", { desc = "Move Block Up" })
 map("x", "<A-j>", "<cmd>move '>+1<CR>gv-gv<CR>", { desc = "Move Block Down" })
 map("x", "<A-k>", "<cmd>move '>-2<CR>gv-gv<CR>", { desc = "Move Block Up" })
-
 
 map("n", "[<Space>", "<cmd>put!=repeat(nr2char(10), v:count1)|silent<CR>", { desc = "Prev Add Lines" })
 map("n", "]<Space>", "<cmd>put =repeat(nr2char(10), v:count1)|silent<CR>", { desc = "Prev Add Lines" })
