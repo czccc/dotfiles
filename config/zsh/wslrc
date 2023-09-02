@@ -1,0 +1,22 @@
+
+export BROWSER="powershell.exe /C start"
+
+WINIP=`cat /etc/resolv.conf | grep nameserver | awk '{ print $2 }'`
+
+proxy () {
+  export ALL_PROXY="socks5://$WINIP:7890"
+  export all_proxy="socks5://$WINIP:7890"
+  export HTTP_PROXY="http://$WINIP:7890"
+  export http_proxy="http://$WINIP:7890"
+  export HTTPS_PROXY="http://$WINIP:7890"
+  export https_proxy="http://$WINIP:7890"
+}
+
+unproxy () {
+  unset ALL_PROXY
+  unset all_proxy
+  unset HTTP_PROXY
+  unset http_proxy
+  unset HTTPS_PROXY
+  unset https_proxy
+}
