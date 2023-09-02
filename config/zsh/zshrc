@@ -144,9 +144,13 @@ if (( $+commands[zoxide] )); then
   alias zz=__zoxide_zi
 fi
 
+if (( $+commands[lazygit] )); then
+  alias lg=lazygit
+fi
+
 
 alias vz="vim ~/.zshrc && source ~/.zshrc"
-alias vzf="vim ~/.zimrc"
+alias vzz="vim ~/.zimrc"
 alias nv="NVIM_APPNAME=lazyvim nvim"
 alias gcl="git clone --recursive"
 alias gst="git status"
