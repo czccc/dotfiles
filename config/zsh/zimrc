@@ -26,6 +26,8 @@ zmodule fzf
 zmodule exa
 # Provides functions for easy archive manipulation.
 zmodule archive
+# ZSH plugin that reminds you to use existing aliases for commands you just typed
+zmodule MichaelAquilina/zsh-you-should-use --source you-should-use.plugin.zsh
 
 #
 # Prompt
