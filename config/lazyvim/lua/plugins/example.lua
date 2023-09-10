@@ -81,6 +81,24 @@ return {
     },
     cmd = { "UndotreeToggle" },
   },
+  {
+    "sindrets/diffview.nvim",
+    -- enabled = false,
+    lazy = true,
+    opts = {
+      enhanced_diff_hl = true,
+      key_bindings = {
+        file_panel = { q = "<Cmd>DiffviewClose<CR>" },
+        view = { q = "<Cmd>DiffviewClose<CR>" },
+        file_history_panel = { q = "<Cmd>DiffviewClose<CR>" },
+      },
+    },
+    keys = {
+      { "<Leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diff HEAD" },
+      { "<Leader>gD", "<cmd>DiffviewOpen -uno -- %<cr>", desc = "Diff Current File" },
+      { "<Leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "View File History" },
+    },
+  },
 
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -97,11 +115,11 @@ return {
             added = "", -- or "✚", but this is redundant info if you use git_status_colors on the name
             modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
             deleted = "✖", -- this can only be used in the git_status source
-            renamed = "", -- this can only be used in the git_status source
+            -- renamed = "", -- this can only be used in the git_status source
             -- Status type
             untracked = "✚", -- ""
             ignored = "",
-            unstaged = "",
+            -- unstaged = "",
             staged = "", -- ""
             conflict = "",
           },
@@ -226,8 +244,8 @@ return {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- this way you will only jump inside the snippet region
+          -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+          -- this way you will only jump inside the snippet region
           elseif luasnip.expand_or_jumpable() then
             luasnip.expand_or_jump()
           elseif has_words_before() then

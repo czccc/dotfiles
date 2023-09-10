@@ -64,6 +64,11 @@ return {
         ["@function.macro"] = { fg = "$orange" },
         ["@function.builtin"] = { fg = "$orange" },
         ["@keyword.function"] = { fmt = "bold" },
+
+        ["@lsp.type.variable"] = { fg = "$red" },
+        ["@lsp.type.property"] = { fg = "$red" },
+        ["@lsp.type.macro"] = { fg = "$orange" },
+
         cppTSConstant = { fg = "$orange" },
         cTSConstant = { fg = "$orange" },
         TSPunctBracket = { fg = "$purple" },
@@ -94,13 +99,14 @@ return {
         TreesitterContextLineNumber = { bg = "$bg2", fg = "$yellow", fmt = "bold" },
         TreesitterContext = { bg = "$bg2" },
 
-        IlluminatedWordText = { fmt = "none" },
-        IlluminatedWordRead = { fmt = "none" },
-        IlluminatedWordWrite = { fmt = "none" },
+        IlluminatedWordText = { bg = "$bg2", fmt = "none" },
+        IlluminatedWordRead = { bg = "$bg2", fmt = "none" },
+        IlluminatedWordWrite = { bg = "$bg2", fmt = "none" },
 
         BufferLineFill = { bg = "$bg0" },
 
         IndentBlankLineContextChar = { fg = "$blue" },
+        MiniIndentscopeSymbol = { fg = "$blue" },
       }, -- Override highlight groups
 
       -- Plugins Config --

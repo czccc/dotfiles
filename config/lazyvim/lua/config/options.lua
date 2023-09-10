@@ -25,7 +25,7 @@ vim.opt.wildignore = {
 
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 vim.wo.foldmethod = "expr"
-vim.wo.foldlevel = 5
+vim.wo.foldlevel = 6
 -- fillchars = "fold:\\",
 -- foldnestmax = 5,
 vim.wo.foldminlines = 1
