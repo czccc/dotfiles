@@ -1,0 +1,3 @@
+[submodule "config/zsh/custom"]
+	path = config/zsh/custom
+	url = git@github.com:czccc/zsh-custom.git

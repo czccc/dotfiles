@@ -22,12 +22,12 @@ zmodule utility
 zmodule run-help
 # Configures fzf for faster fetching of files and directories names.
 zmodule fzf
-# Adds aliases and better defaults for exa.
-zmodule exa
 # Provides functions for easy archive manipulation.
 zmodule archive
 # ZSH plugin that reminds you to use existing aliases for commands you just typed
 zmodule MichaelAquilina/zsh-you-should-use --source you-should-use.plugin.zsh
+# Custom zsh module
+zmodule czccc/zsh-custom --name custom
 
 #
 # Prompt

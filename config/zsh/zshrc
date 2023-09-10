@@ -137,21 +137,7 @@ unset key
 # User configuration
 # ------------------
 
-
-if (( $+commands[zoxide] )); then
-  export _ZO_ECHO=1
-  eval "$(zoxide init zsh)"
-  alias zz=__zoxide_zi
-fi
-
-if (( $+commands[lazygit] )); then
-  alias lg=lazygit
-fi
+#export _ZO_ECHO=0
 
 
-alias vz="vim ~/.zshrc && source ~/.zshrc"
-alias vzz="vim ~/.zimrc"
-alias nv="NVIM_APPNAME=lazyvim nvim"
-alias gcl="git clone --recursive"
-alias gst="git status"
 
