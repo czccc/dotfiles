@@ -33,3 +33,12 @@ map("n", "<Leader>Q", "<cmd>wqa<cr>", { desc = "Quit" })
 -- windows
 map("n", "<leader>w=", "<C-W>=", { desc = "Resize Windows", remap = true })
 map("n", "<leader>=", "<C-W>=", { desc = "Resize Windows", remap = true })
+
+map("x", "p", [["zdP]])
+map({ "n", "x" }, "x", [["-x]])
+map({ "n", "x" }, "c", [["-c]])
+
+map("n", "<F2>", [[yiw:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>]], { desc = "Substitute CurWord" })
+map("v", "<F2>", [[y:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>]], { desc = "Substitute CurWord" })
+map("n", "<F3>", "yiw", { desc = "Yank CurWord" })
+map("n", "<F4>", 'viw"zdP', { desc = "Paste CurWord" })

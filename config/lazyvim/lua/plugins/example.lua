@@ -76,9 +76,7 @@ return {
       vim.g.undotree_WindowLayout = 3
       vim.g.undotree_SetFocusWhenToggle = 1
     end,
-    keys = {
-      { "<Leader>uu", "<cmd>UndotreeToggle<cr>", desc = "Undo Tree" },
-    },
+    keys = { { "<Leader>uu", "<cmd>UndotreeToggle<cr>", desc = "Undo Tree" } },
     cmd = { "UndotreeToggle" },
   },
   {
@@ -161,36 +159,6 @@ return {
     },
   },
 
-  -- change some telescope options and a keymap to browse plugin files
-  {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-			-- add a keymap to browse plugin files
-			-- stylua: ignore
-			{
-				"<leader>sz",
-				function() require("telescope.builtin").builtin() end,
-				desc = "Telescope",
-			},
-    },
-    -- change some options
-    opts = {
-      defaults = {
-        layout_strategy = "horizontal",
-        layout_config = { prompt_position = "top" },
-        sorting_strategy = "ascending",
-        winblend = 0,
-      },
-    },
-    dependencies = {
-      "nvim-telescope/telescope-fzf-native.nvim",
-      build = "make",
-      config = function()
-        require("telescope").load_extension("fzf")
-      end,
-    },
-  },
-
   -- add more treesitter parsers
   {
     "nvim-treesitter/nvim-treesitter",
@@ -200,6 +168,50 @@ return {
         "tsx",
         "typescript",
       })
+      opts.textobjects = vim.tbl_extend("force", opts.textobjects or {}, {
+        lsp_interop = {
+          enable = true,
+          border = "rounded",
+          floating_preview_opts = {},
+          peek_definition_code = {
+            ["<leader>cp"] = "@function.outer",
+            ["<leader>cP"] = "@class.outer",
+          },
+        },
+      })
+    end,
+  },
+  -- {
+  --   "echasnovski/mini.surround",
+  --   opts = {
+  --     mappings = {
+  --       add = "gsa",
+  --       delete = "gsd",
+  --       find = "gsf",
+  --       find_left = "gsF",
+  --       highlight = "gsh",
+  --       replace = "gsr",
+  --       update_n_lines = "gsn",
+  --     },
+  --   },
+  -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      setup = {
+        clangd = function(_, opts)
+          opts.capabilities.offsetEncoding = { "utf-16" }
+        end,
+      },
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
+    init = function()
+      local keys = require("lazyvim.plugins.lsp.keymaps").get()
+      -- change a keymap
+      keys[#keys + 1] = { "ga", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "codeAction" }
+      keys[#keys + 1] = { "gl", vim.lsp.codelens.run, desc = "Code Lens", mode = { "n", "v" }, has = "codeLens" }
     end,
   },
 
@@ -216,12 +228,28 @@ return {
     },
   },
 
+  {
+    "RRethy/vim-illuminate",
+    opts = {
+      providers = { "lsp", "treesitter", "regex" },
+      large_file_overrides = { providers = { "lsp" } },
+      filetypes_denylist = { "neo-tree", "TelescopePrompt" },
+      modes_denylist = { "v", "x", "vs" },
+    },
+  },
+
   -- Use <tab> for completion and snippets (supertab)
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
   {
     "L3MON4D3/LuaSnip",
     keys = function()
-      return {}
+      return {
+        history = false,
+        update_events = "InsertLeave",
+        enable_autosnippets = true,
+        region_check_events = "CursorHold,InsertLeave",
+        delete_check_events = "TextChanged,InsertEnter",
+      }
     end,
   },
   -- then: setup supertab in cmp
@@ -231,29 +259,75 @@ return {
       "hrsh7th/cmp-emoji",
     },
     opts = function(_, opts)
+      ---@diagnostic disable-next-line: unused-function, unused-local
       local has_words_before = function()
         unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+      end
+      local feedkey = function(key, mode, replace)
+        if replace then
+          key = vim.api.nvim_replace_termcodes(key, true, false, true)
+          vim.api.nvim_feedkeys(key, mode, false)
+        else
+          vim.api.nvim_feedkeys(key, mode, true)
+        end
       end
 
       local luasnip = require("luasnip")
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-          -- this way you will only jump inside the snippet region
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
+        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        ["<C-y>"] = cmp.mapping.complete(),
+        ["<Esc>"] = cmp.mapping({
+          i = function(fallback)
+            if cmp.visible() then
+              cmp.abort()
+            elseif luasnip.expand_or_locally_jumpable() then
+              luasnip.session.current_nodes[vim.api.nvim_get_current_buf()] = nil
+              fallback()
+            else
+              fallback()
+            end
+          end,
+        }),
+        ["<Tab>"] = cmp.mapping({
+          i = function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+            -- this way you will only jump inside the snippet region
+            elseif luasnip.expand_or_locally_jumpable() then
+              luasnip.expand_or_jump()
+            -- elseif has_words_before() then
+            --   cmp.complete()
+            else
+              local next_char = vim.api.nvim_eval("strcharpart(getline('.')[col('.') - 1:], 0, 1)")
+              if
+                next_char == '"'
+                or next_char == "'"
+                or next_char == "`"
+                or next_char == ")"
+                or next_char == "]"
+                or next_char == "}"
+              then
+                feedkey("<Right>", "n", true)
+              else
+                fallback()
+              end
+            end
+          end,
+          s = function(fallback)
+            if luasnip.expand_or_locally_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end,
+        }),
         ["<S-Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
@@ -266,10 +340,50 @@ return {
       })
 
       opts.window = {
-        completion = cmp.config.window.bordered(),
+        -- completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered(),
       }
       return opts
     end,
   },
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   dependencies = {
+  --     "hrsh7th/cmp-cmdline",
+  --     "dmitmel/cmp-cmdline-history",
+  --   },
+  --   opts = function(_, opts)
+  --     local cmp = require("cmp")
+  --
+  --     cmp.setup.cmdline(":", {
+  --       mapping = cmp.mapping.preset.cmdline(),
+  --       sources = {
+  --         { name = "path" },
+  --         { name = "cmdline" },
+  --         { name = "cmdline_history", max_item_count = 3, keyword_length = 3 },
+  --         { name = "nvim_lua" },
+  --       },
+  --       formatting = {
+  --         format = require("utils.lspkind").cmp_format({}),
+  --       },
+  --     })
+  --     cmp.setup.cmdline({ "/", "?" }, {
+  --       mapping = cmp.mapping.preset.cmdline(),
+  --       sources = {
+  --         { name = "buffer" },
+  --         { name = "cmdline_history", max_item_count = 3, keyword_length = 3 },
+  --       },
+  --       formatting = {
+  --         format = require("utils.lspkind").cmp_format({}),
+  --       },
+  --     })
+  --     cmp.setup.filetype("markdown", {
+  --       sources = cmp.config.sources({
+  --         { name = "buffer", max_item_count = 5 },
+  --       }),
+  --     })
+  --
+  --     return opts
+  --   end,
+  -- },
 }
