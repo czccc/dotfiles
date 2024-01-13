@@ -156,11 +156,20 @@ return {
   -- add more treesitter parsers
   {
     "nvim-treesitter/nvim-treesitter",
+    keys = {
+      { "<c-space>", enable = false },
+      { "<C-M>", desc = "Increment selection" },
+      { "<bs>", desc = "Decrement selection", mode = "x" },
+    },
     opts = function(_, opts)
-      -- add tsx and treesitter
-      vim.list_extend(opts.ensure_installed, {
-        "tsx",
-        "typescript",
+      opts.incremental_selection = vim.tbl_extend("force", opts.incremental_selection or {}, {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-M>",
+          node_incremental = "<C-M>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
+        },
       })
       opts.textobjects = vim.tbl_extend("force", opts.textobjects or {}, {
         lsp_interop = {

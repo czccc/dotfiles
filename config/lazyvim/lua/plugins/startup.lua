@@ -9,31 +9,6 @@ local join = function(...)
   return table.concat({ ... }, separator)
 end
 
-local safe_require = function(mod)
-  local ok, module = pcall(require, mod)
-  if not ok then
-    vim.notify(mod .. " not found!")
-    return
-  end
-  return module
-end
-
-local lazy_require = function(mod, key, ...)
-  local args = { ... }
-  return function()
-    local module = safe_require(mod)
-    if not module then
-      return
-    end
-    local func = module[key]
-    if func == nil then
-      vim.notify(mod .. "[" .. key .. "]" .. " not found!")
-      return
-    end
-    func(table.unpack(args))
-  end
-end
-
 return {
   {
     "goolord/alpha-nvim",
@@ -224,14 +199,12 @@ return {
       max_path_length = 120, -- Shorten the display path if length exceeds this threshold. Use 0 if don't want to shorten the path at all.
     },
     keys = {
-      { "<Leader>sp", lazy_require("session_manager", "load_session"), desc = "Projects" },
-      { "<Leader>qs", lazy_require("session_manager", "save_current_session"), desc = "Save" },
-      { "<Leader>qc", lazy_require("session_manager", "load_current_dir_session"), desc = "Restore CurDir" },
-      { "<Leader>ql", lazy_require("session_manager", "load_last_session"), desc = "Restore Last" },
-      { "<Leader>qA", lazy_require("session_manager", "autosave_session"), desc = "Auto Save" },
-      { "<Leader>qa", lazy_require("session_manager", "autoload_session"), desc = "Auto Restore" },
-      { "<Leader>qd", lazy_require("session_manager", "delete_session"), desc = "Delete" },
-      { "<Leader>qp", lazy_require("session_manager", "load_session"), desc = "List" },
+      { "<Leader>sp", "<cmd>SessionManager load_session<cr>", desc = "Projects" },
+      { "<Leader>qs", "<cmd>SessionManager save_current_session<cr>", desc = "Save" },
+      { "<Leader>qc", "<cmd>SessionManager load_current_dir_session<cr>", desc = "Restore CurDir" },
+      { "<Leader>ql", "<cmd>SessionManager load_last_session<cr>", desc = "Restore Last" },
+      { "<Leader>qd", "<cmd>SessionManager delete_session<cr>", desc = "Delete" },
+      { "<Leader>qp", "<cmd>SessionManager load_session<cr>", desc = "List" },
     },
   },
 }

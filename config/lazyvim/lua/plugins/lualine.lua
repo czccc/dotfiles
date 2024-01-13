@@ -258,7 +258,7 @@ local components = {
           t = t .. "  " .. s.passed
         end
         if s.failed > 0 then
-          t = t .. "  " .. s.failed
+          t = t .. "  " .. s.failed
         end
         if s.running > 0 then
           t = t .. "  " .. s.running
@@ -276,7 +276,7 @@ local components = {
       local s = vim.fn["ultest#status"]()
       return { added = s.tests, modified = s.passed, removed = s.failed }
     end,
-    symbols = { added = " ", modified = " ", removed = " " },
+    symbols = { added = " ", modified = " ", removed = " " },
     diff_color = {
       added = { fg = colors.green },
       modified = { fg = colors.yellow },
@@ -295,7 +295,7 @@ local components = {
       -- add client
       local buf_clients = vim.lsp.get_active_clients()
       if #buf_clients > 0 then
-        table.insert(buf_client_names, "")
+        table.insert(buf_client_names, "󰧨")
       end
 
       return table.concat(buf_client_names, " ")
@@ -421,7 +421,8 @@ local components = {
   },
   filetype1 = {
     "filetype",
-    icon_only = false,
+    icons_enabled = false,
+    color = { fg = colors.green },
     cond = conditions.large_window,
   },
   scrollbar = {
@@ -538,6 +539,7 @@ return {
           components.spaces,
           components.encoding,
           components.fileformat,
+          components.filetype1,
           -- components.clock,
           components.location,
           components.scrollbar,

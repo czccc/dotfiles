@@ -10,6 +10,8 @@ return {
   { "SmiteshP/nvim-navic", opts = { highlight = false, separator = " > " } },
   { "folke/edgy.nvim", opts = { wo = { winhighlight = "" } } },
 
+  { "hiphish/rainbow-delimiters.nvim", event = "VeryLazy" },
+
   {
     "navarasu/onedark.nvim",
     lazy = false,

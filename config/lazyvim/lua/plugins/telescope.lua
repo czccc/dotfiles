@@ -1,3 +1,4 @@
+local Util = require("lazyvim.util")
 local utils = require("utils")
 
 return {
@@ -152,30 +153,9 @@ return {
             ["<C-k>"] = actions.move_selection_previous,
             ["<C-n>"] = actions.cycle_history_next,
             ["<C-p>"] = actions.cycle_history_prev,
-            ["<C-Down>"] = actions.cycle_history_next,
-            ["<C-Up>"] = actions.cycle_history_prev,
-            ["<C-f>"] = actions.preview_scrolling_down,
-            ["<C-b>"] = actions.preview_scrolling_up,
-            ["<C-t>"] = function(...)
-              return require("trouble.providers.telescope").open_with_trouble(...)
-            end,
-            ["<M-t>"] = function(...)
-              return require("trouble.providers.telescope").open_selected_with_trouble(...)
-            end,
-            ["<M-i>"] = function()
-              local action_state = require("telescope.actions.state")
-              local line = action_state.get_current_line()
-              utils.telescope.builtin("find_files", { no_ignore = true, default_text = line })()
-            end,
-            ["<M-h>"] = function()
-              local action_state = require("telescope.actions.state")
-              local line = action_state.get_current_line()
-              utils.telescope.builtin("find_files", { hidden = true, default_text = line })()
-            end,
           },
           n = {
             ["<M-p>"] = action_layout.toggle_preview,
-            ["q"] = actions.close,
             ["<C-j>"] = actions.move_selection_next,
             ["<C-k>"] = actions.move_selection_previous,
             ["<C-n>"] = actions.cycle_history_next,
@@ -203,32 +183,26 @@ return {
         },
       })
     end,
-    dependencies = {
+  },
+
+  {
+    "nvim-telescope/telescope-frecency.nvim",
+    event = "VeryLazy",
+    config = function(_, _)
+      Util.on_load("telescope.nvim", function()
+        require("telescope").load_extension("frecency")
+      end)
+    end,
+    keys = {
       {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-        config = function()
-          require("telescope").load_extension("fzf")
-        end,
+        "<Leader>fr",
+        "<cmd>Telescope frecency<cr>",
+        desc = "Frequency in CWD",
       },
       {
-        "nvim-telescope/telescope-frecency.nvim",
-        event = "VeryLazy",
-        config = function(_, _)
-          require("telescope").load_extension("frecency")
-        end,
-        keys = {
-          {
-            "<Leader>fr",
-            "<cmd>Telescope frecency<cr>",
-            desc = "Frequency in CWD",
-          },
-          {
-            "<Leader>fR",
-            "<cmd>Telescope frecency default_text=:*:<cr>",
-            desc = "Frequency",
-          },
-        },
+        "<Leader>fR",
+        "<cmd>Telescope frecency default_text=:*:<cr>",
+        desc = "Frequency",
       },
     },
   },
