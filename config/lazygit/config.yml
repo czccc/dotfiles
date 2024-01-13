@@ -1,2 +1,5 @@
 gui:
-  language: 'en'
+  language: "en"
+  theme:
+    selectedLineBgColor:
+      - black
