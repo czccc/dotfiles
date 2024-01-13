@@ -2,7 +2,7 @@ local Util = require("lazyvim.util")
 
 local M = {}
 
-M.get_root = Util.get_root
+M.get_root = Util.root.get
 
 M.separator = vim.loop.os_uname().version:match("Windows") and "\\" or "/"
 M.join = function(...)
@@ -67,7 +67,7 @@ end
 M.telescope = function(builtin, opts)
   opts = opts or {}
   return function()
-    opts = vim.tbl_deep_extend("force", { cwd = Util.get_root() }, opts)
+    opts = vim.tbl_deep_extend("force", { cwd = Util.root.get() }, opts)
     if builtin == "files" then
       if vim.loop.fs_stat((opts.cwd or vim.loop.cwd()) .. "/.git") then
         opts.show_untracked = true
