@@ -241,6 +241,16 @@ return {
     },
   },
 
+  {
+
+    "echasnovski/mini.pairs",
+    opts = {
+      mappings = {
+        ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%w\\].", register = { cr = false } },
+      },
+    },
+  },
+
   -- Use <tab> for completion and snippets (supertab)
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
   {
