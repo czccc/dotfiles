@@ -1,0 +1,19 @@
+{
+  "name": "user-snippets",
+  "author": "Cheng",
+  "engines": {
+    "vscode": "^1.0.0"
+  },
+  "contributes": {
+    "snippets": [
+      {
+        "language": "verilog",
+        "path": "./verilog.json"
+      },
+      {
+        "language": "lua",
+        "path": "./lua.json"
+      }
+    ]
+  }
+}

@@ -254,6 +254,9 @@ return {
         delete_check_events = "TextChanged,InsertEnter",
       }
     end,
+    config = function()
+      require("luasnip/loaders/from_vscode").lazy_load({ paths = { "./snippets" } })
+    end,
   },
   -- then: setup supertab in cmp
   {
