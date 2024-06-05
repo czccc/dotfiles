@@ -1,3 +1,11 @@
+-- local function restore_nvim_tree()
+--   local neotree_status_ok, neotree = pcall(require, "neo-tree.command")
+--   if neotree_status_ok then
+--     pcall(vim.cmd, [[ Neotree ]])
+--     return
+--   end
+-- end
+
 return {
   {
     "folke/persistence.nvim",
@@ -9,6 +17,7 @@ return {
     opts = {
       auto_session_create_enabled = false,
       auto_session_suppress_dirs = { "~/", "/" },
+      -- post_restore_cmds = { restore_nvim_tree, "wincmd =" },
     },
     keys = {
       { "<Leader>qs", "<cmd>SessionSave<cr>", desc = "Save Current" },

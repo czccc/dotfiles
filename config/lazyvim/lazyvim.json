@@ -2,6 +2,8 @@
   "extras": [
     "lazyvim.plugins.extras.coding.mini-surround",
     "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.dap.core",
+    "lazyvim.plugins.extras.editor.dial",
     "lazyvim.plugins.extras.editor.harpoon2",
     "lazyvim.plugins.extras.editor.illuminate",
     "lazyvim.plugins.extras.editor.leap",
@@ -24,15 +26,18 @@
     "lazyvim.plugins.extras.linting.eslint",
     "lazyvim.plugins.extras.ui.alpha",
     "lazyvim.plugins.extras.ui.edgy",
+    "lazyvim.plugins.extras.ui.mini-animate",
     "lazyvim.plugins.extras.ui.mini-indentscope",
     "lazyvim.plugins.extras.util.dot",
+    "lazyvim.plugins.extras.util.mini-hipatterns",
     "lazyvim.plugins.extras.util.startuptime",
     "lazyvim.plugins.extras.vscode",
+    "plugins.extras.diffview",
     "plugins.extras.lualine",
     "plugins.extras.onedark",
     "plugins.extras.session",
     "plugins.extras.telescope_color",
-    "plugins.extras.test"
+    "plugins.extras.undotree"
   ],
   "news": {
     "NEWS.md": "4964"

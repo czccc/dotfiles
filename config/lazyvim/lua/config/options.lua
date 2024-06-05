@@ -3,7 +3,7 @@
 -- Add any additional options here
 
 -- cursor blink
-vim.cmd([[set guicursor+=a:-blinkwait5-blinkoff5-blinkon5]])
+-- vim.cmd([[set guicursor+=n-v-c:-blinkwait500-blinkoff500-blinkon500]])
 
 vim.opt.relativenumber = false -- Relative line numbers
 vim.opt.wildignore = {
