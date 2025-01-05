@@ -54,7 +54,7 @@ return {
         NeoTreeWinSeparator = { fg = "$bg2", bg = "$bg0", fmt = "bold" },
 
         BufferLineFill = { bg = "$bg0" },
-        LazyNormal = { bg = "$bg0" },
+        -- LazyNormal = { bg = "$bg0" },
 
         WinBar = { bg = "$bg0" },
         WinBarNC = { bg = "$bg0" },
@@ -79,18 +79,9 @@ return {
         CmpItemAbbrMatch = { fg = "$green" },
         CmpItemAbbrMatchFuzzy = { fg = "$green" },
 
-        -- OperatorSandwichChange = { fg = "$bg0", bg = "$orange" },
-        -- OperatorSandwichDelete = { fg = "$bg0", bg = "$orange" },
-        -- OperatorSandwichAdd = { fg = "$bg0", bg = "$orange" },
-
         HlSearchLens = { bg = "$bg3" },
 
         rainbowcol1 = { fg = "$purple" },
-
-        -- HopNextKey = { fg = "$bg0", bg = "$orange", fmt = "none" },
-        -- HopNextKey1 = { fg = "$bg0", bg = "$blue", fmt = "none" },
-        -- HopNextKey2 = { fg = "$yellow", fmt = "bold" },
-        -- HopUnmatched = { fg = "$grey" },
 
         TreesitterContextLineNumber = { bg = "$bg2", fg = "$yellow", fmt = "bold" },
         TreesitterContext = { bg = "$bg2" },

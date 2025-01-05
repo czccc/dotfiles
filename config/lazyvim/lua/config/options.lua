@@ -5,7 +5,8 @@
 -- cursor blink
 -- vim.cmd([[set guicursor+=n-v-c:-blinkwait500-blinkoff500-blinkon500]])
 
-vim.opt.relativenumber = false -- Relative line numbers
+vim.opt.relativenumber = false
+-- vim.opt.wrap = true
 vim.opt.wildignore = {
   "*.aux,*.out,*.toc",
   "*.o,*.obj,*.dll,*.jar,*.pyc,__pycache__,*.rbc,*.class",
@@ -23,27 +24,11 @@ vim.opt.wildignore = {
   ".git,.svn",
 }
 
-vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
-vim.wo.foldmethod = "expr"
-vim.wo.foldlevel = 6
--- fillchars = "fold:\\",
--- foldnestmax = 5,
-vim.wo.foldminlines = 1
+-- vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.wo.foldmethod = "expr"
+-- vim.wo.foldlevel = 6
+-- -- fillchars = "fold:\\",
+-- -- foldnestmax = 5,
+-- vim.wo.foldminlines = 1
 vim.wo.foldtext =
   [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').'...'.trim(getline(v:foldend)) . ' (' . (v:foldend - v:foldstart + 1) . ' lines)']]
-
-if vim.loop.os_uname().sysname == "Linux" and vim.fn.has("wsl") ~= 0 then
-  vim.cmd([[let g:clipboard = {
-    \   'name': 'WslClipboard',
-    \   'copy': {
-    \      '+': 'clip.exe',
-    \      '*': 'clip.exe',
-    \    },
-    \   'paste': {
-    \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    \   },
-    \   'cache_enabled': 0,
-    \ }
-  ]])
-end
