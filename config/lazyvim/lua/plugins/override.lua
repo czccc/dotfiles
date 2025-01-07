@@ -1,6 +1,39 @@
 return {
-  { "SmiteshP/nvim-navic", opts = { highlight = false, separator = " > " } },
+  -- { "SmiteshP/nvim-navic", opts = { highlight = false, separator = " > " } },
   { "hiphish/rainbow-delimiters.nvim", event = "VeryLazy" },
+  {
+    "saghen/blink.cmp",
+    opts = {
+      keymap = {
+        preset = "super-tab",
+        ["<C-y>"] = { "select_and_accept" },
+        ["<CR>"] = { "accept", "fallback" },
+        ["<Esc>"] = { "hide", "fallback" },
+      },
+    },
+  },
+  {
+    "MagicDuck/grug-far.nvim",
+    opts = { headerMaxWidth = 80 },
+    cmd = "GrugFar",
+    keys = {
+      {
+        "<leader>sr",
+        function()
+          local grug = require("grug-far")
+          local file_name = vim.bo.buftype == "" and vim.fn.expand("%:.")
+          grug.open({
+            transient = true,
+            prefills = {
+              filesFilter = file_name and file_name ~= "" and file_name or nil,
+            },
+          })
+        end,
+        mode = { "n", "v" },
+        desc = "Search and Replace",
+      },
+    },
+  },
   {
     "snacks.nvim",
     opts = {
