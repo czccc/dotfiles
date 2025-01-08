@@ -16,18 +16,14 @@ end
 -- map({ "i", "n" }, "<esc>", "<cmd>noh<cr><cmd>fc<cr><esc>", { desc = "Escape and Clear hlsearch" })
 --
 
+-- lazy
 map("n", "<leader>L", "<cmd>LazyExtras<cr>", { desc = "LazyExtras" })
 
--- Move Blocks
-map("x", "J", "<cmd>move '>+1<CR>gv-gv<CR>", { desc = "Move Block Down" })
-map("x", "K", "<cmd>move '>-2<CR>gv-gv<CR>", { desc = "Move Block Up" })
-map("x", "<A-j>", "<cmd>move '>+1<CR>gv-gv<CR>", { desc = "Move Block Down" })
-map("x", "<A-k>", "<cmd>move '>-2<CR>gv-gv<CR>", { desc = "Move Block Up" })
-
+-- add space line
 map("n", "[<Space>", "<cmd>put!=repeat(nr2char(10), v:count1)|silent<CR>", { desc = "Prev Add Lines" })
 map("n", "]<Space>", "<cmd>put =repeat(nr2char(10), v:count1)|silent<CR>", { desc = "Prev Add Lines" })
 
-map("n", "<C-a>", "ggVG", { desc = "Select All" })
+-- map("n", "<C-a>", "ggVG", { desc = "Select All" })
 
 -- quit
 map("n", "<Leader>Q", "<cmd>wqa<cr>", { desc = "Quit" })
@@ -36,10 +32,12 @@ map("n", "<Leader>Q", "<cmd>wqa<cr>", { desc = "Quit" })
 map("n", "<leader>w=", "<C-W>=", { desc = "Resize Windows", remap = true })
 map("n", "<leader>=", "<C-W>=", { desc = "Resize Windows", remap = true })
 
+-- cut, delete, paste
 map("x", "p", [["zdP]])
 map({ "n", "x" }, "x", [["-x]])
 map({ "n", "x" }, "c", [["-c]])
 
+-- find, replace
 map("n", "<F2>", [[yiw:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>]], { desc = "Substitute CurWord" })
 map("v", "<F2>", [[y:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>]], { desc = "Substitute CurWord" })
 map("n", "<F3>", "yiw", { desc = "Yank CurWord" })
