@@ -42,3 +42,22 @@ map("n", "<F2>", [[yiw:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>]], { desc = "Su
 map("v", "<F2>", [[y:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>]], { desc = "Substitute CurWord" })
 map("n", "<F3>", "yiw", { desc = "Yank CurWord" })
 map("n", "<F4>", 'viw"zdP', { desc = "Paste CurWord" })
+
+-- skip pairs
+map("i", "<Tab>", function()
+  local next_char = vim.api.nvim_eval("strcharpart(getline('.')[col('.') - 1:], 0, 1)")
+  if
+    next_char == '"'
+    or next_char == "'"
+    or next_char == "`"
+    or next_char == ")"
+    or next_char == "]"
+    or next_char == "}"
+  then
+    local key = vim.api.nvim_replace_termcodes("<Right>", true, false, true)
+    vim.api.nvim_feedkeys(key, "n", false)
+  else
+    local key = vim.api.nvim_replace_termcodes("<Tab>", true, false, true)
+    vim.api.nvim_feedkeys(key, "n", false)
+  end
+end, { desc = "Paste CurWord" })
