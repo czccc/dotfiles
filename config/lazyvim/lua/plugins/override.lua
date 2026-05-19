@@ -49,7 +49,7 @@ return {
     },
   },
   {
-    "echasnovski/mini.pairs",
+    "nvim-mini/mini.pairs",
     opts = {
       mappings = {
         ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%w\\].", register = { cr = false } },
@@ -91,6 +91,12 @@ return {
     opts = {
       diagnostics = { float = { border = "rounded" } },
       servers = {
+        ["*"] = {
+          keys = {
+            { "ga", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "codeAction" },
+            { "gl", vim.lsp.codelens.run, desc = "Code Lens", mode = { "n", "v" }, has = "codeLens" },
+          },
+        },
         pyright = {},
         ruff_lsp = false,
       },
@@ -101,16 +107,10 @@ return {
         end,
       },
     },
-    init = function()
-      local keys = require("lazyvim.plugins.lsp.keymaps").get()
-      -- change a keymap
-      keys[#keys + 1] = { "ga", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "codeAction" }
-      keys[#keys + 1] = { "gl", vim.lsp.codelens.run, desc = "Code Lens", mode = { "n", "v" }, has = "codeLens" }
-    end,
   },
 
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "stylua",
