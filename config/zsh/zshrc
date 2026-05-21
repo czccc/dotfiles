@@ -1,102 +1,18 @@
-# Start configuration added by Zim install {{{
-#
-# User configuration sourced by interactive shells
-#
-
-# -----------------
-# Zsh configuration
-# -----------------
-
-#
-# History
-#
-
-# Remove older command from the history if a duplicate is to be added.
+# -------------------
+# Basic configuration
+# -------------------
 setopt HIST_IGNORE_ALL_DUPS
 typeset -g HISTFILE=${ZDOTDIR:-${HOME}}/.zsh_history
-
-#
-# Input/output
-#
-
-# Set editor default keymap to emacs (`-e`) or vi (`-v`)
 bindkey -e
-
-# Prompt for spelling correction of commands.
-setopt CORRECT
-
-# Customize spelling correction prompt.
-SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
-
-# Remove path separator from WORDCHARS.
 WORDCHARS=${WORDCHARS//[\/]}
 
-# -----------------
-# Zim configuration
-# -----------------
-
-# Use degit instead of git as the default tool to install and update modules.
-#zstyle ':zim:zmodule' use 'degit'
-
-# --------------------
-# Module configuration
-# --------------------
-
-#
-# git
-#
-
-# Set a custom prefix for the generated aliases. The default prefix is 'G'.
 zstyle ':zim:git' aliases-prefix 'g'
-
-#
-# input
-#
-
-# Append `../` to your input for each `.` you type after an initial `..`
-zstyle ':zim:input' double-dot-expand yes
-
-#
-# termtitle
-#
-
-# Set a custom terminal title format using prompt expansion escape sequences.
-# See http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Simple-Prompt-Escapes
-# If none is provided, the default '%n@%m: %~' is used.
 zstyle ':zim:termtitle' format '%1~'
 zstyle ':zim:termtitle' hooks 'preexec' 'precmd'
 zstyle ':zim:termtitle:preexec' format '${${(A)=1}[1]}'
 zstyle ':zim:termtitle:precmd'  format '%1~'
 
-#
-# zsh-autosuggestions
-#
-
-# Disable automatic widget re-binding on each precmd. This can be set when
-# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-# Customize the style that the suggestions are shown with.
-# See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
-
-#
-# zsh-syntax-highlighting
-#
-
-# Set what highlighters will be used.
-# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-
-# Customize the main highlighter styles.
-# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
-#typeset -A ZSH_HIGHLIGHT_STYLES
-#ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
-
-# ------------------
 # Initialize modules
-# ------------------
-
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
@@ -112,17 +28,9 @@ fi
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
   source ${ZIM_HOME}/zimfw.zsh init -q
 fi
-# Initialize modules.
 source ${ZIM_HOME}/init.zsh
 
-# ------------------------------
 # Post-init module configuration
-# ------------------------------
-
-#
-# zsh-history-substring-search
-#
-
 zmodload -F zsh/terminfo +p:terminfo
 # Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
 for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
@@ -130,14 +38,97 @@ for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search
 for key ('k') bindkey -M vicmd ${key} history-substring-search-up
 for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
-# }}} End configuration added by Zim install
-
 
 # ------------------
 # User configuration
 # ------------------
 
-#export _ZO_ECHO=0
+if (( $+commands[zoxide] )); then
+  # export _ZO_ECHO=1
+  eval "$(zoxide init zsh)"
+  alias zz=__zoxide_zi
+  # alias cd=z
+fi
 
 
+if (( $+commands[lazygit] )); then
+  alias lg=lazygit
+fi
+
+if (( $+commands[lazydocker] )); then
+  alias lzd=lazydocker
+fi
+
+if (( $+commands[cargo] )); then
+  export PATH="~/.cargo/bin:${PATH}"
+fi
+
+if (( $+commands[go] )); then
+  export PATH="~/go/bin:${PATH}"
+fi
+
+alias ls='ls --color=auto'
+alias ll='ls -hl'
+alias la='ll -a'
+
+if (( $+commands[eza] )); then
+  alias ls='eza --color=auto --group-directories-first'
+  alias ll='ls -l --git'        # Long format, git status
+  alias la='ll -a'              # Long format, all files
+  alias lr='ll -T'              # Long format, recursive as a tree
+  alias lx='ll -sextension'     # Long format, sort by extension
+  alias lk='ll -ssize'          # Long format, largest file size last
+  alias lt='ll -smodified'      # Long format, newest modification time last
+  alias lc='ll -schanged'       # Long format, newest status change (ctime) last
+fi
+
+if (( $+commands[tmux] )); then
+  alias t="tmux new -A -s 0"
+  tt() {
+    local session_name
+    if [ "$PWD" = "$HOME" ]; then
+        session_name="~"
+    else
+        session_name=$(basename "$PWD" | tr '.:' '__')
+    fi
+    tmux new-session -A -s "$session_name"
+  }
+fi
+
+if (( $+commands[nvim] )); then
+  alias nv="nvim"
+fi
+
+if (( $+commands[claude] )); then
+  alias cl="claude --dangerously-skip-permissions"
+fi
+
+alias vz="vim ~/.zshrc && source ~/.zshrc"
+alias vzz="vim ~/.zimrc"
+alias vzu="zimfw install && zimfw update"
+
+unalias gh
+alias gfc="git clone --recursive"
+alias gst="git status"
+
+export EDITOR=vim
+export PATH="$HOME/.local/bin:$PATH"
+
+proxy () {
+  # local PROXY="socks5://127.0.0.1:7890"
+  local PROXY="http://127.0.0.1:7890"
+  export ALL_PROXY="${PROXY}"
+  export HTTP_PROXY="${PROXY}"
+  export HTTPS_PROXY="${PROXY}"
+  git config --global http.proxy ${PROXY}
+  git config --global https.proxy ${PROXY}
+}
+
+unproxy () {
+  unset ALL_PROXY
+  unset HTTP_PROXY
+  unset HTTPS_PROXY
+  git config --global --unset http.proxy
+  git config --global --unset https.proxy
+}
 
